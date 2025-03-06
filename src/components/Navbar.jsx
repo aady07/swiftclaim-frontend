@@ -11,6 +11,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { FaNewspaper } from "react-icons/fa";
 import { BiSupport } from "react-icons/bi";
+
 const Navbar = () => {
   // manage navbar's visibility
   const [nav, setNav] = useState(false);
@@ -19,129 +20,49 @@ const Navbar = () => {
   const handleNavbar = () => {
     setNav(!nav);
   };
+
   // array containing navigation items
   const navItems = [
-    { id: 2, text: "About US", href: "/about-us", icon: <FaRegStar /> },
-    {
-      id: 3,
-      text: "Business Setup",
-      href: "/business-setup",
-      icon: <MdBusinessCenter />,
-    },
-    {
-      id: 4,
-      text: "PRO SERVICE",
-      href: "/services",
-      icon: <BsFillPeopleFill />,
-    },
-    {
-      id: 5,
-      text: "Accounting",
-      href: "/accounting",
-      icon: <MdOutlineAccountBalance />,
-    },
-    {
-      id: 6,
-      text: "CORPORATE TAX UAE",
-      href: "/corporate-tax-uae",
-      icon: <FaFileInvoiceDollar />,
-    },
-    {
-      id: 7,
-      text: "OTHER SERVICES",
-      href: "/other-services",
-      icon: <MdMiscellaneousServices />,
-    },
-    {
-      id: 8,
-      text: "NEWS",
-      href: "/news",
-      icon: <FaNewspaper />,
-    },
-    {
-      id: 9,
-      text: "CONTACT",
-      href: "/contact",
-      icon: <BiSupport />,
-    },
+    { id: 1, text: "Home", href: "/" },
+    { id: 2, text: "About Us", href: "/about-us" },
+    { id: 3, text: "Services", href: "/services" },
+    { id: 4, text: "Contacts", href: "/contacts" },
   ];
+
   const border = `1px solid #1E67C6`;
   const boxShadow = `0px 4px 24px #1E67C6`;
 
   return (
-    <div
-      className="
-        bg-nile-light
-        flex 
-        justify-between
-        items-center
-        h-24
-        max-w-[12024px] 
-        mx-1uto
-        px-4
-      
-        border-b-gray-300
-        pt-16
-        pb-16
-        "
-    >
-      {/* logo */}
-      <div className="lg:max-w-80 md:max-w-72 max-w-60">
-        <img src="/images/logo.png" alt="logo" />
+    <div className="sticky top-0 z-50 bg-nile-light shadow-lg">
+      <div className="flex justify-between items-center h-16 max-w-[1200px] mx-auto px-4">
+        <Link to="/" className="flex items-center">
+          <img src="/images/logo.png" alt="logo" className="h-12" />
+        </Link>
+        <ul className="hidden lg:flex space-x-4">
+          {navItems.map((item) => (
+            <Link to={item.href} key={item.id}>
+              <motion.li
+                className="p-4 rounded-xl cursor-pointer text-nile-400 uppercase hover:bg-nile-100 focus:bg-nile-100"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.text}
+              </motion.li>
+            </Link>
+          ))}
+        </ul>
+        <div onClick={handleNavbar} className="block lg:hidden">
+          {nav ? <AiOutlineClose size={20} color="black" /> : <AiOutlineMenu size={20} color="black" />}
+        </div>
       </div>
-      {/* <h1>Business 4 Business</h1> */}
-
-      {/* Desktop Navigation */}
-      <ul className="hidden 2xl:flex">
-        {navItems.map((item) => (
-          <Link to={item.href} key={item.id}>
-            <motion.li
-              className="flex items-center gap-1
-               p-4 rounded-xl m-3 cursor-pointer   
-               whitespace-nowrap border-r-gray-300 text-nile-400 uppercase hover:bg-nile-100 focus:bg-nile-100"
-              style={{
-                border,
-                boxShadow,
-              }}
-              whileHover={{
-                scale: 1.015,
-              }}
-              whileTap={{
-                scale: 0.985,
-              }}
-            >
-              <span>{item.icon}</span>
-              {item.text}
-            </motion.li>
-          </Link>
-        ))}
-      </ul>
-      {/* Mobile Navigation Icon */}
-      <div onClick={handleNavbar} className="block 2xl:hidden ">
-        {nav ? (
-          <AiOutlineClose size={20} color="black" />
-        ) : (
-          <AiOutlineMenu size={20} color="black" />
-        )}
-      </div>
-      {/* Mobile Navigation Menu */}
-
       <ul
-        className={
-          nav
-            ? "absolute z-40 lg:hidden left-0 top-0 w-[60%] h-auto border-r border-r-gray-300 ease-in-out duration-500 mt-32 rounded-xl  bg-nile-light"
-            : "ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%]"
-        }
+        className={`${
+          nav ? "absolute z-40 left-0 top-16 w-full bg-nile-light" : "hidden"
+        } lg:hidden`}
       >
-        {/* Mobile Logo */}
-        {/* Mobile Navigation Items */}
         {navItems.map((item) => (
           <Link to={item.href} key={item.id}>
-            <li
-              key={item.id}
-              className="flex items-center justify-start gap-1 p-4 border-b border-b-[#1E67C6] rounded-xl duration-300 cursor-pointer hover:bg-nile-100 focus:bg-nile-100 "
-            >
-              <span>{item.icon}</span>
+            <li className="p-4 border-b border-b-gray-300 text-nile-400 uppercase hover:bg-nile-100 focus:bg-nile-100">
               {item.text}
             </li>
           </Link>
