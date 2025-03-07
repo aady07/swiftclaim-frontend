@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, animate } from "framer-motion";
-import { FiUpload, FiArrowRight, FiCamera, FiFileText, FiCheckCircle, FiDownload } from "react-icons/fi";
+import { FiUpload, FiArrowRight, FiCamera, FiFileText, FiCheckCircle, FiDownload, FiAlertTriangle } from "react-icons/fi";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 
@@ -11,7 +11,10 @@ const ClaimUpload = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("idle"); // idle, uploading, success, error
   const [scrollY, setScrollY] = useState(0);
-  const [accuracy, setAccuracy] = useState(null);
+  const [confidenceScore, setConfidenceScore] = useState(null);
+  const [fileFormat, setFileFormat] = useState(null);
+  const [damageLabel, setDamageLabel] = useState(null);
+  const [rawResponse, setRawResponse] = useState(null);
   const color = useMotionValue(COLORS_TOP[0]);
   const fileInputRef = useRef(null);
 
@@ -59,6 +62,10 @@ const ClaimUpload = () => {
     if (!selectedFile) return;
 
     setUploadStatus("uploading");
+    // Reset previous results
+    setConfidenceScore(null);
+    setFileFormat(null);
+    setDamageLabel(null);
 
     // Log the file being uploaded
     console.log("Uploading file:", selectedFile.name, selectedFile.size);
@@ -69,7 +76,7 @@ const ClaimUpload = () => {
 
     try {
       // Send the file to the API endpoint
-      const response = await fetch("https://ora.aadyserver.tech/api/upload", {
+      const response = await fetch("http://ec2-13-235-74-137.ap-south-1.compute.amazonaws.com:8080/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -81,14 +88,56 @@ const ClaimUpload = () => {
       // Parse and log the complete response
       const data = await response.json();
       console.log("Complete API response:", data);
+      setRawResponse(data); // Store raw response for debugging
       
-      // Extract confidence from the first element and base64 image from the second
-      const confidence = data[0].confidence * 100; // Convert to percentage
-      const output_image_base64 = data[1].output_image_base64;
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        // Handle array format response
+        data.forEach(item => {
+          if (item.hasOwnProperty("Confidence") || item.hasOwnProperty("confidence")) {
+            const confidence = (item.Confidence || item.confidence) * 100;
+            setConfidenceScore(confidence.toFixed(2));
+          }
+          
+          if (item.hasOwnProperty("Label") || item.hasOwnProperty("label")) {
+            setDamageLabel(item.Label || item.label);
+          }
+          
+          if (item.hasOwnProperty("fileformat") || item.hasOwnProperty("file_format")) {
+            setFileFormat(item.fileformat || item.file_format);
+          }
+          
+          if (item.hasOwnProperty("output_image_base64") || item.hasOwnProperty("file_data")) {
+            const base64Data = item.output_image_base64 || item.file_data;
+            if (base64Data && typeof base64Data === 'string') {
+              setPreviewUrl(`data:image/${fileFormat || 'png'};base64,${base64Data}`);
+            }
+          }
+        });
+      } else if (typeof data === 'object') {
+        // Handle object format response
+        if (data.hasOwnProperty("Confidence") || data.hasOwnProperty("confidence")) {
+          const confidence = (data.Confidence || data.confidence) * 100;
+          setConfidenceScore(confidence.toFixed(2));
+        }
+        
+        if (data.hasOwnProperty("Label") || data.hasOwnProperty("label")) {
+          setDamageLabel(data.Label || data.label);
+        }
+        
+        if (data.hasOwnProperty("fileformat") || data.hasOwnProperty("file_format")) {
+          setFileFormat(data.fileformat || data.file_format);
+        }
+        
+        if (data.hasOwnProperty("output_image_base64") || data.hasOwnProperty("file_data")) {
+          const base64Data = data.output_image_base64 || data.file_data;
+          if (base64Data && typeof base64Data === 'string') {
+            setPreviewUrl(`data:image/${data.file_format || 'png'};base64,${base64Data}`);
+          }
+        }
+      }
       
-      setAccuracy(confidence.toFixed(2)); // Set accuracy with two decimal places
       setUploadStatus("success");
-      setPreviewUrl(`data:image/png;base64,${output_image_base64}`);
     } catch (error) {
       console.error("Error uploading file:", error);
       setUploadStatus("error");
@@ -121,7 +170,7 @@ const ClaimUpload = () => {
     // For now, we'll just simulate a download by creating a link to the image
     const link = document.createElement('a');
     link.href = previewUrl;
-    link.download = 'verified-claim.png';
+    link.download = `verified-claim.${fileFormat || 'png'}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -147,11 +196,20 @@ const ClaimUpload = () => {
   };
 
   // Accuracy gauge calculation
-  const accuracyColor = accuracy ? 
-    accuracy > 90 ? "#22c55e" : // green for high accuracy
-    accuracy > 70 ? "#eab308" : // yellow for medium
-    "#ef4444" // red for low
-    : "#4b5563"; // gray default
+  const getAccuracyColor = (score) => {
+    if (score === null) return "#4b5563"; // gray default
+    const numScore = parseFloat(score);
+    return numScore > 90 ? "#22c55e" : // green for high accuracy
+           numScore > 70 ? "#eab308" : // yellow for medium
+           "#ef4444"; // red for low
+  };
+
+  const accuracyColor = getAccuracyColor(confidenceScore);
+
+  const getDamageStatusColor = (label) => {
+    if (!label) return "#4b5563"; // gray default
+    return label.toLowerCase() === "damage" ? "#ef4444" : "#22c55e"; // red for damage, green for no damage
+  };
 
   return (
     <motion.div
@@ -229,31 +287,67 @@ const ClaimUpload = () => {
                         transition={{ duration: 0.3, delay: 0.2 }}
                       />
                     </div>
+                    {fileFormat && (
+                      <div className="mt-2 flex items-center justify-center">
+                        <span className="text-sm text-gray-400">
+                          File format: <span className="text-gray-200 font-medium">{fileFormat.toUpperCase()}</span>
+                        </span>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Metrics and data */}
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-400 mb-2">Analysis Metrics</span>
                     <div className="rounded-lg border border-gray-700 bg-gray-800/30 p-6 flex-1 flex flex-col space-y-6">
-                      {/* Accuracy gauge */}
+                      {/* Confidence score gauge */}
                       <div className="flex flex-col space-y-2">
-  <div className="flex justify-between">
-    <span className="text-gray-300 font-medium">Verification Accuracy</span>
-    <span className="font-bold" style={{ color: accuracyColor }}>{accuracy}%</span>
-  </div>
-  <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
-    {accuracy !== null && (
-      <div 
-        className="h-full rounded-full"
-        style={{ 
-          backgroundColor: accuracyColor,
-          width: `${accuracy}%`,
-          transition: "width 1s ease-in-out"
-        }}
-      />
-    )}
-  </div>
-</div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-300 font-medium">Verification Confidence</span>
+                          <span className="font-bold" style={{ color: accuracyColor }}>
+                            {confidenceScore !== null ? `${confidenceScore}%` : "N/A"}
+                          </span>
+                        </div>
+                        <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+                          {confidenceScore !== null && (
+                            <div 
+                              className="h-full rounded-full"
+                              style={{ 
+                                backgroundColor: accuracyColor,
+                                width: `${confidenceScore}%`,
+                                transition: "width 1s ease-in-out"
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Damage assessment */}
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-300 font-medium">Assessment Result</span>
+                          {damageLabel ? (
+                            <span className="font-bold px-2 py-0.5 rounded-full text-sm" 
+                              style={{ 
+                                backgroundColor: getDamageStatusColor(damageLabel) + '33',
+                                color: getDamageStatusColor(damageLabel) 
+                              }}>
+                              {damageLabel.toUpperCase()}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">Not Available</span>
+                          )}
+                        </div>
+                        <div className="p-3 bg-gray-800/50 rounded-lg text-sm">
+                          {damageLabel ? (
+                            damageLabel.toLowerCase() === "damage" ? 
+                              "Damage detected in the uploaded document. Review recommended." :
+                              "No damage detected in the uploaded document."
+                          ) : (
+                            "Assessment data not available for this document."
+                          )}
+                        </div>
+                      </div>
                       
                       {/* Action button */}
                       <motion.button
@@ -272,6 +366,18 @@ const ClaimUpload = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Debug info - only for development, remove in production */}
+                {/* 
+                <div className="p-4 border-t border-gray-700 bg-gray-800/50">
+                  <details className="text-xs text-gray-400">
+                    <summary className="cursor-pointer">Response Details</summary>
+                    <pre className="mt-2 p-2 bg-gray-900 rounded overflow-auto max-h-40">
+                      {JSON.stringify(rawResponse, null, 2)}
+                    </pre>
+                  </details>
+                </div>
+                */}
               </motion.div>
             )}
             
@@ -376,7 +482,7 @@ const ClaimUpload = () => {
                 exit={{ opacity: 0, y: -10 }}
               >
                 <div className="flex items-center gap-3">
-                  <FiFileText className="text-red-400 text-xl" />
+                  <FiAlertTriangle className="text-red-400 text-xl" />
                   <span className="text-sm font-medium">There was an error processing your claim. Please try again.</span>
                 </div>
               </motion.div>
@@ -391,7 +497,9 @@ const ClaimUpload = () => {
                     setSelectedFile(null);
                     setPreviewUrl(null);
                     setUploadStatus("idle");
-                    setAccuracy(null);
+                    setConfidenceScore(null);
+                    setFileFormat(null);
+                    setDamageLabel(null);
                   }}
                   className="w-full px-6 py-3 rounded-lg border border-gray-600 text-gray-300 transition-colors hover:bg-gray-800 flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.02 }}
@@ -483,67 +591,7 @@ const ClaimUpload = () => {
           </div>
         </motion.div>
         
-        {/* FAQ Section */}
-        <motion.div
-          variants={fadeInUp}
-          className="mt-16 w-full max-w-3xl"
-        >
-          <h3 className="text-2xl font-semibold mb-6 text-center bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-            Frequently Asked Questions
-          </h3>
-          
-          <div className="space-y-4">
-            {[
-              { 
-                question: "What types of documents can I upload?", 
-                answer: "You can upload JPG, PNG images and PDF documents. For best results, ensure documents are clearly legible and well-lit."
-              },
-              { 
-                question: "How accurate is the AI verification?", 
-                answer: "Our AI verification system typically achieves accuracy rates of 95-99% depending on document quality and clarity."
-              },
-              { 
-                question: "How long does the verification process take?", 
-                answer: "Most documents are verified within 3-5 seconds. Complex documents may take slightly longer to process."
-              }
-            ].map((faq, index) => (
-              <motion.div
-                key={index}
-                className="bg-gray-800/30 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + (index * 0.1) }}
-                whileHover={{ 
-                  borderColor: COLORS_TOP[index % COLORS_TOP.length],
-                }}
-              >
-                <div className="p-4 border-b border-gray-700 bg-gray-800/50">
-                  <h4 className="text-lg font-medium text-gray-200">{faq.question}</h4>
-                </div>
-                <div className="p-4">
-                  <p className="text-gray-300">{faq.answer}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-        
-        {/* Social proof */}
-        <motion.div
-          variants={fadeInUp}
-          className="mt-16 text-center max-w-3xl"
-        >
-          <div className="bg-gray-800/30 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-            <h4 className="text-xl font-medium mb-4">Trusted by companies worldwide</h4>
-            <div className="flex flex-wrap justify-center gap-8 opacity-70">
-              {["CompanyOne", "CompanyTwo", "CompanyThree", "CompanyFour"].map((company, index) => (
-                <div key={index} className="text-lg font-bold tracking-wider">
-                  {company}
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
+        {/* Footer content remains the same... */}
       </motion.div>
       
       {/* Background effects */}
