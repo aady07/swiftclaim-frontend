@@ -76,7 +76,7 @@ const ClaimUpload = () => {
 
     try {
       // Send the file to the API endpoint
-      const response = await fetch("http://ec2-13-235-74-137.ap-south-1.compute.amazonaws.com:8080/api/upload", {
+      const response = await fetch("https://aadybackend.site/api/upload", {
         method: "POST",
         body: formData,
       });
