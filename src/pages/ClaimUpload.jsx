@@ -15,6 +15,14 @@ const ClaimUpload = () => {
   const [fileFormat, setFileFormat] = useState(null);
   const [damageLabel, setDamageLabel] = useState(null);
   const [rawResponse, setRawResponse] = useState(null);
+  const [carMake, setCarMake] = useState("");
+  const [carModel, setCarModel] = useState("");
+  
+  // New state variables for the additional response data
+  const [damagedParts, setDamagedParts] = useState([]);
+  const [costEstimates, setCostEstimates] = useState([]);
+  const [damageImageUrl, setDamageImageUrl] = useState(null);
+  const [partsImageUrl, setPartsImageUrl] = useState(null);
   const color = useMotionValue(COLORS_TOP[0]);
   const fileInputRef = useRef(null);
 
@@ -59,20 +67,27 @@ const ClaimUpload = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!selectedFile) return;
+    if (!selectedFile || !carMake.trim() || !carModel.trim()) return;
 
     setUploadStatus("uploading");
     // Reset previous results
     setConfidenceScore(null);
     setFileFormat(null);
     setDamageLabel(null);
+    setDamagedParts([]);
+    setCostEstimates([]);
+    setDamageImageUrl(null);
+    setPartsImageUrl(null);
 
     // Log the file being uploaded
     console.log("Uploading file:", selectedFile.name, selectedFile.size);
+    console.log("Car details:", carMake, carModel);
 
     // Create FormData to send the file
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("carMake", carMake);
+    formData.append("carModel", carModel);
 
     try {
       // Send the file to the API endpoint
@@ -90,50 +105,60 @@ const ClaimUpload = () => {
       console.log("Complete API response:", data);
       setRawResponse(data); // Store raw response for debugging
       
-      // Handle different response formats
-      if (Array.isArray(data)) {
-        // Handle array format response
-        data.forEach(item => {
-          if (item.hasOwnProperty("Confidence") || item.hasOwnProperty("confidence")) {
-            const confidence = (item.Confidence || item.confidence) * 100;
+      // Handle the new response format
+      if (data) {
+        // Extract model1_output data (damage detection)
+        if (data.model1_output && Array.isArray(data.model1_output) && data.model1_output.length > 0) {
+          const model1Data = data.model1_output[0];
+          
+          // Set confidence score
+          if (model1Data.confidence) {
+            const confidence = model1Data.confidence * 100;
             setConfidenceScore(confidence.toFixed(2));
           }
           
-          if (item.hasOwnProperty("Label") || item.hasOwnProperty("label")) {
-            setDamageLabel(item.Label || item.label);
+          // Set file format
+          if (model1Data.file_format) {
+            setFileFormat(model1Data.file_format);
           }
           
-          if (item.hasOwnProperty("fileformat") || item.hasOwnProperty("file_format")) {
-            setFileFormat(item.fileformat || item.file_format);
+          // Set damage label
+          if (model1Data.label) {
+            setDamageLabel(model1Data.label);
           }
           
-          if (item.hasOwnProperty("output_image_base64") || item.hasOwnProperty("file_data")) {
-            const base64Data = item.output_image_base64 || item.file_data;
-            if (base64Data && typeof base64Data === 'string') {
-              setPreviewUrl(`data:image/${fileFormat || 'png'};base64,${base64Data}`);
+          // Set damage image
+          if (model1Data.output_image_base64) {
+            if (model1Data.output_image_base64.startsWith('data')) {
+              setDamageImageUrl(model1Data.output_image_base64);
+            } else {
+              setDamageImageUrl(`data:image/${model1Data.file_format || 'png'};base64,${model1Data.output_image_base64}`);
             }
           }
-        });
-      } else if (typeof data === 'object') {
-        // Handle object format response
-        if (data.hasOwnProperty("Confidence") || data.hasOwnProperty("confidence")) {
-          const confidence = (data.Confidence || data.confidence) * 100;
-          setConfidenceScore(confidence.toFixed(2));
         }
         
-        if (data.hasOwnProperty("Label") || data.hasOwnProperty("label")) {
-          setDamageLabel(data.Label || data.label);
-        }
-        
-        if (data.hasOwnProperty("fileformat") || data.hasOwnProperty("file_format")) {
-          setFileFormat(data.fileformat || data.file_format);
-        }
-        
-        if (data.hasOwnProperty("output_image_base64") || data.hasOwnProperty("file_data")) {
-          const base64Data = data.output_image_base64 || data.file_data;
-          if (base64Data && typeof base64Data === 'string') {
-            setPreviewUrl(`data:image/${data.file_format || 'png'};base64,${base64Data}`);
+        // Extract model2_output data (parts detection)
+        if (data.model2_output && Array.isArray(data.model2_output) && data.model2_output.length > 0) {
+          const model2Data = data.model2_output[0];
+          
+          // Set parts image
+          if (model2Data.output2_image_base64) {
+            if (model2Data.output2_image_base64.startsWith('data')) {
+              setPartsImageUrl(model2Data.output2_image_base64);
+            } else {
+              setPartsImageUrl(`data:image/${fileFormat || 'png'};base64,${model2Data.output2_image_base64}`);
+            }
           }
+        }
+        
+        // Extract damaged parts
+        if (data.parts && Array.isArray(data.parts)) {
+          setDamagedParts(data.parts);
+        }
+        
+        // Extract cost estimates
+        if (data.cost && Array.isArray(data.cost)) {
+          setCostEstimates(data.cost);
         }
       }
       
@@ -211,6 +236,60 @@ const ClaimUpload = () => {
     return label.toLowerCase() === "damage" ? "#ef4444" : "#22c55e"; // red for damage, green for no damage
   };
 
+  // Format part name for display
+  const formatPartName = (part) => {
+    if (!part) return "";
+    return part
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  // Function to convert an image URL to base64
+  const getBase64FromUrl = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // Async test function
+  const testUIWithMockData = async () => {
+    // Set form data
+    setCarMake("Toyota");
+    setCarModel("Camry");
+    
+    // Set initial states
+    setUploadStatus("uploading");
+    
+    try {
+      // Get base64 from placeholder images
+      const damageBase64 = await getBase64FromUrl('https://i.imgur.com/h4y1d0C.jpeg');
+      const partsBase64 = await getBase64FromUrl('https://i.imgur.com/qtVRnWI.jpeg');
+      
+      // Set all the result data
+      setConfidenceScore("99.91");
+      setFileFormat("png");
+      setDamageLabel("damage");
+      setDamagedParts(["boot-dent", "rear-bumper-dent"]);
+      setCostEstimates(["5,000 - 15,000", "3,000 - 7,000"]);
+      
+      // Set images using the converted base64 data
+      setDamageImageUrl(damageBase64);
+      setPartsImageUrl(partsBase64);
+      
+      // Complete the upload process
+      setUploadStatus("success");
+    } catch (error) {
+      console.error("Error generating test data:", error);
+      setUploadStatus("error");
+    }
+  };
+
   return (
     <motion.div
       className="relative min-h-screen overflow-hidden bg-nile-900 px-4 py-16 text-gray-200"
@@ -273,111 +352,174 @@ const ClaimUpload = () => {
                   <h3 className="text-xl font-medium text-gray-200">AI Verification Results</h3>
                 </div>
                 
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Image result */}
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-400 mb-2">Processed Image</span>
-                    <div className="rounded-lg overflow-hidden border border-gray-700 bg-gray-800/30 h-64 flex items-center justify-center">
-                      <motion.img 
-                        src={previewUrl} 
-                        alt="Processed" 
-                        className="max-h-full max-w-full object-contain" 
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: 0.2 }}
-                      />
-                    </div>
-                    {fileFormat && (
-                      <div className="mt-2 flex items-center justify-center">
-                        <span className="text-sm text-gray-400">
-                          File format: <span className="text-gray-200 font-medium">{fileFormat.toUpperCase()}</span>
+                <div className="p-6 flex flex-col gap-6">
+                  {/* Confidence and damage status */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Confidence score gauge */}
+                    <div className="flex flex-col space-y-2 bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                      <div className="flex justify-between">
+                        <span className="text-gray-300 font-medium">Verification Confidence</span>
+                        <span className="font-bold" style={{ color: getAccuracyColor(confidenceScore) }}>
+                          {confidenceScore !== null ? `${confidenceScore}%` : "N/A"}
                         </span>
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Metrics and data */}
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-400 mb-2">Analysis Metrics</span>
-                    <div className="rounded-lg border border-gray-700 bg-gray-800/30 p-6 flex-1 flex flex-col space-y-6">
-                      {/* Confidence score gauge */}
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-300 font-medium">Verification Confidence</span>
-                          <span className="font-bold" style={{ color: accuracyColor }}>
-                            {confidenceScore !== null ? `${confidenceScore}%` : "N/A"}
+                      <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+                        {confidenceScore !== null && (
+                          <div 
+                            className="h-full rounded-full"
+                            style={{ 
+                              backgroundColor: getAccuracyColor(confidenceScore),
+                              width: `${confidenceScore}%`,
+                              transition: "width 1s ease-in-out"
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Damage assessment */}
+                    <div className="flex flex-col space-y-2 bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                      <div className="flex justify-between">
+                        <span className="text-gray-300 font-medium">Assessment Result</span>
+                        {damageLabel ? (
+                          <span className="font-bold px-2 py-0.5 rounded-full text-sm" 
+                            style={{ 
+                              backgroundColor: getDamageStatusColor(damageLabel) + '33',
+                              color: getDamageStatusColor(damageLabel) 
+                            }}>
+                            {damageLabel.toUpperCase()}
                           </span>
-                        </div>
-                        <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
-                          {confidenceScore !== null && (
-                            <div 
-                              className="h-full rounded-full"
-                              style={{ 
-                                backgroundColor: accuracyColor,
-                                width: `${confidenceScore}%`,
-                                transition: "width 1s ease-in-out"
-                              }}
-                            />
-                          )}
-                        </div>
+                        ) : (
+                          <span className="text-gray-400">Not Available</span>
+                        )}
                       </div>
-                      
-                      {/* Damage assessment */}
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-gray-300 font-medium">Assessment Result</span>
-                          {damageLabel ? (
-                            <span className="font-bold px-2 py-0.5 rounded-full text-sm" 
-                              style={{ 
-                                backgroundColor: getDamageStatusColor(damageLabel) + '33',
-                                color: getDamageStatusColor(damageLabel) 
-                              }}>
-                              {damageLabel.toUpperCase()}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">Not Available</span>
-                          )}
-                        </div>
-                        <div className="p-3 bg-gray-800/50 rounded-lg text-sm">
-                          {damageLabel ? (
-                            damageLabel.toLowerCase() === "damage" ? 
-                              "Damage detected in the uploaded document. Review recommended." :
-                              "No damage detected in the uploaded document."
-                          ) : (
-                            "Assessment data not available for this document."
-                          )}
-                        </div>
+                      <div className="p-3 bg-gray-800/50 rounded-lg text-sm">
+                        {damageLabel ? (
+                          damageLabel.toLowerCase() === "damage" ? 
+                            "Damage detected in the uploaded document. Review recommended." :
+                            "No damage detected in the uploaded document."
+                        ) : (
+                          "Assessment data not available for this document."
+                        )}
                       </div>
-                      
-                      {/* Action button */}
-                      <motion.button
-                        type="button"
-                        onClick={handleDownloadPDF}
-                        style={{
-                          border,
-                          boxShadow,
-                        }}
-                        className="mt-auto flex items-center justify-center gap-2 rounded-lg bg-gray-800/70 px-6 py-3 text-gray-50 transition-colors hover:bg-gray-800/90"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        Download Verified Image <FiDownload />
-                      </motion.button>
                     </div>
                   </div>
+                  
+                  {/* Images section */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Damage detection image */}
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-400 mb-2">Damage Detection</span>
+                      <div className="rounded-lg overflow-hidden border border-gray-700 bg-gray-800/30 h-64 flex items-center justify-center">
+                        {damageImageUrl ? (
+                          <motion.img 
+                            src={damageImageUrl} 
+                            alt="Damage Detection" 
+                            className="max-h-full max-w-full object-contain" 
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
+                          />
+                        ) : (
+                          <span className="text-gray-500">No damage image available</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Parts detection image */}
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-400 mb-2">Parts Detection</span>
+                      <div className="rounded-lg overflow-hidden border border-gray-700 bg-gray-800/30 h-64 flex items-center justify-center">
+                        {partsImageUrl ? (
+                          <motion.img 
+                            src={partsImageUrl} 
+                            alt="Parts Detection" 
+                            className="max-h-full max-w-full object-contain" 
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, delay: 0.2 }}
+                          />
+                        ) : (
+                          <span className="text-gray-500">No parts image available</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Damaged parts and cost estimates */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Damaged parts list */}
+                    <div className="flex flex-col bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                      <span className="text-gray-300 font-medium mb-3">Damaged Parts</span>
+                      {damagedParts && damagedParts.length > 0 ? (
+                        <ul className="space-y-2">
+                          {damagedParts.map((part, index) => (
+                            <li key={index} className="flex items-center gap-2 p-2 bg-gray-800/50 rounded-lg">
+                              <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                              <span>{formatPartName(part)}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div className="p-3 bg-gray-800/50 rounded-lg text-sm text-gray-400">
+                          No damaged parts identified
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Cost estimates */}
+                    <div className="flex flex-col bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                      <span className="text-gray-300 font-medium mb-3">Repair Cost Estimates</span>
+                      {costEstimates && costEstimates.length > 0 ? (
+                        <div className="space-y-3">
+                          {costEstimates.map((cost, index) => (
+                            <div key={index} className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                              <span className="text-sm">
+                                {damagedParts && damagedParts[index] ? formatPartName(damagedParts[index]) : `Estimate ${index + 1}`}
+                              </span>
+                              <span className="font-medium text-green-400">₹{cost}</span>
+                            </div>
+                          ))}
+                          <div className="flex justify-between items-center p-3 mt-2 bg-gray-700/50 rounded-lg">
+                            <span className="font-medium">Total Estimated Cost</span>
+                            <span className="font-bold text-green-400">
+                              ₹{costEstimates.reduce((total, cost) => {
+                                // Extract the lower limit of the range
+                                const range = cost.split('-').map(val => parseInt(val.replace(/[^0-9]/g, '').trim()));
+                                return total + range[0];
+                              }, 0).toLocaleString()} - ₹{costEstimates.reduce((total, cost) => {
+                                // Extract the higher limit of the range
+                                const range = cost.split('-').map(val => parseInt(val.replace(/[^0-9]/g, '').trim()));
+                                return total + (range.length > 1 ? range[1] : range[0]);
+                              }, 0).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="p-3 bg-gray-800/50 rounded-lg text-sm text-gray-400">
+                          No cost estimates available
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Action buttons */}
+                  <div className="flex gap-4 mt-2">
+                    <motion.button
+                      type="button"
+                      onClick={handleDownloadPDF}
+                      style={{
+                        border,
+                        boxShadow,
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-800/70 px-6 py-3 text-gray-50 transition-colors hover:bg-gray-800/90"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Download Report <FiDownload />
+                    </motion.button>
+                  </div>
                 </div>
-                
-                {/* Debug info - only for development, remove in production */}
-                {/* 
-                <div className="p-4 border-t border-gray-700 bg-gray-800/50">
-                  <details className="text-xs text-gray-400">
-                    <summary className="cursor-pointer">Response Details</summary>
-                    <pre className="mt-2 p-2 bg-gray-900 rounded overflow-auto max-h-40">
-                      {JSON.stringify(rawResponse, null, 2)}
-                    </pre>
-                  </details>
-                </div>
-                */}
               </motion.div>
             )}
             
@@ -445,6 +587,34 @@ const ClaimUpload = () => {
                     accept="image/*,.pdf"
                   />
                 </div>
+                
+                {/* Car details input fields */}
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label htmlFor="carMake" className="text-sm text-gray-400 mb-1">Car Make</label>
+                    <input
+                      id="carMake"
+                      type="text"
+                      value={carMake}
+                      onChange={(e) => setCarMake(e.target.value)}
+                      placeholder="e.g. Toyota, Honda, Ford"
+                      className="px-4 py-3 rounded-lg bg-gray-800/70 border border-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)" }}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label htmlFor="carModel" className="text-sm text-gray-400 mb-1">Car Model</label>
+                    <input
+                      id="carModel"
+                      type="text"
+                      value={carModel}
+                      onChange={(e) => setCarModel(e.target.value)}
+                      placeholder="e.g. Camry, Civic, F-150"
+                      className="px-4 py-3 rounded-lg bg-gray-800/70 border border-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)" }}
+                    />
+                  </div>
+                </div>
               </motion.div>
             )}
             
@@ -500,6 +670,8 @@ const ClaimUpload = () => {
                     setConfidenceScore(null);
                     setFileFormat(null);
                     setDamageLabel(null);
+                    setCarMake("");
+                    setCarModel("");
                   }}
                   className="w-full px-6 py-3 rounded-lg border border-gray-600 text-gray-300 transition-colors hover:bg-gray-800 flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.02 }}
@@ -514,6 +686,8 @@ const ClaimUpload = () => {
                     onClick={() => {
                       setSelectedFile(null);
                       setPreviewUrl(null);
+                      setCarMake("");
+                      setCarModel("");
                     }}
                     className="flex-1 px-6 py-3 rounded-lg border border-gray-600 text-gray-300 transition-colors hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
@@ -532,7 +706,7 @@ const ClaimUpload = () => {
                     className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-800/50 px-6 py-3 text-gray-50 transition-colors hover:bg-gray-800/80 disabled:opacity-50 disabled:cursor-not-allowed"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    disabled={!selectedFile || uploadStatus === "uploading"}
+                    disabled={!selectedFile || !carMake.trim() || !carModel.trim() || uploadStatus === "uploading"}
                   >
                     {uploadStatus === "uploading" ? "Verifying..." : "Verify Claim"}
                     <FiArrowRight className="transition-transform group-hover:translate-x-1" />
@@ -624,6 +798,19 @@ const ClaimUpload = () => {
           />
         ))}
       </div>
+
+      {/* Add this right after your form or somewhere visible */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <button
+            type="button"
+            onClick={testUIWithMockData}
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg shadow-lg"
+          >
+            Test UI
+          </button>
+        </div>
+      )}
     </motion.div>
   );
 };
