@@ -176,7 +176,7 @@ const Contacts = () => {
             <div className="space-y-4">
               <div className="flex items-center">
                 <FiMail className="text-blue-400 mr-3" />
-                <span>support@techiees.ai</span>
+                <span>customersupport@miraista.com</span>
               </div>
               <div className="flex items-center">
                 <FiPhone className="text-blue-400 mr-3" />

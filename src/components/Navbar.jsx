@@ -36,7 +36,7 @@ const Navbar = () => {
     <motion.div 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 bg-white shadow-lg"
+      className="sticky top-0 z-50 bg-[#fcfcfc] shadow-lg" // Changed here
     >
       <div className="flex justify-between items-center h-20 max-w-[1200px] mx-auto px-6">
         <Link to="/" className="flex items-center">
