@@ -92,7 +92,32 @@
         color: "from-blue-400/20 to-blue-500/20"
       }
     ];
-    
+    const technologies = [
+      {
+        name: "Machine Learning",
+        description: "Advanced algorithms that learn and improve from experience",
+        icon: "🧠",
+        color: "from-blue-500 to-indigo-600"
+      },
+      {
+        name: "Deep Neural Networks",
+        description: "Complex neural architectures mimicking human brain processing",
+        icon: "💡",
+        color: "from-green-500 to-teal-600"
+      },
+      {
+        name: "Natural Language Processing",
+        description: "Transforming human language into actionable insights",
+        icon: "💬",
+        color: "from-purple-500 to-pink-600"
+      },
+      {
+        name: "Computer Vision",
+        description: "Intelligent image and video analysis capabilities",
+        icon: "👁️",
+        color: "from-red-500 to-orange-600"
+      }
+    ];
     // How it works steps
     const steps = [
       {
@@ -137,7 +162,7 @@
         answer: "Yes, our solutions are designed for seamless integration with popular business platforms, databases, and APIs. We have experience working with a wide range of systems and can develop custom connectors when needed."
       },
       {
-        question: "What makes Techiees.AI different from other AI companies?",
+        question: "What makes MiraIsta different from other AI companies?",
         answer: "Our team combines deep technical expertise with practical business experience. We focus on delivering measurable ROI rather than implementing technology for its own sake. Additionally, our continuous support model ensures your AI solutions evolve alongside your business needs."
       }
     ];
@@ -154,12 +179,12 @@
         opacity: 1,
         transition: {
           staggerChildren: 0.2
-        }
+        } 
       }
     };
 
     const handleTryItNow = () => {
-      navigate("/claim-upload");
+      navigate("/claimupload");
     };
 
     const [hoveredCard, setHoveredCard] = useState(null);
@@ -199,44 +224,53 @@
           
           {/* Hero content */}
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="text-center"
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center"
+          >
+            <motion.h1
+              variants={fadeInUp}
+              className="text-5xl md:text-7xl font-bold mb-6"
             >
-              <motion.h1
-                variants={fadeInUp}
-                className="text-5xl md:text-7xl font-bold mb-6"
+              <span className="block mb-2">Transforming Business</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Through AI Innovation
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              variants={fadeInUp}
+              className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-gray-300"
+            >
+              Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
+            </motion.p>
+            
+            <motion.div
+              variants={fadeInUp}
+              className="flex flex-wrap gap-6 justify-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleTryItNow}
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg text-lg font-medium"
               >
-                <span className="block mb-2">Transforming Business</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                  Through AI Innovation
-                </span>
-              </motion.h1>
-              
-              <motion.p
-                variants={fadeInUp}
-                className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-gray-300"
+                Try It Now
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/services")}
+                className="px-8 py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-lg font-medium"
               >
-                Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
-              </motion.p>
-              
-              <motion.div
-                variants={fadeInUp}
-                className="flex flex-wrap gap-6 justify-center"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate("/services")}
-                  className="px-8 py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-lg font-medium"
-                >
-                  Learn More
-                </motion.button>
-              </motion.div>
+                Learn More
+              </motion.button>
             </motion.div>
-          </div>
+          </motion.div>
+        </div>
+        
           
           {/* Wave separator */}
           <div className="absolute bottom-0 left-0 right-0">
@@ -705,7 +739,7 @@
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
               <div>
-                <h3 className="text-2xl font-bold text-white mb-4">Techiees.AI</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">MiraIsta</h3>
                 <p className="text-gray-400 mb-6">Transforming business through AI innovation.</p>
                 <div className="flex space-x-4">
                   {["twitter", "linkedin", "facebook", "instagram"].map((social, index) => (
@@ -758,7 +792,7 @@
             
             <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-500 text-sm">
-                &copy; {new Date().getFullYear()} Techiees.AI. All rights reserved.
+                &copy; {new Date().getFullYear()} MiraIsta. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
                 <a href="#" className="text-gray-500 hover:text-blue-400 text-sm">
