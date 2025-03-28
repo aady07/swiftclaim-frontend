@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin, FiSend, FiLinkedin, FiTwitter, FiFacebook } from "react-icons/fi";
-import { Canvas } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
+import DOMPurify from 'dompurify';
 
 // Animation variants for fade-in effects
 const fadeInUp = {
@@ -26,46 +25,113 @@ const Contacts = () => {
     message: ""
   });
 
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const sanitizeInput = (input) => {
+    return DOMPurify.sanitize(input.trim());
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name validation
+    const sanitizedName = sanitizeInput(formData.name);
+    if (!sanitizedName) {
+      newErrors.name = "Name is required";
+    } else if (sanitizedName.length < 2) {
+      newErrors.name = "Name must be at least 2 characters long";
+    } else if (!/^[a-zA-Z\s]+$/.test(sanitizedName)) {
+      newErrors.name = "Name can only contain letters";
+    }
+
+    // Email validation
+    const sanitizedEmail = sanitizeInput(formData.email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!sanitizedEmail) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(sanitizedEmail)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    // Subject validation
+    const sanitizedSubject = sanitizeInput(formData.subject);
+    if (!sanitizedSubject) {
+      newErrors.subject = "Subject is required";
+    } else if (sanitizedSubject.length < 3) {
+      newErrors.subject = "Subject must be at least 3 characters long";
+    }
+
+    // Message validation
+    const sanitizedMessage = sanitizeInput(formData.message);
+    if (!sanitizedMessage) {
+      newErrors.message = "Message is required";
+    } else if (sanitizedMessage.length < 10) {
+      newErrors.message = "Message must be at least 10 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear error for the field being edited
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: undefined });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add form submission logic here (e.g., API call)
-    console.log("Form submitted:", formData);
+    setIsSubmitting(true);
+    
+    if (validateForm()) {
+      // Form is valid, proceed with submission
+      console.log("Form submitted:", formData);
+      // Add your form submission logic here (e.g., API call)
+      
+      // Reset form after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
+      setIsSubmitting(false);
+    } else {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <motion.div
-      className="relative min-h-screen overflow-hidden px-4 py-16 text-gray-200"
+      className="relative min-h-screen overflow-hidden bg-gray-950 text-gray-200"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      {/* Static Linear Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-purple-700 to-indigo-900" />
-
-      {/* Wave background effect */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        {[...Array(5)].map((_, i) => (
+      {/* Animated background particles - Updated to match HomePage style */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-full h-[50vh] border-t border-white/10"
+            className="absolute w-2 h-2 rounded-full bg-white opacity-70"
             style={{
-              top: `${20 * i}vh`,
-              scaleX: 2,
-              transformOrigin: "center",
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [0, 15, 0],
-              scaleY: [1, 1.2, 1],
+              y: [0, Math.random() * 100 - 50],
+              opacity: [0.7, 0.1, 0.7],
+              scale: [1, Math.random() * 1.5, 1]
             }}
             transition={{
-              duration: 8 + i * 2,
+              duration: Math.random() * 5 + 5,
               repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5,
+              ease: "easeInOut"
             }}
           />
         ))}
@@ -75,19 +141,19 @@ const Contacts = () => {
         variants={fadeInStagger}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex flex-col items-center max-w-6xl mx-auto"
+        className="relative z-10 flex flex-col items-center max-w-6xl mx-auto px-4 py-16"
       >
         {/* Hero Section */}
         <motion.span 
           variants={fadeInUp}
-          className="mb-1.5 inline-block rounded-full bg-gray-600/70 backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-wider"
+          className="mb-4 inline-block rounded-full bg-gray-800/70 px-4 py-1.5 text-sm font-medium tracking-wider"
         >
           CONTACT US
         </motion.span>
         
         <motion.h1 
           variants={fadeInUp}
-          className="max-w-3xl bg-gradient-to-br from-gray-200 to-white bg-clip-text text-center text-4xl font-bold leading-tight text-transparent sm:text-5xl md:text-6xl"
+          className="max-w-3xl bg-clip-text text-center text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
         >
           Get in Touch
         </motion.h1>
@@ -104,65 +170,70 @@ const Contacts = () => {
           {/* Contact Form */}
           <motion.div
             variants={fadeInUp}
-            className="bg-gray-800/40 backdrop-blur-sm rounded-xl p-8 border border-gray-700"
+            className="bg-gray-800 rounded-xl p-8 border border-gray-700"
           >
-            <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-white">Send Us a Message</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium mb-2">Name</label>
+                <label htmlFor="name" className="block text-sm font-medium mb-2 text-gray-300">Name</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-gray-700/50 text-gray-300"
-                  required
+                  className={`w-full p-3 rounded-lg bg-gray-700/50 text-gray-300 ${errors.name ? 'border-2 border-red-500' : 'border border-gray-600'}`}
+                  disabled={isSubmitting}
                 />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
+                <label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-300">Email</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-gray-700/50 text-gray-300"
-                  required
+                  className={`w-full p-3 rounded-lg bg-gray-700/50 text-gray-300 ${errors.email ? 'border-2 border-red-500' : 'border border-gray-600'}`}
+                  disabled={isSubmitting}
                 />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
               <div className="mb-4">
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">Subject</label>
+                <label htmlFor="subject" className="block text-sm font-medium mb-2 text-gray-300">Subject</label>
                 <input
                   type="text"
                   id="subject"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-gray-700/50 text-gray-300"
-                  required
+                  className={`w-full p-3 rounded-lg bg-gray-700/50 text-gray-300 ${errors.subject ? 'border-2 border-red-500' : 'border border-gray-600'}`}
+                  disabled={isSubmitting}
                 />
+                {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject}</p>}
               </div>
               <div className="mb-4">
-                <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
+                <label htmlFor="message" className="block text-sm font-medium mb-2 text-gray-300">Message</label>
                 <textarea
                   id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full p-3 rounded-lg bg-gray-700/50 text-gray-300"
+                  className={`w-full p-3 rounded-lg bg-gray-700/50 text-gray-300 ${errors.message ? 'border-2 border-red-500' : 'border border-gray-600'}`}
                   rows="4"
-                  required
+                  disabled={isSubmitting}
                 ></textarea>
+                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
               <motion.button
                 type="submit"
-                className="w-full py-3 rounded-lg bg-gray-700/70 hover:bg-gray-700 transition-colors text-white font-medium"
+                className="w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-blue-600 text-white font-medium"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                disabled={isSubmitting}
               >
-                <FiSend className="inline-block mr-2" /> Send Message
+                <FiSend className="inline-block mr-2" /> {isSubmitting ? 'Sending...' : 'Send Message'}
               </motion.button>
             </form>
           </motion.div>
@@ -170,35 +241,35 @@ const Contacts = () => {
           {/* Contact Information */}
           <motion.div
             variants={fadeInUp}
-            className="bg-gray-800/40 backdrop-blur-sm rounded-xl p-8 border border-gray-700"
+            className="bg-gray-800 rounded-xl p-8 border border-gray-700"
           >
-            <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-white">Contact Information</h2>
             <div className="space-y-4">
               <div className="flex items-center">
-                <FiMail className="text-blue-400 mr-3" />
-                <span>support@techiees.ai</span>
+                <FiMail className="text-gray-400 mr-3" />
+                <span>customersupport@miraista.com</span>
               </div>
               <div className="flex items-center">
-                <FiPhone className="text-blue-400 mr-3" />
+                <FiPhone className="text-gray-400 mr-3" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center">
-                <FiMapPin className="text-blue-400 mr-3" />
+                <FiMapPin className="text-gray-400 mr-3" />
                 <span>India</span>
               </div>
             </div>
 
             {/* Social Media Links */}
             <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
+              <h3 className="text-xl font-semibold mb-4 text-white">Follow Us</h3>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
                   <FiLinkedin size={24} />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
                   <FiTwitter size={24} />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
                   <FiFacebook size={24} />
                 </a>
               </div>
@@ -206,48 +277,51 @@ const Contacts = () => {
           </motion.div>
         </div>
 
-        {/* Map Section */}
-        <motion.div
-          variants={fadeInUp}
-          className="w-full mt-16"
-        >
-          <h2 className="text-3xl font-bold text-center mb-8">Our Location</h2>
-          <div className="relative h-64 w-full rounded-xl overflow-hidden">
-            {/* Embed your map here, e.g., Google Maps iframe */}
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d448196.5267132906!2d76.76357333036381!3d28.643795032341773!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x37205b715389640!2sDelhi%2C%20India!5e0!3m2!1sen!2sus!4v1698765432109!5m2!1sen!2sus"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-            ></iframe>
-          </div>
-        </motion.div>
-
         {/* CTA Section */}
         <motion.div
           variants={fadeInUp}
-          className="w-full mt-16 mb-8"
+          className="w-full py-20 mt-16"
         >
-          <div className="rounded-xl overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 backdrop-blur-sm z-0"></div>
+          <div className="rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full bg-white opacity-70"
+                  style={{
+                    top: `${Math.random() * 100}%`,
+                    left: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, Math.random() * 100 - 50],
+                    opacity: [0.7, 0.1, 0.7],
+                    scale: [1, Math.random() * 1.5, 1]
+                  }}
+                  transition={{
+                    duration: Math.random() * 5 + 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </div>
+            
             <div className="relative z-10 p-12 flex flex-col items-center text-center">
-              <h3 className="text-3xl font-bold mb-4">Need Assistance?</h3>
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl">
+              <h3 className="text-3xl font-bold mb-4 text-white">Need Assistance?</h3>
+              <p className="text-lg text-blue-100 mb-8 max-w-2xl">
                 Our team is ready to help you with any questions or concerns. Reach out to us today!
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <motion.button
-                  className="px-8 py-3 rounded-lg bg-gray-950/30 text-white font-medium"
+                  className="px-10 py-4 bg-white text-slate-700 rounded-lg shadow-xl font-bold text-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   Contact Support
                 </motion.button>
                 <motion.button
-                  className="px-8 py-3 rounded-lg border border-gray-500 text-gray-300"
-                  whileHover={{ scale: 1.05, borderColor: "white" }}
+                  className="px-10 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold text-lg"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   Back to Home
@@ -257,13 +331,6 @@ const Contacts = () => {
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Starry background */}
-      <div className="absolute inset-0 z-0 opacity-40">
-        <Canvas>
-          <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
-        </Canvas>
-      </div>
     </motion.div>
   );
 };

@@ -13,53 +13,111 @@
       {
         title: "Intelligent Analytics",
         description: "Transform raw data into actionable insights with our AI-powered analytics platform.",
-        icon: "/images/analytics-icon.png"
+        icon: "https://cdn-icons-png.flaticon.com/512/2620/2620669.png"
       },
       {
         title: "Predictive Modeling",
         description: "Forecast trends and anticipate market changes with our advanced predictive algorithms.",
-        icon: "/images/predictive-icon.png"
+        icon: "https://cdn-icons-png.flaticon.com/512/2103/2103633.png"
       },
       {
         title: "Natural Language Processing",
         description: "Analyze text data at scale and extract meaningful patterns from unstructured content.",
-        icon: "/images/nlp-icon.png"
+        icon: "https://cdn-icons-png.flaticon.com/512/6614/6614677.png"
       },
       {
         title: "Computer Vision",
         description: "Automate image and video analysis with our cutting-edge visual recognition systems.",
-        icon: "/images/vision-icon.png"
+        icon: "https://cdn-icons-png.flaticon.com/512/6614/6614658.png"
       }
     ];
     
     // Solutions for different industries
     const industries = [
       {
-        name: "Healthcare",
-        description: "Improving patient outcomes through predictive diagnostics and personalized treatment plans.",
-        image: "/images/healthcare-bg.jpg",
-        color: "from-blue-600 to-cyan-500"
+        name: "Banking",
+        description: "Enhancing customer experience, fraud detection, and risk management through advanced AI algorithms.",
+        image: "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?q=80&w=1200",
+        color: "from-blue-600 to-blue-800",
+        icon: "💹"
       },
       {
-        name: "Finance",
-        description: "Enhancing risk assessment and fraud detection with pattern recognition algorithms.",
-        image: "/images/finance-bg.jpg",
-        color: "from-indigo-600 to-purple-500"
+        name: "Insurance",
+        description: "Streamlining claims processing and improving underwriting with predictive models and automation.",
+        image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1200",
+        color: "from-emerald-600 to-emerald-800",
+        icon: "🛡️"
       },
       {
-        name: "Retail",
-        description: "Optimizing inventory management and personalizing customer experiences.",
-        image: "/images/retail-bg.jpg",
-        color: "from-fuchsia-600 to-pink-500"
+        name: "Wealth Management",
+        description: "Personalizing investment strategies and optimizing portfolio allocation through data-driven insights.",
+        image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200",
+        color: "from-amber-600 to-amber-800",
+        icon: "📈"
       },
       {
-        name: "Manufacturing",
-        description: "Streamlining operations and predicting maintenance needs before failures occur.",
-        image: "/images/manufacturing-bg.jpg",
-        color: "from-orange-600 to-amber-500"
+        name: "Science & Research",
+        description: "Accelerating discoveries and analyzing complex datasets for breakthrough innovations across disciplines.",
+        image: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=1200",
+        color: "from-purple-600 to-purple-800",
+        icon: "🔬"
       }
     ];
     
+    // Update the Trusted By section with real company logos
+    const brandLogos = [
+      {
+        name: "Microsoft",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+        color: "from-blue-500/20 to-blue-600/20"
+      },
+      {
+        name: "IBM",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+        color: "from-blue-600/20 to-blue-700/20"
+      },
+      {
+        name: "Deloitte",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Deloitte.svg",
+        color: "from-green-500/20 to-green-600/20"
+      },
+      {
+        name: "Accenture",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg",
+        color: "from-purple-500/20 to-purple-600/20"
+      },
+      {
+        name: "KPMG",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/7/76/KPMG_logo.svg",
+        color: "from-blue-400/20 to-blue-500/20"
+      }
+    ];
+    const technologies = [
+      {
+        name: "Machine Learning",
+        description: "Advanced algorithms that learn and improve from experience",
+        icon: "🧠",
+        color: "from-blue-500 to-indigo-600"
+      },
+      {
+        name: "Deep Neural Networks",
+        description: "Complex neural architectures mimicking human brain processing",
+        icon: "💡",
+        color: "from-green-500 to-teal-600"
+      },
+      {
+        name: "Natural Language Processing",
+        description: "Transforming human language into actionable insights",
+        icon: "💬",
+        color: "from-purple-500 to-pink-600"
+      },
+      {
+        name: "Computer Vision",
+        description: "Intelligent image and video analysis capabilities",
+        icon: "👁️",
+        color: "from-red-500 to-orange-600"
+      }
+    ];
     // How it works steps
     const steps = [
       {
@@ -104,7 +162,7 @@
         answer: "Yes, our solutions are designed for seamless integration with popular business platforms, databases, and APIs. We have experience working with a wide range of systems and can develop custom connectors when needed."
       },
       {
-        question: "What makes Techiees.AI different from other AI companies?",
+        question: "What makes MiraIsta different from other AI companies?",
         answer: "Our team combines deep technical expertise with practical business experience. We focus on delivering measurable ROI rather than implementing technology for its own sake. Additionally, our continuous support model ensures your AI solutions evolve alongside your business needs."
       }
     ];
@@ -121,20 +179,23 @@
         opacity: 1,
         transition: {
           staggerChildren: 0.2
-        }
+        } 
       }
     };
 
     const handleTryItNow = () => {
-      navigate("/claim-upload");
+      navigate("/claimupload");
     };
+
+    const [hoveredCard, setHoveredCard] = useState(null);
+
 
     return (
       <div className="bg-gray-950 text-gray-200 overflow-hidden">
         {/* Hero Section */}
         <section className="relative min-h-screen overflow-hidden">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-purple-700 to-indigo-900" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900" />
 
           
           {/* Animated particles */}
@@ -163,52 +224,53 @@
           
           {/* Hero content */}
           <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="text-center"
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center"
+          >
+            <motion.h1
+              variants={fadeInUp}
+              className="text-5xl md:text-7xl font-bold mb-6"
             >
-              <motion.h1
-                variants={fadeInUp}
-                className="text-5xl md:text-7xl font-bold mb-6"
+              <span className="block mb-2">Transforming Business</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Through AI Innovation
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              variants={fadeInUp}
+              className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-gray-300"
+            >
+              Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
+            </motion.p>
+            
+            <motion.div
+              variants={fadeInUp}
+              className="flex flex-wrap gap-6 justify-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleTryItNow}
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg text-lg font-medium"
               >
-                <span className="block mb-2">Transforming Business</span>
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                  Through AI Innovation
-                </span>
-              </motion.h1>
-              
-              <motion.p
-                variants={fadeInUp}
-                className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-gray-300"
+                Try It Now
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/services")}
+                className="px-8 py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-lg font-medium"
               >
-                Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
-              </motion.p>
-              
-              <motion.div
-                variants={fadeInUp}
-                className="flex flex-wrap gap-6 justify-center"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleTryItNow}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
-                >
-                  Try It Now
-                </motion.button>
-                
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-transparent border-2 border-blue-500 text-white rounded-lg text-lg font-medium"
-                >
-                  Learn More
-                </motion.button>
-              </motion.div>
+                Learn More
+              </motion.button>
             </motion.div>
-          </div>
+          </motion.div>
+        </div>
+        
           
           {/* Wave separator */}
           <div className="absolute bottom-0 left-0 right-0">
@@ -223,36 +285,73 @@
         </section>
 
         {/* Trusted By Section */}
-        <section className="py-16 bg-gray-900">
+        <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-800 relative overflow-hidden">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="text-center mb-12"
+              className="text-center mb-16"
             >
-              <h2 className="text-2xl font-semibold text-gray-400">Trusted By Industry Leaders</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Trusted By Industry Leaders</h2>
+              <p className="text-gray-300 text-lg">Empowering global enterprises with cutting-edge AI solutions</p>
             </motion.div>
             
-            <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16 opacity-70">
-              {["brand1", "brand2", "brand3", "brand4", "brand5"].map((brand, index) => (
+            <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-12">
+              {brandLogos.map((brand, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="grayscale hover:grayscale-0 transition-all duration-300"
+                  className="relative group"
                 >
-                  <img
-                    src={`/images/${brand}-logo.png`}
-                    alt={`${brand} logo`}
-                    className="h-12 md:h-16"
-                  />
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="w-40 h-24 relative flex items-center justify-center p-4 rounded-xl bg-gray-800/50 backdrop-blur-sm"
+                  >
+                    {/* Enhanced glowing background effect */}
+                    <div className={`absolute inset-0 bg-gradient-to-r ${brand.color} opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300 blur-xl`} />
+                    
+                    {/* Logo with improved visibility */}
+                    <img
+                      src={brand.logo}
+                      alt={`${brand.name} logo`}
+                      className="relative z-10 max-h-12 max-w-[120px] object-contain brightness-200 contrast-200 filter"
+                    />
+                    
+                    {/* Enhanced hover effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/5 opacity-0 group-hover:opacity-100 rounded-xl transition-all duration-300" />
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
+          </div>
+          
+          {/* Animated background particles */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-white rounded-full"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                }}
+                animate={{
+                  y: [0, Math.random() * 100 - 50],
+                  opacity: [0.3, 0.1, 0.3],
+                  scale: [1, Math.random() * 1.5, 1]
+                }}
+                transition={{
+                  duration: Math.random() * 5 + 5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
           </div>
         </section>
 
@@ -274,14 +373,14 @@
               </motion.h6>
               <motion.h2
                 variants={fadeInUp}
-                className="text-4xl md:text-5xl font-bold mb-4"
-              >
+                className="text-slate-400 uppercase tracking-wider mb-2"
+                >
                 Advanced AI Solutions
               </motion.h2>
               <motion.div
                 variants={fadeInUp}
-                className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"
-              />
+                className="w-24 h-1 bg-gradient-to-r from-slate-500 to-slate-600 mx-auto"
+                />
             </motion.div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -318,8 +417,9 @@
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-lg font-medium"
-              >
+                onClick={() => navigate("/services")}
+                className="px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg text-lg font-medium"
+                >
                 Explore All Features
               </motion.button>
             </motion.div>
@@ -338,8 +438,8 @@
             >
               <motion.h6
                 variants={fadeInUp}
-                className="text-blue-400 uppercase tracking-wider mb-2"
-              >
+                className="text-slate-400 uppercase tracking-wider mb-2"
+                >
                 Our Process
               </motion.h6>
               <motion.h2
@@ -368,9 +468,9 @@
                     <div className="hidden lg:block absolute top-16 left-full w-full h-1 bg-blue-500/30 -z-10 transform -translate-x-1/2" />
                   )}
                   
-                  <div className="mb-6 h-16 w-16 flex items-center justify-center rounded-full bg-blue-500/20 border border-blue-500/50 mx-auto">
-                    <span className="text-2xl font-bold text-blue-400">{step.number}</span>
-                  </div>
+                  <div className="mb-6 h-16 w-16 flex items-center justify-center rounded-full bg-slate-500/20 border border-slate-500/50 mx-auto">
+  <span className="text-2xl font-bold text-slate-400">{step.number}</span>
+</div>
                   
                   <div className="text-center">
                     <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
@@ -392,8 +492,8 @@
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-lg font-medium"
-              >
+                className="px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg text-lg font-medium"
+                >
                 Request Demo
               </motion.button>
             </motion.div>
@@ -418,7 +518,7 @@
               </motion.h6>
               <motion.h2
                 variants={fadeInUp}
-                className="text-4xl md:text-5xl font-bold mb-4"
+                className="text-4xl md:text-5xl font-bold mb-4 text-white"
               >
                 Industries We Serve
               </motion.h2>
@@ -428,7 +528,7 @@
               />
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {industries.map((industry, index) => (
                 <motion.div
                   key={index}
@@ -436,33 +536,69 @@
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                  className="relative rounded-xl overflow-hidden group cursor-pointer h-64"
+                  whileHover={{ y: -10 }}
+                  className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700"
                 >
-                  {/* Background image with overlay */}
-                  <div className="absolute inset-0">
+                  {/* Image Container */}
+                  <div className="relative h-48 overflow-hidden">
                     <img
                       src={industry.image}
                       alt={industry.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-r ${industry.color} opacity-80`} />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/90" />
                   </div>
-                  
+
                   {/* Content */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end transition-all duration-300 group-hover:bg-black/30">
-                    <h3 className="text-2xl font-bold text-white mb-2">{industry.name}</h3>
-                    <p className="text-white/90 mb-6 max-w-sm">{industry.description}</p>
-                    <span className="text-white font-semibold flex items-center opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                      Learn More
-                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">{industry.icon}</span>
+                      <h3 className="text-xl font-semibold text-white">{industry.name}</h3>
+                    </div>
+                    <p className="text-gray-300 mb-6 text-sm">{industry.description}</p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => navigate("/services")}
+                      className="w-full px-4 py-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors duration-300"
+                    >
+                      <span>Learn More</span>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
                       </svg>
-                    </span>
+                    </motion.button>
                   </div>
                 </motion.div>
               ))}
             </div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/services")}
+                className="px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg text-lg font-medium"
+              >
+                Explore All Industries
+              </motion.button>
+            </motion.div>
           </div>
         </section>
         
@@ -478,8 +614,8 @@
             >
               <motion.h6
                 variants={fadeInUp}
-                className="text-blue-400 uppercase tracking-wider mb-2"
-              >
+                className="text-slate-400 uppercase tracking-wider mb-2"
+                >
                 Common Questions
               </motion.h6>
               <motion.h2
@@ -538,8 +674,8 @@
         </section>
         
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-700 to-indigo-800 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
+        <section className="py-20 bg-gradient-to-r from-slate-700 to-slate-800 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
             {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
@@ -580,14 +716,15 @@
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={handleTryItNow}
-                  className="px-10 py-4 bg-white text-blue-700 rounded-lg shadow-xl font-bold text-lg"
+                  onClick={() => navigate("/services")}
+                  className="px-10 py-4 bg-white text-slate-700 rounded-lg shadow-xl font-bold text-lg"
                 >
-                  Try It Now
+                  Learn More
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/contacts")}
                   className="px-10 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold text-lg"
                 >
                   Contact Sales
@@ -602,12 +739,12 @@
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
               <div>
-                <h3 className="text-2xl font-bold text-white mb-4">Techiees.AI</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">MiraIsta</h3>
                 <p className="text-gray-400 mb-6">Transforming business through AI innovation.</p>
                 <div className="flex space-x-4">
                   {["twitter", "linkedin", "facebook", "instagram"].map((social, index) => (
-                    <a key={index} href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                      <img src={`/images/${social}-icon.svg`} alt={social} className="h-6 w-6" />
+                    <a key={index} href="#" className="text-gray-400 hover:text-slate-400 transition-colors">
+                    <img src={`/images/${social}-icon.svg`} alt={social} className="h-6 w-6" />
                     </a>
                   ))}
                 </div>
@@ -618,7 +755,7 @@
                 <ul className="space-y-2">
                   {["Analytics Platform", "Predictive Modeling", "Natural Language Processing", "Computer Vision", "Custom Solutions"].map((item, index) => (
                     <li key={index}>
-                      <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+<a href="#" className="text-gray-400 hover:text-slate-400 transition-colors">
                         {item}
                       </a>
                     </li>
@@ -631,8 +768,8 @@
                 <ul className="space-y-2">
                   {["About Us", "Team", "Careers", "News", "Contact"].map((item, index) => (
                     <li key={index}>
-                      <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                        {item}
+<a href="#" className="text-gray-500 hover:text-slate-400 text-sm">
+{item}
                       </a>
                     </li>
                   ))}
@@ -655,7 +792,7 @@
             
             <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
               <p className="text-gray-500 text-sm">
-                &copy; {new Date().getFullYear()} Techiees.AI. All rights reserved.
+                &copy; {new Date().getFullYear()} MiraIsta. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
                 <a href="#" className="text-gray-500 hover:text-blue-400 text-sm">
