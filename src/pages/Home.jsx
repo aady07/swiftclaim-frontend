@@ -688,13 +688,7 @@
               <div>
                 <h3 className="text-2xl font-bold text-white mb-4">MiraIsta</h3>
                 <p className="text-gray-400 mb-6">Transforming business through AI innovation.</p>
-                <div className="flex space-x-4">
-                  {["twitter", "linkedin", "facebook", "instagram"].map((social, index) => (
-                    <a key={index} href="#" className="text-gray-400 hover:text-slate-400 transition-colors">
-                    <img src={`/images/${social}-icon.svg`} alt={social} className="h-6 w-6" />
-                    </a>
-                  ))}
-                </div>
+               
               </div>
               
               <div>
