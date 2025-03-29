@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const AboutUs = () => {
   const { scrollYProgress } = useScroll();
+  
   const teamRef = useRef(null);
+  const navigate = useNavigate();
+
 
   const teamMembers = [
     { 
@@ -177,6 +181,8 @@ const AboutUs = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/services")}
+
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg shadow-lg text-lg font-medium"
             >
               Our Services
@@ -185,6 +191,7 @@ const AboutUs = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/contact")}
               className="px-8 py-4 bg-transparent border-2 border-gray-600 text-white rounded-lg text-lg font-medium"
             >
               Contact Us
@@ -427,6 +434,8 @@ const AboutUs = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => navigate("/contacts")}
+
               className="px-10 py-4 bg-white text-gray-900 rounded-lg shadow-xl font-bold text-lg"
             >
               Schedule a Consultation
