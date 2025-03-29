@@ -28,7 +28,7 @@
       {
         title: "Computer Vision",
         description: "Automate image and video analysis with our cutting-edge visual recognition systems.",
-        icon: "https://cdn-icons-png.flaticon.com/512/6614/6614658.png"
+        icon: "https://cdn-icons-png.flaticon.com/512/3081/3081977.png" // New icon URL
       }
     ];
     
@@ -65,7 +65,7 @@
     ];
     
     // Update the Trusted By section with real company logos
-    const brandLogos = [
+    /*const brandLogos = [
       {
         name: "Microsoft",
         logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
@@ -117,7 +117,8 @@
         icon: "👁️",
         color: "from-red-500 to-orange-600"
       }
-    ];
+    ];*/
+   
     // How it works steps
     const steps = [
       {
@@ -282,82 +283,27 @@
               ></path>
             </svg>
           </div>
+          <motion.div
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <path 
+              d="M12 5L12 19M12 19L19 12M12 19L5 12" 
+              stroke="white" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            />
+          </svg>
+        </motion.div>
         </section>
 
-        {/* Trusted By Section */}
-        <section className="py-20 bg-gradient-to-b from-gray-900 to-gray-800 relative overflow-hidden">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Trusted By Industry Leaders</h2>
-              <p className="text-gray-300 text-lg">Empowering global enterprises with cutting-edge AI solutions</p>
-            </motion.div>
-            
-            <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-12">
-              {brandLogos.map((brand, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="relative group"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="w-40 h-24 relative flex items-center justify-center p-4 rounded-xl bg-gray-800/50 backdrop-blur-sm"
-                  >
-                    {/* Enhanced glowing background effect */}
-                    <div className={`absolute inset-0 bg-gradient-to-r ${brand.color} opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300 blur-xl`} />
-                    
-                    {/* Logo with improved visibility */}
-                    <img
-                      src={brand.logo}
-                      alt={`${brand.name} logo`}
-                      className="relative z-10 max-h-12 max-w-[120px] object-contain brightness-200 contrast-200 filter"
-                    />
-                    
-                    {/* Enhanced hover effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/5 opacity-0 group-hover:opacity-100 rounded-xl transition-all duration-300" />
-                  </motion.div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Animated background particles */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-white rounded-full"
-                style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [0, Math.random() * 100 - 50],
-                  opacity: [0.3, 0.1, 0.3],
-                  scale: [1, Math.random() * 1.5, 1]
-                }}
-                transition={{
-                  duration: Math.random() * 5 + 5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
-          </div>
-        </section>
 
         {/* Features Section */}
-        <section className="py-20 bg-gray-950">
-          <div className="container mx-auto px-4">
+        <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -492,6 +438,7 @@
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/contact")}
                 className="px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg text-lg font-medium"
                 >
                 Request Demo
