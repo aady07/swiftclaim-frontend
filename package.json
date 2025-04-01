@@ -17,6 +17,7 @@
     "@vercel/analytics": "^1.5.0",
     "axios": "^1.8.4",
     "dompurify": "^3.2.4",
+    "dotenv": "^16.4.7",
     "framer-motion": "^11.0.20",
     "gsap": "^3.12.5",
     "openai": "^4.90.0",
