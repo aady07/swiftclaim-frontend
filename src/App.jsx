@@ -5,7 +5,9 @@ import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
 import Contacts from "./pages/Contacts";
 import ClaimUpload from "./pages/ClaimUpload";
-import Navbar from "./components/Navbar"; 
+import Navbar from "./components/Navbar";
+import Chatbot3D from "./components/Chatbot3D"; // Import chatbot
+
 
 const App = () => {
   return (
@@ -19,6 +21,7 @@ const App = () => {
         <Route path="/claimupload" element={<ClaimUpload />} />
       </Routes>
       <Analytics />
+      <Chatbot3D /> 
     </>
   );
 };
