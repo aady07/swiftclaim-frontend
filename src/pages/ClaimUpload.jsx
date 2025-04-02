@@ -201,8 +201,8 @@ const ClaimUpload = () => {
     document.body.removeChild(link);
   };
 
-  const backgroundImage = useMotionTemplate`radial-gradient(125% 125% at 50% 0%, #020617 50%, ${color})`;
-  const border = useMotionTemplate`1px solid ${color}`;
+  const backgroundImage = useMotionTemplate`linear-gradient(to bottom, #0f172a, #1e293b)`;
+    const border = useMotionTemplate`1px solid ${color}`;
   const boxShadow = useMotionTemplate`0px 4px 24px ${color}`;
   const progressBg = useMotionTemplate`linear-gradient(90deg, ${color}, #020617)`;
 
@@ -325,7 +325,7 @@ const ClaimUpload = () => {
           variants={fadeInUp}
           className="my-6 max-w-xl text-center text-lg leading-relaxed md:text-xl text-gray-300"
         >
-          Upload an image of your claim document and our AI will analyze it in seconds, providing verification with high accuracy.
+          Upload an image of your damaged vehicle and our AI will analyze it in seconds, providing verification with high accuracy.
         </motion.p>
         
         <motion.form 
@@ -677,7 +677,7 @@ const ClaimUpload = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <FiUpload className="mr-1" /> Upload New Document
+                  <FiUpload className="mr-1" /> Upload New Vehicle Image
                 </motion.button>
               ) : (
                 <>
@@ -770,34 +770,34 @@ const ClaimUpload = () => {
       
       {/* Background effects */}
       <div className="absolute inset-0 z-0">
-        <Canvas>
-          <Stars radius={50} count={2500} factor={4} fade speed={2} />
-        </Canvas>
-      </div>
+  <Canvas>
+    <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+  </Canvas>
+</div>
       
       {/* Animated particles */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-white opacity-70"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, Math.random() * 100 - 50],
-              opacity: [0.7, 0.1, 0.7],
-              scale: [1, Math.random() * 2, 1]
-            }}
-            transition={{
-              duration: Math.random() * 5 + 5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-        ))}
-      </div>
+  {[...Array(20)].map((_, i) => (
+    <motion.div
+      key={i}
+      className="absolute w-2 h-2 rounded-full bg-gray-500 opacity-70"
+      style={{
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+      }}
+      animate={{
+        y: [0, Math.random() * 100 - 50],
+        opacity: [0.7, 0.1, 0.7],
+        scale: [1, Math.random() * 1.5, 1]
+      }}
+      transition={{
+        duration: Math.random() * 5 + 5,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+    />
+  ))}
+</div>
 
       {/* Add this right after your form or somewhere visible */}
       {process.env.NODE_ENV === 'development' && (

@@ -6,8 +6,7 @@ import { Suspense } from 'react';
 import axios from "axios";
 import "./Chatbot3D.css";
 
-// IMPORTANT: Replace with your actual API key or use environment variables in production
-// For security, you should use environment variables instead of hardcoding the API key
+
 const API_KEY = "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";
 
 // HumanoidAvatar component with improved design and animations
@@ -196,7 +195,7 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
 };
 
 // Expanded chatbot component with language support
-const Chatbot = () => {
+const Chatbot = ({ isFullPage = false }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -205,9 +204,22 @@ const Chatbot = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [emotion, setEmotion] = useState("neutral");
-  const [isOpen, setIsOpen] = useState(false);
+  // Initialize isOpen based on isFullPage prop
+  const [isOpen, setIsOpen] = useState(isFullPage);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (isFullPage && !isOpen) {
+      setIsOpen(true);
+    }
+  }, [isFullPage, isOpen]);
+
+  const toggleChatbot = () => {
+    if (!isFullPage) {
+      setIsOpen(!isOpen);
+    }
+  };
 
   // Initialize welcome message based on selected language
   useEffect(() => {
@@ -243,9 +255,9 @@ const Chatbot = () => {
   }, [messages]);
   
 
-  const toggleChatbot = () => {
+  /*const toggleChatbot = () => {
     setIsOpen(!isOpen);
-  };
+  };*/
 
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
@@ -415,6 +427,7 @@ const Chatbot = () => {
   return (
     <>
       {/* Floating chat button */}
+      {!isFullPage && (
       <div className="chatbot-button" onClick={toggleChatbot}>
         {isOpen ? (
           <span className="close-icon">×</span>
@@ -422,25 +435,25 @@ const Chatbot = () => {
           <div className="button-pulse"></div>
         )}
       </div>
-
+)}
       {/* Chat window */}
       {isOpen && (
-        <div className="chatbot-container">
-          {/* Chatbot header */}
-          <div className="chatbot-header">
-            <h3>{uiText.chatbotTitle}</h3>
-            <div className="header-controls">
-              <button className="voice-button" onClick={startListening} disabled={isListening || !languageSelected}>
-                {isListening ? "🎤" : "🎤"}
-              </button>
-              <button className="mute-button" onClick={toggleMute}>
-                {isMuted ? "🔇" : "🔊"}
-              </button>
+        <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
+        {/* Header with modified controls */}
+        <div className="chatbot-header">
+          <h3>{uiText.chatbotTitle}</h3>
+          <div className="header-controls">
+            <button className="voice-button" onClick={startListening} disabled={isListening || !languageSelected}>
+              {isListening ? "🎤" : "🎤"}
+            </button>
+            <button className="mute-button" onClick={toggleMute}>
+              {isMuted ? "🔇" : "🔊"}
+            </button>
               <button className="close-btn" onClick={toggleChatbot}>×</button>
             </div>
           </div>
 
-          {/* Language selection or avatar based on the state lem */}/
+          {/* Language selection or avatar based on the state lem */}
           {!languageSelected ? (
             <div className="language-selection-container">
               <LanguagePicker selectedLanguage={language} onSelectLanguage={selectLanguage} />
