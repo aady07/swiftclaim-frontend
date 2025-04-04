@@ -3,6 +3,9 @@ import { motion, useMotionTemplate, useMotionValue, animate } from "framer-motio
 import { FiUpload, FiArrowRight, FiCamera, FiFileText, FiCheckCircle, FiDownload, FiAlertTriangle } from "react-icons/fi";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
+import jsPDF from 'jspdf';
+
+
 
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
@@ -26,16 +29,9 @@ const ClaimUpload = () => {
   const color = useMotionValue(COLORS_TOP[0]);
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
+  
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  
 
   useEffect(() => {
     animate(color, COLORS_TOP, {
@@ -80,8 +76,7 @@ const ClaimUpload = () => {
     setPartsImageUrl(null);
 
     // Log the file being uploaded
-    console.log("Uploading file:", selectedFile.name, selectedFile.size);
-    console.log("Car details:", carMake, carModel);
+
 
     // Create FormData to send the file
     const formData = new FormData();
@@ -102,7 +97,6 @@ const ClaimUpload = () => {
       
       // Parse and log the complete response
       const data = await response.json();
-      console.log("Complete API response:", data);
       setRawResponse(data); // Store raw response for debugging
       
       // Handle the new response format
@@ -164,7 +158,6 @@ const ClaimUpload = () => {
       
       setUploadStatus("success");
     } catch (error) {
-      console.error("Error uploading file:", error);
       setUploadStatus("error");
       setTimeout(() => {
         setUploadStatus("idle");
@@ -186,19 +179,237 @@ const ClaimUpload = () => {
       setPreviewUrl(objectUrl);
     }
   };
-
   const handleDownloadPDF = () => {
-    // Create a new jsPDF instance
-    if (!previewUrl) return;
+    if (!previewUrl || !damageLabel) {
+      console.log("Missing required data for PDF generation");
+      return;
+    }
     
-    // In a real application, you would generate a PDF here
-    // For now, we'll just simulate a download by creating a link to the image
-    const link = document.createElement('a');
-    link.href = previewUrl;
-    link.download = `verified-claim.${fileFormat || 'png'}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Define the missing getTotalCostRange function
+    const getTotalCostRange = (costs) => {
+      if (!costs || costs.length === 0) return "0";
+      
+      // Calculate total
+      const total = costs.reduce((sum, cost) => sum + parseFloat(cost || 0), 0);
+      return total.toLocaleString();
+    };
+    
+    try {
+      // Create a new jsPDF instance
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      /* --- Header with Company Name (Skip logo for now) --- */
+      // Skip logo loading to avoid errors
+      // Add company name with styled header
+      doc.setFillColor(15, 23, 42); // Dark background for header
+      doc.rect(14, 14, 182, 12, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`MiraIsta`, 20, 22);
+      doc.text(`Vehicle  Assessment Report`, 105, 22, { align: 'center' });
+      
+      // Add vehicle info
+      doc.setTextColor(50, 50, 50);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Vehicle: ${carMake} ${carModel}`, 20, 32);
+      doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 20, 38);
+      
+      /* --- Assessment Result --- */
+      doc.setFillColor(240, 240, 240);
+      doc.roundedRect(14, 45, 182, 25, 3, 3, 'F');
+      
+      // Title for section
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text("Assessment Results", 20, 55);
+      
+      // Assessment details
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      
+      // Show damage status with color
+      const damageStatus = damageLabel ? damageLabel.toUpperCase() : "N/A";
+      if (damageLabel?.toLowerCase() === "damage") {
+        doc.setTextColor(220, 53, 69);
+      } else {
+        doc.setTextColor(25, 135, 84);
+      }
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Assessment Result: ${damageStatus}`, 20, 63);
+      
+      // Show confidence score
+      doc.setTextColor(30, 30, 30);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Confidence Score: ${confidenceScore || 'N/A'}%`, 120, 63);
+      
+      /* --- Damaged Parts --- */
+      doc.setFillColor(248, 249, 250);
+      doc.roundedRect(14, 75, 182, 70, 3, 3, 'F');
+      
+      // Section title
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text("Damaged Parts", 20, 85);
+      
+      // Add damaged parts list
+      let yPos = 95;
+      if (damagedParts && damagedParts.length > 0) {
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        
+        damagedParts.forEach((part, index) => {
+          // Draw a small color indicator
+          doc.setFillColor(220, 53, 69); // Red for damage
+          doc.circle(20, yPos - 1, 1.5, 'F');
+          
+          doc.setTextColor(50, 50, 50);
+          doc.text(`${formatPartName(part)}`, 25, yPos);
+          yPos += 10;
+        });
+      } else {
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'italic');
+        doc.setTextColor(100, 100, 100);
+        doc.text('No damaged parts identified', 25, yPos);
+        yPos += 10;
+      }
+  
+      /* --- Cost Estimates --- */
+      doc.setFillColor(240, 240, 240);
+      doc.roundedRect(14, 150, 182, 100, 3, 3, 'F');
+      
+      // Section title
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 30, 30);
+      doc.text("Repair Cost Estimates", 20, 160);
+      
+      // Add cost estimate table
+      yPos = 170;
+      
+      if (costEstimates && costEstimates.length > 0) {
+        // Table header
+        doc.setFillColor(200, 200, 200);
+        doc.rect(20, yPos - 7, 140, 8, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        doc.text("Part", 25, yPos - 1);
+        doc.text("Estimated Cost (₹)", 120, yPos - 1);
+        
+        // Table content
+        doc.setFont('helvetica', 'normal');
+        yPos += 8;
+        
+        costEstimates.forEach((cost, index) => {
+          // Add alternating row colors
+          if (index % 2 === 0) {
+            doc.setFillColor(245, 245, 245);
+            doc.rect(20, yPos - 7, 140, 8, 'F');
+          }
+          
+          const partName = damagedParts && damagedParts[index] 
+            ? formatPartName(damagedParts[index]) 
+            : `Estimate ${index + 1}`;
+            
+          doc.setTextColor(50, 50, 50);
+          doc.text(partName, 25, yPos - 1);
+          doc.text(`₹ ${cost}`, 120, yPos - 1);
+          yPos += 8;
+        });
+        
+        // Total cost with highlight
+        yPos += 5;
+        doc.setFillColor(15, 23, 42);
+        doc.rect(20, yPos - 7, 140, 8, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 255, 255);
+        doc.text("Total Estimated Cost:", 25, yPos - 1);
+        
+        const totalRange = getTotalCostRange(costEstimates);
+        doc.text(`₹ ${totalRange}`, 120, yPos - 1);
+      } else {
+        doc.setFont('helvetica', 'italic');
+        doc.setTextColor(100, 100, 100);
+        doc.text('No cost estimates available', 25, yPos);
+      }
+      
+      /* --- Images --- */
+      if (damageImageUrl) {
+        doc.addPage();
+        
+        // Add header on second page too
+        doc.setFillColor(15, 23, 42);
+        doc.rect(14, 14, 182, 12, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`MiraIsta`, 20, 22);
+        doc.text(`Damage Analysis Images`, 105, 22, { align: 'center' });
+        
+        try {
+          // Add original image
+          doc.setTextColor(50, 50, 50);
+          doc.setFontSize(12);
+          doc.text("Original Upload", 20, 40);
+          if (previewUrl) {
+            doc.addImage(previewUrl, 'JPEG', 20, 45, 80, 60, undefined, 'FAST');
+          }
+          
+          // Add damage detection image
+          doc.text("Damage Detection", 110, 40);
+          if (damageImageUrl) {
+            doc.addImage(damageImageUrl, 'JPEG', 110, 45, 80, 60, undefined, 'FAST');
+          }
+          
+          // Add parts image if available
+          if (partsImageUrl) {
+            doc.text("Parts Detection", 20, 120);
+            doc.addImage(partsImageUrl, 'JPEG', 20, 125, 80, 60, undefined, 'FAST');
+          }
+        } catch (imgError) {
+          console.error("Error adding images to PDF:", imgError);
+          doc.setTextColor(220, 53, 69);
+          doc.text("Error loading images", 20, 45);
+        }
+      }
+      
+      /* --- Footer --- */
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        
+        // Add footer with page numbers
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        
+        // Add a line above the footer
+        doc.setDrawColor(200, 200, 200);
+        doc.line(14, 280, 196, 280);
+        
+        // Add company footer
+        doc.text("MiraIsta Vehicle Damage Assessment", 14, 287);
+        doc.text(`Page ${i} of ${pageCount}`, 196, 287, { align: 'right' });
+      }
+      
+      // Save the PDF
+      doc.save(`mira-sita-damage-report-${carMake}-${carModel}.pdf`);
+      console.log("Enhanced PDF generated and download initiated");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      // Show error to user
+      alert("There was an error generating the PDF. Please try again.");
+    }
   };
 
   const backgroundImage = useMotionTemplate`linear-gradient(to bottom, #0f172a, #1e293b)`;
@@ -285,7 +496,6 @@ const ClaimUpload = () => {
       // Complete the upload process
       setUploadStatus("success");
     } catch (error) {
-      console.error("Error generating test data:", error);
       setUploadStatus("error");
     }
   };

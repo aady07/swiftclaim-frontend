@@ -51,7 +51,7 @@ const Navbar = () => {
     <motion.div 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 bg-white shadow-lg"
+      className="sticky top-0 z-50 bg-[#fcfcfc] shadow-lg"
     >
       <div className="flex justify-between items-center h-20 max-w-[1200px] mx-auto px-6">
         <Link to="/" className="flex items-center">
@@ -59,7 +59,8 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             src="/images/logo.png" 
             alt="logo" 
-            className="h-14 transition-all duration-300" 
+            className="h-16 w-auto transition-all duration-300" 
+            style={{ minWidth: "60px" }}
           />
         </Link>
 
@@ -161,7 +162,7 @@ const Navbar = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
               transition={{ duration: 0.3 }}
-              className="lg:hidden fixed top-20 right-0 left-0 bottom-0 flex flex-col bg-white shadow-xl z-40"
+              className="lg:hidden fixed top-20 right-0 left-0 bottom-0 flex flex-col bg-[#fcfcfc] shadow-xl z-40"
             >
               <div className="flex flex-col py-4 overflow-y-auto">
                 {navItems.map((item) => (

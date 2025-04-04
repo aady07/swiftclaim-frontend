@@ -178,55 +178,58 @@ const Services = () => {
         </div>
         
         {/* Hero Content */}
-        <motion.div 
-          className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen"
-          style={{ opacity: heroOpacity, y: heroY }}
-        >
-          <motion.span 
-            variants={fadeInUp}
-            className="mb-1.5 inline-block rounded-full bg-gray-600/70 backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-wider"
-          >
-            OUR SERVICES
-          </motion.span>
-          
-          <motion.h1
-            variants={fadeInUp}
-            className="max-w-4xl text-center text-5xl font-bold sm:text-7xl mb-6"
-          >
-            <span className="bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              AI-Powered Verification Solutions
-            </span>
-          </motion.h1>
-          
-          <motion.p
-            variants={fadeInUp}
-            className="my-6 max-w-2xl text-center text-xl md:text-2xl text-gray-300"
-          >
-            We offer cutting-edge verification services powered by artificial intelligence to ensure accuracy and reliability for individuals and businesses alike.
-          </motion.p>
-          
-          <motion.div 
-            variants={fadeInUp}
-            className="flex flex-wrap gap-4 mt-8 justify-center"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
-            >
-              Contact Us
-            </motion.button>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-transparent border-2 border-gray-600 text-white rounded-lg text-lg font-medium"
-            >
-              Learn More
-            </motion.button>
-          </motion.div>
-        </motion.div>
-
+        {/* Hero Content */}
+<motion.div 
+  className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen"
+  style={{ opacity: heroOpacity, y: heroY }}
+  variants={staggerContainer}
+  initial="hidden"
+  animate="visible"
+>
+  <motion.span 
+    variants={fadeInUp}
+    className="mb-1.5 inline-block rounded-full bg-gray-600/70 backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-wider"
+  >
+    OUR SERVICES
+  </motion.span>
+  
+  <motion.h1
+    variants={fadeInUp}
+    className="max-w-4xl text-center text-5xl font-bold sm:text-7xl mb-6"
+  >
+    <span className="bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent">
+      AI-Powered Verification Solutions
+    </span>
+  </motion.h1>
+  
+  <motion.p
+    variants={fadeInUp}
+    className="my-6 max-w-2xl text-center text-xl md:text-2xl text-gray-300"
+  >
+    We offer cutting-edge verification services powered by artificial intelligence to ensure accuracy and reliability for individuals and businesses alike.
+  </motion.p>
+  
+  <motion.div 
+    variants={fadeInUp}
+    className="flex flex-wrap gap-4 mt-8 justify-center"
+  >
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
+    >
+      Contact Us
+    </motion.button>
+    
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="px-8 py-4 bg-transparent border-2 border-gray-600 text-white rounded-lg text-lg font-medium"
+    >
+      Learn More
+    </motion.button>
+  </motion.div>
+</motion.div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full h-auto">
             <path

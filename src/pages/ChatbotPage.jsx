@@ -34,20 +34,6 @@ const ChatbotPage = () => {
         ))}
       </div>
 
-      {/* Back to Home Button */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="absolute top-6 left-6 z-20"
-      >
-        <Link 
-          to="/" 
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium hover:opacity-90 transition"
-        >
-          ← Back to Home
-        </Link>
-      </motion.div>
 
       {/* Chatbot Container */}
       <motion.div

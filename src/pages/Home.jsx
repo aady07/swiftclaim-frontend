@@ -1,8 +1,12 @@
   import React, { useState, useEffect } from "react";
   import { motion, AnimatePresence } from "framer-motion";
   import { useNavigate } from "react-router-dom";
+  import { useScroll, useTransform } from "framer-motion";
+
 
   const HomePage = () => {
+    const { scrollYProgress } = useScroll();
+
     const navigate = useNavigate();
     
     // Hero section background animation
@@ -183,7 +187,8 @@
         } 
       }
     };
-
+    const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
     const handleTryItNow = () => {
       navigate("/claimupload");
     };
@@ -224,7 +229,10 @@
           </div>
           
           {/* Hero content */}
-          <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen">
+          <motion.div 
+  className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen"
+  style={{ opacity: heroOpacity, y: heroY }}
+>
           <motion.div
             initial="hidden"
             animate="visible"
@@ -270,7 +278,8 @@
               </motion.button>
             </motion.div>
           </motion.div>
-        </div>
+          </motion.div>
+
         
           
           {/* Wave separator */}
@@ -283,21 +292,7 @@
               ></path>
             </svg>
           </div>
-          <motion.div
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-            <path 
-              d="M12 5L12 19M12 19L19 12M12 19L5 12" 
-              stroke="white" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            />
-          </svg>
-        </motion.div>
+          
         </section>
 
 
@@ -438,7 +433,7 @@
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/contact")}
+                onClick={() => navigate("/contacts")}
                 className="px-8 py-3 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-lg text-lg font-medium"
                 >
                 Request Demo
@@ -682,73 +677,7 @@
         </section>
         
         {/* Footer */}
-        <footer className="bg-gray-950 py-12">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-4">MiraIsta</h3>
-                <p className="text-gray-400 mb-6">Transforming business through AI innovation.</p>
-               
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Solutions</h4>
-                <ul className="space-y-2">
-                  {["Analytics Platform", "Predictive Modeling", "Natural Language Processing", "Computer Vision", "Custom Solutions"].map((item, index) => (
-                    <li key={index}>
-<a href="#" className="text-gray-400 hover:text-slate-400 transition-colors">
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
-                <ul className="space-y-2">
-                  {["About Us", "Team", "Careers", "News", "Contact"].map((item, index) => (
-                    <li key={index}>
-<a href="#" className="text-gray-500 hover:text-slate-400 text-sm">
-{item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Resources</h4>
-                <ul className="space-y-2">
-                  {["Blog", "Case Studies", "Documentation", "Support", "API Reference"].map((item, index) => (
-                    <li key={index}>
-                      <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            
-            <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-500 text-sm">
-                &copy; {new Date().getFullYear()} MiraIsta. All rights reserved.
-              </p>
-              <div className="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" className="text-gray-500 hover:text-blue-400 text-sm">
-                  Privacy Policy
-                </a>
-                <a href="#" className="text-gray-500 hover:text-blue-400 text-sm">
-                  Terms of Service
-                </a>
-                <a href="#" className="text-gray-500 hover:text-blue-400 text-sm">
-                  Cookie Policy
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+       
       </div>
     );
   };

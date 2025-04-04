@@ -5,9 +5,12 @@ import * as THREE from 'three';
 import { Suspense } from 'react';
 import axios from "axios";
 import "./Chatbot3D.css";
+import Avatar from "./Avatar";
+// Check that the import is correct at the top of your component file
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // Make sure the path is correct
 
 
-const API_KEY = "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";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 // HumanoidAvatar component with improved design and animations
 const HumanoidAvatar = ({ isTalking, emotion }) => {
@@ -176,9 +179,10 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
   ];
   
   
+  
   return (
     <div className="language-picker">
-      <p>{selectedLanguage === "en" ? "Select Language:" : "भाषा चुनें:"}</p>
+      <p>{selectedLanguage === "en" ? "" : "भाषा चुनें:"}</p>
       <div className="language-buttons">
         {languages.map((lang) => (
           <button
@@ -196,6 +200,7 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
 
 // Expanded chatbot component with language support
 const Chatbot = ({ isFullPage = false }) => {
+
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -210,11 +215,11 @@ const Chatbot = ({ isFullPage = false }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (isFullPage && !isOpen) {
+    // Make sure isOpen is synchronized with isFullPage immediately
+    if (isFullPage) {
       setIsOpen(true);
     }
-  }, [isFullPage, isOpen]);
-
+  }, [isFullPage]);
   const toggleChatbot = () => {
     if (!isFullPage) {
       setIsOpen(!isOpen);
@@ -246,13 +251,20 @@ const Chatbot = ({ isFullPage = false }) => {
 
   // Auto-scroll to latest message
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    const messagesContainer = document.querySelector('.messages');
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-  };
+  };  
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (isFullPage && messages.length > 0) {
+      // Force scroll on fullpage mode after each message
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isFullPage, messages]);
   
 
   /*const toggleChatbot = () => {
@@ -367,7 +379,6 @@ const Chatbot = ({ isFullPage = false }) => {
         }
       }, 30); // Slightly faster typing for better UX
     } catch (error) {
-      console.error("Error fetching chatbot response:", error);
       const errorMessage = language === "en"
         ? "Sorry, I couldn't process that request. Please try again."
         : "क्षमा करें, मैं आपके अनुरोध को संसाधित नहीं कर सका। कृपया पुनः प्रयास करें।";
@@ -378,44 +389,160 @@ const Chatbot = ({ isFullPage = false }) => {
     }
   };
 
-  const startListening = () => {
-    if (!("webkitSpeechRecognition" in window)) {
+
+  const { transcript, listening, browserSupportsSpeechRecognition, resetTranscript } = useSpeechRecognition();
+
+
+// Modified startListening
+// Replace the speech recognition related code with this more robust implementation
+
+// Update the startListening function
+const startListening = () => {
+  
+  if (!browserSupportsSpeechRecognition) {
+    alert(language === "en" 
+      ? "Your browser does not support voice recognition." 
+      : "आपका ब्राउज़र वॉयस रिकग्निशन का समर्थन नहीं करता है।");
+    return;
+  }
+  
+  // Configure speech recognition first
+  SpeechRecognition.abortListening();
+  resetTranscript();
+  
+  // Set UI state
+  setIsListening(true);
+  setInput("");
+  
+  // Important: Request microphone permission explicitly before starting
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(() => {
+      // Start after permission is granted
+      SpeechRecognition.startListening({
+        continuous: true,  // Set back to true for continuous listening
+        language: language === "en" ? "en-US" : "hi-IN"
+      });
+    })
+    .catch(error => {
+      setIsListening(false);
       alert(language === "en" 
-        ? "Your browser does not support voice recognition." 
-        : "आपका ब्राउज़र वॉयस रिकग्निशन का समर्थन नहीं करता है।");
-      return;
-    }
+        ? "Microphone access is required for voice input." 
+        : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
+    });
+};
+// Add this useEffect to check if speech recognition is working
+useEffect(() => {
+  if (isListening) {
+    // Set a timeout to check if any transcript has been captured
+    const checkTimeout = setTimeout(() => {
+      if (isListening && !transcript) {
+        
+        // Try to restart speech recognition
+        SpeechRecognition.abortListening();
+        
+        // Small delay before restarting
+        setTimeout(() => {
+          if (isListening) {
+            SpeechRecognition.startListening({
+              continuous: true,
+              language: language === "en" ? "en-US" : "hi-IN"
+            });
+          }
+        }, 500);
+      }
+    }, 3000);
+    
+    return () => clearTimeout(checkTimeout);
+  }
+}, [isListening, transcript]);
+
+// Modified stop listening function
+// Update the stopListening function
+const stopListening = () => {
   
-    setIsListening(true);
-    const recognition = new window.webkitSpeechRecognition();
-    recognition.lang = language === "en" ? "en-US" : "hi-IN";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+  // Save the current transcript before stopping
+  const currentTranscript = transcript;
   
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript.trim();
+  // First update UI state
+  setIsListening(false);
+  
+  // Then stop the recognition
+  SpeechRecognition.stopListening();
+  
+  // Process the transcript we captured
+  if (currentTranscript && currentTranscript.trim()) {
+    setInput(currentTranscript);
+    
+    // Small delay before sending to make sure UI updates
+    setTimeout(() => {
+      handleSend(currentTranscript);
+    }, 100);
+  } else {
+  }
+  
+  resetTranscript();
+};
+// Add this function to test the microphone directly
+const testMicrophone = () => {
+  
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      
+      // Show user feedback
+      alert(language === "en" 
+        ? "Microphone is working. Please try voice input again." 
+        : "माइक्रोफोन काम कर रहा है। कृपया वॉइस इनपुट फिर से प्रयास करें।");
+      
+      // Clean up the stream
+      stream.getTracks().forEach(track => track.stop());
+    })
+    .catch(error => {
+      
+      // Show error to user
+      alert(language === "en" 
+        ? "Microphone access denied. Please check your browser settings." 
+        : "माइक्रोफोन एक्सेस अस्वीकृत। कृपया अपने ब्राउज़र सेटिंग्स की जांच करें।");
+    });
+};
+// Add this useEffect to track transcript changes
+
+
+// Add this useEffect to track when speech recognition ends on its own
+useEffect(() => {
+  // If speech recognition stopped but we're still in listening mode, handle that case
+  if (!listening && isListening) {
+    setIsListening(false);
+    
+    if (transcript && transcript.trim()) {
       setInput(transcript);
       handleSend(transcript);
-    };
+    }
+    
+    resetTranscript();
+  }
+}, [listening, isListening, transcript]);
+// Add this code to create a timeout for the listening session
+useEffect(() => {
+  let timeoutId;
   
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-      setIsListening(false);
-    };
+  if (isListening) {
+    // Set a timeout to automatically stop listening after 10 seconds
+    // if the user doesn't stop it manually
+    timeoutId = setTimeout(() => {
+      stopListening();
+    }, 10000); // 10 seconds timeout
+  }
   
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-  
-    recognition.start();
+  return () => {
+    if (timeoutId) clearTimeout(timeoutId);
   };
+}, [isListening]);
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && input.trim()) {
       handleSend();
     }
   };
-
   // Localized UI text based on selected language
   const uiText = {
     chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
@@ -443,12 +570,6 @@ const Chatbot = ({ isFullPage = false }) => {
         <div className="chatbot-header">
           <h3>{uiText.chatbotTitle}</h3>
           <div className="header-controls">
-            <button className="voice-button" onClick={startListening} disabled={isListening || !languageSelected}>
-              {isListening ? "🎤" : "🎤"}
-            </button>
-            <button className="mute-button" onClick={toggleMute}>
-              {isMuted ? "🔇" : "🔊"}
-            </button>
               <button className="close-btn" onClick={toggleChatbot}>×</button>
             </div>
           </div>
@@ -466,8 +587,8 @@ const Chatbot = ({ isFullPage = false }) => {
                 <Canvas
                   gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
                   camera={{
-                    position: [0, 0, 2.2],
-                    fov: 45,
+                    position: isFullPage ? [0, 0.5, 2.5] : [0, 1.6, 1.0], // Adjusted for full-page
+                    fov: isFullPage ? 35 : 25, // Wider field of view for full-page
                     near: 0.1,
                     far: 1000
                   }}
@@ -491,16 +612,16 @@ const Chatbot = ({ isFullPage = false }) => {
                     />
                     
                     {/* Humanoid Avatar */}
-                    <HumanoidAvatar isTalking={isTalking} emotion={emotion} />
+                    <Avatar isTalking={isTalking} emotion={emotion} isFullPage={isFullPage} />
                     
                     {/* Camera Controls - Limited to prevent awkward angles */}
                     <OrbitControls 
-                      enableZoom={false}
-                      minPolarAngle={Math.PI/2 - 0.4}
-                      maxPolarAngle={Math.PI/2 + 0.4}
-                      minAzimuthAngle={-Math.PI/4}
-                      maxAzimuthAngle={Math.PI/4}
-                    />
+  enableZoom={isFullPage}
+  minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page
+  maxPolarAngle={Math.PI/2 + (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page
+  minAzimuthAngle={isFullPage ? -Math.PI/4 : -Math.PI/6}
+  maxAzimuthAngle={isFullPage ? Math.PI/4 : Math.PI/6}
+/>
                   </Suspense>
                 </Canvas>
                 
@@ -542,25 +663,73 @@ const Chatbot = ({ isFullPage = false }) => {
                 
                 {/* Input area */}
                 <div className="input-area">
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder={uiText.placeholder}
-                    disabled={isTyping}
-                  />
-                  <button 
-                    onClick={() => handleSend()} 
-                    disabled={!input.trim() || isTyping}
-                    className={!input.trim() || isTyping ? "disabled-btn" : ""}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
+  {isListening ? (
+    // Recording UI
+    <div className="recording-container">
+  <div className="recording-wave">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div className="recording-text">
+    {language === "en" ? "Listening..." : "सुन रहा हूँ..."}
+  </div>
+  <button onClick={stopListening} className="stop-recording-btn">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
+      <circle cx="12" cy="12" r="10" />
+      <rect x="9" y="9" width="6" height="6" />
+    </svg>
+  </button>
+</div>
+  ) : (
+    // Normal input UI
+    <>
+      <button className="mute-button input-control-btn" onClick={toggleMute}>
+        {isMuted ? "🔇" : "🔊"}
+      </button>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder={uiText.placeholder}
+        disabled={isTyping}
+      />
+      {!input.trim() ? (
+        <button 
+        onClick={() => {
+          if (isListening) {
+            stopListening();
+          } else {
+            startListening();
+          }
+        }} 
+        disabled={!languageSelected || isTyping}
+        className={`voice-button input-control-btn ${isListening ? 'active' : ''}`}
+        title={language === "en" ? "Voice input" : "वॉइस इनपुट"}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 15c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v6c0 2.21 1.79 4 4 4z" fill="currentColor" />
+          <path d="M19 11h-1c0 3.31-2.69 6-6 6s-6-2.69-6-6H5c0 3.82 2.72 7.01 6.31 7.76A3 3 0 0 0 9 22h6a3 3 0 0 0 0-6h-3.09c1.82-.47 3.4-1.58 4.5-3.13C17.87 13.98 19 12.61 19 11z" fill="currentColor" />
+        </svg>
+      </button>
+      ) : (
+        <button 
+          onClick={() => handleSend()} 
+          disabled={!input.trim() || isTyping}
+          className={!input.trim() || isTyping ? "disabled-btn" : ""}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      )}
+    </>
+  )}
+</div>
               </div>
             </>
           )}
