@@ -6,13 +6,10 @@ import { Suspense } from 'react';
 import axios from "axios";
 import "./Chatbot3D.css";
 import Avatar from "./Avatar";
-// Check that the import is correct at the top of your component file
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'; // Make sure the path is correct
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 
-const API_KEY = import.meta.env.VITE_API_KEY;
 
-// HumanoidAvatar component with improved design and animations
 const HumanoidAvatar = ({ isTalking, emotion }) => {
   const headRef = useRef();
   const mouthRef = useRef();
@@ -21,13 +18,11 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
 
 
   
-  // Animation loop for talking and emotions
   React.useEffect(() => {
     let animationFrameId;
     
     const animate = () => {
       if (headRef.current) {
-        // Add subtle head movement when talking
         if (isTalking) {
           headRef.current.rotation.y = Math.sin(Date.now() * 0.002) * 0.08;
           
@@ -42,7 +37,6 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
           }
         }
         
-        // Apply emotional expressions
         if (eyebrowsRef.current) {
           switch (emotion) {
             case "happy":
@@ -73,7 +67,6 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isTalking, emotion]);
   
-  // Enhanced humanoid design with better proportions and colors
   return (
     <group>
       {/* Head */}
@@ -209,13 +202,11 @@ const Chatbot = ({ isFullPage = false }) => {
   const [isTalking, setIsTalking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [emotion, setEmotion] = useState("neutral");
-  // Initialize isOpen based on isFullPage prop
   const [isOpen, setIsOpen] = useState(isFullPage);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Make sure isOpen is synchronized with isFullPage immediately
     if (isFullPage) {
       setIsOpen(true);
     }
@@ -240,10 +231,8 @@ const Chatbot = ({ isFullPage = false }) => {
     const messagesContainer = document.querySelector('.messages');
     
     if (messagesContainer && isOpen) {
-      // Initially scroll to the bottom when chat opens
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       
-      // Fix for touch devices - add if needed
       messagesContainer.style.overflowY = "auto";
       messagesContainer.style.WebkitOverflowScrolling = "touch";
     }
@@ -258,7 +247,6 @@ const Chatbot = ({ isFullPage = false }) => {
   };  
   useEffect(() => {
     if (isFullPage && messages.length > 0) {
-      // Force scroll on fullpage mode after each message
       const timer = setTimeout(() => {
         scrollToBottom();
       }, 100);
@@ -267,9 +255,7 @@ const Chatbot = ({ isFullPage = false }) => {
   }, [isFullPage, messages]);
   
 
-  /*const toggleChatbot = () => {
-    setIsOpen(!isOpen);
-  };*/
+
 
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
@@ -310,49 +296,53 @@ const Chatbot = ({ isFullPage = false }) => {
   const handleSend = async (messageToSend = input) => {
     if (!messageToSend.trim()) return;
 
-    // Add user message to the chat
     setMessages((prevMessages) => [...prevMessages, { text: messageToSend, fromBot: false }]);
     setInput("");
     setIsTalking(false);
     setIsTyping(true);
 
     try {
-      // Prepare system prompt based on selected language
       const systemPrompt = language === "en"
         ? "You are a professional, helpful assistant for a large technology company. Respond in English."
         : "आप एक बड़ी प्रौद्योगिकी कंपनी के लिए एक पेशेवर, सहायक सहायक हैं। हिंदी में जवाब दें।";
 
+     
       const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+        "https://aadybackend.site/api/chat",  
         {
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...messages.map(msg => ({
-              role: msg.fromBot ? "assistant" : "user",
-              content: msg.text
-            })),
-            { role: "user", content: messageToSend },
-          ],
+          systemPrompt: systemPrompt,
+          messages: messages, 
+          messageToSend: messageToSend
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${API_KEY}`,
-          },
+            "Content-Type": "application/json"
+          }
         }
       );
 
-      if (!response.data || !response.data.choices || response.data.choices.length === 0) {
-        throw new Error("Invalid API response format");
-      }
+      let botMessage;
 
-      const botMessage = response.data.choices[0].message?.content || 
-        (language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।");
-      
-      const detectedEmotion = detectEmotion(botMessage);
-      setEmotion(detectedEmotion);
-      
+if (response.data && response.data.response) {
+  const responseString = response.data.response;
+  
+  const contentStart = responseString.indexOf("content=") + 8; // 8 is the length of "content="
+  const refusalStart = responseString.indexOf(", refusal=");
+  
+  if (contentStart !== -1 && refusalStart !== -1) {
+    botMessage = responseString.substring(contentStart, refusalStart);
+
+  } else {
+    botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+  }
+} else {
+  botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+}
+
+
+const detectedEmotion = detectEmotion(botMessage);
+setEmotion(detectedEmotion);
+
       setIsTyping(false);
       setIsTalking(true);
       speak(botMessage);
@@ -371,13 +361,12 @@ const Chatbot = ({ isFullPage = false }) => {
           });
           i++;
           
-          // Scroll to bottom after each character to follow the text generation
           scrollToBottom();
         } else {
           clearInterval(interval);
           setIsTalking(false);
         }
-      }, 30); // Slightly faster typing for better UX
+      }, 30); 
     } catch (error) {
       const errorMessage = language === "en"
         ? "Sorry, I couldn't process that request. Please try again."
@@ -390,154 +379,119 @@ const Chatbot = ({ isFullPage = false }) => {
   };
 
 
-  const { transcript, listening, browserSupportsSpeechRecognition, resetTranscript } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
 
-// Modified startListening
-// Replace the speech recognition related code with this more robust implementation
 
-// Update the startListening function
-const startListening = () => {
-  
-  if (!browserSupportsSpeechRecognition) {
-    alert(language === "en" 
-      ? "Your browser does not support voice recognition." 
-      : "आपका ब्राउज़र वॉयस रिकग्निशन का समर्थन नहीं करता है।");
-    return;
-  }
-  
-  // Configure speech recognition first
-  SpeechRecognition.abortListening();
-  resetTranscript();
-  
-  // Set UI state
-  setIsListening(true);
-  setInput("");
-  
-  // Important: Request microphone permission explicitly before starting
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(() => {
-      // Start after permission is granted
-      SpeechRecognition.startListening({
-        continuous: true,  // Set back to true for continuous listening
-        language: language === "en" ? "en-US" : "hi-IN"
-      });
-    })
-    .catch(error => {
-      setIsListening(false);
-      alert(language === "en" 
-        ? "Microphone access is required for voice input." 
-        : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
-    });
-};
-// Add this useEffect to check if speech recognition is working
 useEffect(() => {
-  if (isListening) {
-    // Set a timeout to check if any transcript has been captured
-    const checkTimeout = setTimeout(() => {
-      if (isListening && !transcript) {
-        
-        // Try to restart speech recognition
-        SpeechRecognition.abortListening();
-        
-        // Small delay before restarting
-        setTimeout(() => {
-          if (isListening) {
-            SpeechRecognition.startListening({
-              continuous: true,
-              language: language === "en" ? "en-US" : "hi-IN"
-            });
-          }
-        }, 500);
-      }
-    }, 3000);
-    
-    return () => clearTimeout(checkTimeout);
+  if (listening) {
   }
-}, [isListening, transcript]);
-
-// Modified stop listening function
-// Update the stopListening function
-const stopListening = () => {
-  
-  // Save the current transcript before stopping
-  const currentTranscript = transcript;
-  
-  // First update UI state
-  setIsListening(false);
-  
-  // Then stop the recognition
-  SpeechRecognition.stopListening();
-  
-  // Process the transcript we captured
-  if (currentTranscript && currentTranscript.trim()) {
-    setInput(currentTranscript);
-    
-    // Small delay before sending to make sure UI updates
-    setTimeout(() => {
-      handleSend(currentTranscript);
-    }, 100);
-  } else {
-  }
-  
-  resetTranscript();
-};
-// Add this function to test the microphone directly
-const testMicrophone = () => {
-  
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      
-      // Show user feedback
-      alert(language === "en" 
-        ? "Microphone is working. Please try voice input again." 
-        : "माइक्रोफोन काम कर रहा है। कृपया वॉइस इनपुट फिर से प्रयास करें।");
-      
-      // Clean up the stream
-      stream.getTracks().forEach(track => track.stop());
-    })
-    .catch(error => {
-      
-      // Show error to user
-      alert(language === "en" 
-        ? "Microphone access denied. Please check your browser settings." 
-        : "माइक्रोफोन एक्सेस अस्वीकृत। कृपया अपने ब्राउज़र सेटिंग्स की जांच करें।");
-    });
-};
-// Add this useEffect to track transcript changes
-
-
-// Add this useEffect to track when speech recognition ends on its own
+}, [transcript, listening]);
 useEffect(() => {
-  // If speech recognition stopped but we're still in listening mode, handle that case
+  if (listening && transcript) {
+    setInput(transcript);
+  }
+}, [transcript, listening]);
+useEffect(() => {
+  const handleError = (event) => {
+    setIsListening(false);
+    alert(language === "en"
+      ? "Speech recognition error. Please try again."
+      : "स्पीच रिकग्निशन त्रुटि। कृपया पुनः प्रयास करें।");
+  };
+
+  if (browserSupportsSpeechRecognition) {
+    SpeechRecognition.getRecognition()?.addEventListener('error', handleError);
+    
+    return () => {
+      SpeechRecognition.getRecognition()?.removeEventListener('error', handleError);
+    };
+  }
+}, [language, browserSupportsSpeechRecognition]);
+
+useEffect(() => {
   if (!listening && isListening) {
     setIsListening(false);
     
     if (transcript && transcript.trim()) {
-      setInput(transcript);
       handleSend(transcript);
+      resetTranscript();
     }
-    
-    resetTranscript();
   }
-}, [listening, isListening, transcript]);
-// Add this code to create a timeout for the listening session
+}, [listening, isListening]);
+
 useEffect(() => {
   let timeoutId;
   
   if (isListening) {
-    // Set a timeout to automatically stop listening after 10 seconds
-    // if the user doesn't stop it manually
     timeoutId = setTimeout(() => {
       stopListening();
-    }, 10000); // 10 seconds timeout
+    }, 15000);
   }
   
   return () => {
     if (timeoutId) clearTimeout(timeoutId);
   };
 }, [isListening]);
+useEffect(() => {
+  
+  if (!listening && isListening) {
+    setIsListening(false);
+    
+    if (transcript && transcript.trim()) {
+      handleSend(transcript);
+      resetTranscript();
+    }
+  }
+}, [listening, isListening, transcript, handleSend, resetTranscript]);
 
+const startListening = () => {
+  if (!browserSupportsSpeechRecognition) {
+    alert(language === "en" 
+      ? "Your browser does not support speech recognition." 
+      : "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है।");
+    return;
+  }
+  
+  
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(() => {
+      resetTranscript();
+      setIsListening(true);
+      
+      SpeechRecognition.startListening({ 
+        continuous: true,
+        interimResults: true,  // Add this to get partial results
+        language: language === "en" ? "en-US" : "hi-IN" 
+      });
+    })
+    .catch(error => {
+      alert(language === "en" 
+        ? "Microphone access is required for voice input." 
+        : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
+    });
+};
+
+
+const stopListening = () => {
+  
+  const finalTranscript = transcript;
+  
+  setIsListening(false);
+  
+
+  SpeechRecognition.stopListening();
+  
+  if (finalTranscript && finalTranscript.trim()) {
+    setInput(finalTranscript);
+    
+    setTimeout(() => {
+      handleSend(finalTranscript);
+      resetTranscript();
+    }, 300); 
+  } else {
+  }
+};
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && input.trim()) {
       handleSend();
@@ -566,7 +520,6 @@ useEffect(() => {
       {/* Chat window */}
       {isOpen && (
         <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
-        {/* Header with modified controls */}
         <div className="chatbot-header">
           <h3>{uiText.chatbotTitle}</h3>
           <div className="header-controls">
@@ -574,7 +527,6 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* Language selection or avatar based on the state lem */}
           {!languageSelected ? (
             <div className="language-selection-container">
               <LanguagePicker selectedLanguage={language} onSelectLanguage={selectLanguage} />
@@ -582,7 +534,6 @@ useEffect(() => {
           
           ) : (
             <>
-              {/* 3D Avatar container */}
               <div className="avatar-container">
                 <Canvas
                   gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
@@ -611,10 +562,8 @@ useEffect(() => {
                       position={[-5, 5, 5]} 
                     />
                     
-                    {/* Humanoid Avatar */}
                     <Avatar isTalking={isTalking} emotion={emotion} isFullPage={isFullPage} />
                     
-                    {/* Camera Controls - Limited to prevent awkward angles */}
                     <OrbitControls 
   enableZoom={isFullPage}
   minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page
@@ -710,11 +659,23 @@ useEffect(() => {
         className={`voice-button input-control-btn ${isListening ? 'active' : ''}`}
         title={language === "en" ? "Voice input" : "वॉइस इनपुट"}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 15c2.21 0 4-1.79 4-4V5c0-2.21-1.79-4-4-4S8 2.79 8 5v6c0 2.21 1.79 4 4 4z" fill="currentColor" />
-          <path d="M19 11h-1c0 3.31-2.69 6-6 6s-6-2.69-6-6H5c0 3.82 2.72 7.01 6.31 7.76A3 3 0 0 0 9 22h6a3 3 0 0 0 0-6h-3.09c1.82-.47 3.4-1.58 4.5-3.13C17.87 13.98 19 12.61 19 11z" fill="currentColor" />
-        </svg>
-      </button>
+        {isListening ? (
+    // Microphone active icon
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+      <line x1="12" y1="19" x2="12" y2="22"></line>
+      <line x1="8" y1="22" x2="16" y2="22"></line>
+    </svg>
+  ) : (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+    <line x1="12" y1="19" x2="12" y2="22"></line>
+    <line x1="8" y1="22" x2="16" y2="22"></line>
+  </svg>
+)}
+</button>
       ) : (
         <button 
           onClick={() => handleSend()} 

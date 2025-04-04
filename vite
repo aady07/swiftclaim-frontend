@@ -1,0 +1,3 @@
+
+Port 5173 is in use, trying another one...  VITE v5.2.2  ready in 144 ms  ➜  Local:   http://localhost:5174/  ➜  Network: http://192.168.0.106:5174/  ➜  press h + enter to show helpBrowserslist: caniuse-lite is outdated. Please run:  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme12:19:16 AM [vite] hmr update /src/components/Chatbot3D.jsx, /src/index.css^Z[2]  + 43153 suspended  npm run d
