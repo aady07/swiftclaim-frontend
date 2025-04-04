@@ -210,25 +210,18 @@ const Services = () => {
   </motion.p>
   
   <motion.div 
-    variants={fadeInUp}
-    className="flex flex-wrap gap-4 mt-8 justify-center"
+  variants={fadeInUp}
+  className="flex justify-center mt-8"
+>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => navigate("/contacts")}
+    className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
   >
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
-    >
-      Contact Us
-    </motion.button>
-    
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="px-8 py-4 bg-transparent border-2 border-gray-600 text-white rounded-lg text-lg font-medium"
-    >
-      Learn More
-    </motion.button>
-  </motion.div>
+    Contact Us
+  </motion.button>
+</motion.div>
 </motion.div>
         <div className="absolute bottom-0 left-0 right-0">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full h-auto">

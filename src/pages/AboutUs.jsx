@@ -11,19 +11,19 @@ const AboutUs = () => {
   const teamMembers = [
     { 
       name: "Rachit", 
-      role: "AI Research Lead", 
+      role: "Co-Founder", 
       image: "https://i.imgur.com/wc1ZutY.png", 
       bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
     },
     { 
       name: "Bharat Parmar", 
-      role: "Chief Innovation Officer", 
+      role: "Co-Founder", 
       image: "https://i.imgur.com/OehHTK9.jpeg", 
       bio: "Seasoned business expert with comprehensive understanding of strategic business operations, technology integration, and organizational growth strategies." 
     },
     { 
       name: "Adarsh", 
-      role: "Senior Software Architect", 
+      role: "Co-Founder", 
       image: "https://i.imgur.com/e9LoxyO.png", 
       bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
     },

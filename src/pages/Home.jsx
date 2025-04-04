@@ -160,7 +160,7 @@
       },
       {
         question: "How do you ensure data security and privacy?",
-        answer: "Security is our top priority. We implement enterprise-grade encryption, strict access controls, and regular security audits. All solutions are designed to comply with relevant regulations including GDPR, HIPAA, and other industry-specific requirements."
+        answer: "We implement enterprise-grade encryption, strict access controls, and conduct regular security audits to safeguard your data. All our solutions are designed to comply with Indian regulatory requirements, including the Digital Personal Data Protection Act (DPDP Act, 2023), CERT-In guidelines, and other sector-specific regulations issued by authorities such as RBI, IRDAI, and SEBI, ensuring full alignment with national standards for data privacy and cybersecurity."
       },
       {
         question: "Can your AI solutions integrate with our existing systems?",
@@ -471,58 +471,58 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             </motion.div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {industries.map((industry, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -10 }}
-                  className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700"
-                >
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={industry.image}
-                      alt={industry.name}
-                      className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/90" />
-                  </div>
+  {industries.map((industry, index) => (
+    <motion.div
+      key={index}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -10 }}
+      className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 flex flex-col"
+    >
+      {/* Image Container */}
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={industry.image}
+          alt={industry.name}
+          className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/90" />
+      </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">{industry.icon}</span>
-                      <h3 className="text-xl font-semibold text-white">{industry.name}</h3>
-                    </div>
-                    <p className="text-gray-300 mb-6 text-sm">{industry.description}</p>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => navigate("/services")}
-                      className="w-full px-4 py-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors duration-300"
-                    >
-                      <span>Learn More</span>
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
-                      </svg>
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+      {/* Content */}
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl">{industry.icon}</span>
+          <h3 className="text-xl font-semibold text-white">{industry.name}</h3>
+        </div>
+        <p className="text-gray-300 mb-6 text-sm flex-grow">{industry.description}</p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/services")}
+          className="w-full px-4 py-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600 text-white rounded-lg flex items-center justify-center gap-2 transition-colors duration-300 mt-auto"
+        >
+          <span>Learn More</span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+        </motion.button>
+      </div>
+    </motion.div>
+  ))}
+</div>
 
             {/* CTA Button */}
             <motion.div

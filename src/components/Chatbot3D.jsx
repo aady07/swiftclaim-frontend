@@ -6,12 +6,10 @@ import { Suspense } from 'react';
 import axios from "axios";
 import "./Chatbot3D.css";
 import Avatar from "./Avatar";
-// Check that the import is correct at the top of your component file
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 
 
-// HumanoidAvatar component with improved design and animations
 const HumanoidAvatar = ({ isTalking, emotion }) => {
   const headRef = useRef();
   const mouthRef = useRef();
@@ -20,13 +18,11 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
 
 
   
-  // Animation loop for talking and emotions
   React.useEffect(() => {
     let animationFrameId;
     
     const animate = () => {
       if (headRef.current) {
-        // Add subtle head movement when talking
         if (isTalking) {
           headRef.current.rotation.y = Math.sin(Date.now() * 0.002) * 0.08;
           
@@ -41,7 +37,6 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
           }
         }
         
-        // Apply emotional expressions
         if (eyebrowsRef.current) {
           switch (emotion) {
             case "happy":
@@ -72,7 +67,6 @@ const HumanoidAvatar = ({ isTalking, emotion }) => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [isTalking, emotion]);
   
-  // Enhanced humanoid design with better proportions and colors
   return (
     <group>
       {/* Head */}
@@ -208,13 +202,11 @@ const Chatbot = ({ isFullPage = false }) => {
   const [isTalking, setIsTalking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [emotion, setEmotion] = useState("neutral");
-  // Initialize isOpen based on isFullPage prop
   const [isOpen, setIsOpen] = useState(isFullPage);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Make sure isOpen is synchronized with isFullPage immediately
     if (isFullPage) {
       setIsOpen(true);
     }
@@ -239,10 +231,8 @@ const Chatbot = ({ isFullPage = false }) => {
     const messagesContainer = document.querySelector('.messages');
     
     if (messagesContainer && isOpen) {
-      // Initially scroll to the bottom when chat opens
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       
-      // Fix for touch devices - add if needed
       messagesContainer.style.overflowY = "auto";
       messagesContainer.style.WebkitOverflowScrolling = "touch";
     }
@@ -257,7 +247,6 @@ const Chatbot = ({ isFullPage = false }) => {
   };  
   useEffect(() => {
     if (isFullPage && messages.length > 0) {
-      // Force scroll on fullpage mode after each message
       const timer = setTimeout(() => {
         scrollToBottom();
       }, 100);
@@ -266,9 +255,7 @@ const Chatbot = ({ isFullPage = false }) => {
   }, [isFullPage, messages]);
   
 
-  /*const toggleChatbot = () => {
-    setIsOpen(!isOpen);
-  };*/
+
 
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
@@ -309,43 +296,22 @@ const Chatbot = ({ isFullPage = false }) => {
   const handleSend = async (messageToSend = input) => {
     if (!messageToSend.trim()) return;
 
-    // Add user message to the chat
     setMessages((prevMessages) => [...prevMessages, { text: messageToSend, fromBot: false }]);
     setInput("");
     setIsTalking(false);
     setIsTyping(true);
 
     try {
-      // Prepare system prompt based on selected language
       const systemPrompt = language === "en"
         ? "You are a professional, helpful assistant for a large technology company. Respond in English."
         : "आप एक बड़ी प्रौद्योगिकी कंपनी के लिए एक पेशेवर, सहायक सहायक हैं। हिंदी में जवाब दें।";
 
-     /* const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...messages.map(msg => ({
-              role: msg.fromBot ? "assistant" : "user",
-              content: msg.text
-            })),
-            { role: "user", content: messageToSend },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${API_KEY}`,
-          },
-        }
-      );*/
+     
       const response = await axios.post(
-        "https://aadybackend.site/api/chat",  // Update this URL to match your backend URL
+        "https://aadybackend.site/api/chat",  
         {
           systemPrompt: systemPrompt,
-          messages: messages, // Your existing messages array with {fromBot, text} objects
+          messages: messages, 
           messageToSend: messageToSend
         },
         {
@@ -360,12 +326,10 @@ const Chatbot = ({ isFullPage = false }) => {
 if (response.data && response.data.response) {
   const responseString = response.data.response;
   
-  // Find the position of "content=" and ", refusal="
   const contentStart = responseString.indexOf("content=") + 8; // 8 is the length of "content="
   const refusalStart = responseString.indexOf(", refusal=");
   
   if (contentStart !== -1 && refusalStart !== -1) {
-    // Extract only the part between "content=" and ", refusal="
     botMessage = responseString.substring(contentStart, refusalStart);
 
   } else {
@@ -397,13 +361,12 @@ setEmotion(detectedEmotion);
           });
           i++;
           
-          // Scroll to bottom after each character to follow the text generation
           scrollToBottom();
         } else {
           clearInterval(interval);
           setIsTalking(false);
         }
-      }, 30); // Slightly faster typing for better UX
+      }, 30); 
     } catch (error) {
       const errorMessage = language === "en"
         ? "Sorry, I couldn't process that request. Please try again."
@@ -419,27 +382,18 @@ setEmotion(detectedEmotion);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
 
-// Modified startListening
-// Replace the speech recognition related code with this more robust implementation
 
-// Update the startListening function
-// Add this useEffect to monitor transcript changes in real-time
 useEffect(() => {
   if (listening) {
-    console.log("Current transcript while listening:", transcript);
   }
 }, [transcript, listening]);
-// Replace the transcript monitoring useEffect
 useEffect(() => {
   if (listening && transcript) {
-    console.log("Live transcript update:", transcript);
     setInput(transcript);
   }
 }, [transcript, listening]);
-// Add this useEffect to catch speech recognition errors
 useEffect(() => {
   const handleError = (event) => {
-    console.error("SpeechRecognition error:", event);
     setIsListening(false);
     alert(language === "en"
       ? "Speech recognition error. Please try again."
@@ -456,24 +410,20 @@ useEffect(() => {
 }, [language, browserSupportsSpeechRecognition]);
 
 useEffect(() => {
-  // This effect handles when the browser's speech recognition stops on its own
   if (!listening && isListening) {
     setIsListening(false);
     
     if (transcript && transcript.trim()) {
-      // Process final transcript
       handleSend(transcript);
       resetTranscript();
     }
   }
 }, [listening, isListening]);
 
-// Add auto-timeout for listening (prevents endless listening)
 useEffect(() => {
   let timeoutId;
   
   if (isListening) {
-    // Auto-stop after 15 seconds of listening
     timeoutId = setTimeout(() => {
       stopListening();
     }, 15000);
@@ -484,23 +434,17 @@ useEffect(() => {
   };
 }, [isListening]);
 useEffect(() => {
-  // This effect handles when the browser's speech recognition stops on its own
-  console.log("Listening state changed:", {listening, isListening}); // Add this log
   
   if (!listening && isListening) {
     setIsListening(false);
     
     if (transcript && transcript.trim()) {
-      console.log("Processing final transcript:", transcript); // Add this log
       handleSend(transcript);
       resetTranscript();
     }
   }
 }, [listening, isListening, transcript, handleSend, resetTranscript]);
 
-// Replace your startListening function with this one
-// Replace your startListening function with this code
-// Replace your startListening function with this improved version
 const startListening = () => {
   if (!browserSupportsSpeechRecognition) {
     alert(language === "en" 
@@ -509,16 +453,12 @@ const startListening = () => {
     return;
   }
   
-  console.log("Attempting to start listening");
   
-  // Request microphone permission explicitly
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(() => {
-      console.log("Microphone permission granted");
       resetTranscript();
       setIsListening(true);
       
-      // Start speech recognition with improved settings
       SpeechRecognition.startListening({ 
         continuous: true,
         interimResults: true,  // Add this to get partial results
@@ -526,39 +466,30 @@ const startListening = () => {
       });
     })
     .catch(error => {
-      console.error("Microphone permission error:", error);
       alert(language === "en" 
         ? "Microphone access is required for voice input." 
         : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
     });
 };
 
-// Replace your stopListening function with this one
-// Replace your stopListening function with this code
+
 const stopListening = () => {
-  console.log("Stopping listening, current transcript:", transcript); // Add this log
   
-  // First capture current transcript before stopping
   const finalTranscript = transcript;
   
-  // Update UI state
   setIsListening(false);
   
-  // Stop the speech recognition
+
   SpeechRecognition.stopListening();
   
-  // Use the final transcript if it exists
   if (finalTranscript && finalTranscript.trim()) {
-    console.log("Setting input to:", finalTranscript); // Add this log
     setInput(finalTranscript);
     
-    // Delay the send to ensure UI is updated
     setTimeout(() => {
       handleSend(finalTranscript);
       resetTranscript();
-    }, 300); // Increased delay for reliability
+    }, 300); 
   } else {
-    console.log("No transcript to send"); // Add this log
   }
 };
   const handleKeyPress = (e) => {
@@ -589,7 +520,6 @@ const stopListening = () => {
       {/* Chat window */}
       {isOpen && (
         <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
-        {/* Header with modified controls */}
         <div className="chatbot-header">
           <h3>{uiText.chatbotTitle}</h3>
           <div className="header-controls">
@@ -597,7 +527,6 @@ const stopListening = () => {
             </div>
           </div>
 
-          {/* Language selection or avatar based on the state lem */}
           {!languageSelected ? (
             <div className="language-selection-container">
               <LanguagePicker selectedLanguage={language} onSelectLanguage={selectLanguage} />
@@ -605,7 +534,6 @@ const stopListening = () => {
           
           ) : (
             <>
-              {/* 3D Avatar container */}
               <div className="avatar-container">
                 <Canvas
                   gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
@@ -634,10 +562,8 @@ const stopListening = () => {
                       position={[-5, 5, 5]} 
                     />
                     
-                    {/* Humanoid Avatar */}
                     <Avatar isTalking={isTalking} emotion={emotion} isFullPage={isFullPage} />
                     
-                    {/* Camera Controls - Limited to prevent awkward angles */}
                     <OrbitControls 
   enableZoom={isFullPage}
   minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page

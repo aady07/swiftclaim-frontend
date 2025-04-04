@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin, FiSend, FiLinkedin, FiTwitter, FiFacebook, FiArrowLeft } from "react-icons/fi";
 import DOMPurify from 'dompurify';
 import { useForm } from '@formspree/react';
+import { useNavigate } from "react-router-dom";
+
 
 // Animation variants
 const fadeIn = {
@@ -25,6 +27,8 @@ const Contacts = () => {
   const sanitizeInput = (input) => {
     return DOMPurify.sanitize(input.trim());
   };
+
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -445,16 +449,12 @@ const Contacts = () => {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <motion.button
-                    className="px-8 py-3 bg-white text-blue-900 rounded-lg shadow-xl font-bold"
-                    whileHover={{ scale: 1.05, boxShadow: "0 15px 25px -5px rgba(255, 255, 255, 0.2)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Schedule a Demo
-                  </motion.button>
+              
                   <motion.button
                     className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg font-bold"
                     whileHover={{ scale: 1.05 }}
+                    onClick={() => navigate("/services")}
+
                     whileTap={{ scale: 0.95 }}
                   >
                     View Solutions
