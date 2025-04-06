@@ -520,13 +520,15 @@ const stopListening = () => {
       {/* Chat window */}
       {isOpen && (
         <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
-        <div className="chatbot-header">
-          <h3>{uiText.chatbotTitle}</h3>
-          <div className="header-controls">
-              <button className="close-btn" onClick={toggleChatbot}>×</button>
-            </div>
-          </div>
 
+        {!isFullPage && (
+      <div className="chatbot-header">
+        <h3>{uiText.chatbotTitle}</h3>
+        <div className="header-controls">
+          <button className="close-btn" onClick={toggleChatbot}>×</button>
+        </div>
+      </div>
+    )}
           {!languageSelected ? (
             <div className="language-selection-container">
               <LanguagePicker selectedLanguage={language} onSelectLanguage={selectLanguage} />

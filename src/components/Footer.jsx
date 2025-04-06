@@ -30,7 +30,8 @@ const Footer = () => {
   return (
     <footer className="bg-gray-950 py-12">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Changed grid layout for mobile - now 2 columns on mobile, 3 on larger screens */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-12">
           {/* Company Info */}
           <motion.div
             initial="hidden"
@@ -38,20 +39,30 @@ const Footer = () => {
             viewport={{ once: true }}
             variants={fadeInUp}
             transition={{ duration: 0.5 }}
+            className="-mt-4 lg:-mt-6 col-span-1"
           >
-            <Link to="/" className="inline-block mb-4">
-              {/* Logo container with #fcfcfc background */}
-              <div className="bg-[#fcfcfc] p-2 rounded-lg inline-flex items-center justify-center mb-2">
-                <img 
+            <Link 
+  to="/" 
+  className="flex items-center"
+  onClick={() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }}
+>
+              <div className="relative">
+                <motion.img 
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
                   src="/images/logo.png" 
-                  alt="MiraIsta Logo"
-                  className="h-12 w-auto"
-                  style={{ minWidth: "60px" }}
+                  alt="logo" 
+                  className="h-auto w-auto max-h-[130px] md:max-h-[150px] lg:max-h-[170px] -mt-8 object-contain"
+                  style={{ maxWidth: "150px" }}
                 />
               </div>
-              <h3 className="text-2xl font-bold text-white">MiraIsta</h3>
             </Link>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 -mt-7 ml-1 lg:-mt-8 lg:ml-2">
               {[
                 { icon: <FaLinkedin />, href: "#" },
                 { icon: <FaTwitter />, href: "#" },
@@ -71,16 +82,17 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Navigation Links - Now in vertical layout */}
+          {/* Navigation Links */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
             transition={{ duration: 0.5, delay: 0.2 }}
+            className="col-span-1"
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Navigation</h4>
-            <ul className="space-y-3">
+            <h4 className="text-lg font-semibold text-white mb-3 md:mb-4">Navigation</h4>
+            <ul className="space-y-2 md:space-y-3">
               {navItems.map((item) => (
                 <li key={item.id}>
                   <Link to={item.href}>
@@ -90,7 +102,7 @@ const Footer = () => {
                       className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-300"
                     >
                       {item.icon}
-                      <span>{item.text}</span>
+                      <span className="text-sm md:text-base">{item.text}</span>
                     </motion.div>
                   </Link>
                 </li>
@@ -105,35 +117,44 @@ const Footer = () => {
             viewport={{ once: true }}
             variants={fadeInUp}
             transition={{ duration: 0.5, delay: 0.3 }}
+            className="col-span-2 md:col-span-1" // Full width on mobile in second row
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Resources</h4>
-            <ul className="space-y-3 mb-6">
-              <li>
-                <a 
-                  href="/apidocs" 
-                  className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
-                >
-                  API Documentation
-                </a>
-              </li>
-            </ul>
-            
-            <h4 className="text-lg font-semibold text-white mb-4">Service Options</h4>
-            <ul className="space-y-3">
-              {serviceOptions.map((option) => (
-                <li key={option.id}>
-                  <Link to={option.href}>
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-0">
+              {/* Resources */}
+              <div>
+                <h4 className="text-lg font-semibold text-white  mb-3 md:mb-4">Resources</h4>
+                <ul className="space-y-2 md:space-y-3 mb-2 md:mb-6">
+                  <li>
+                    <a 
+                      href="/apidocs" 
+                      className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
                     >
-                      {option.text}
-                    </motion.div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      API Documentation
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              {/* Service Options */}
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-3 md:mb-4">Service Options</h4>
+                <ul className="space-y-2 md:space-y-3">
+                  {serviceOptions.map((option) => (
+                    <li key={option.id}>
+                      <Link to={option.href}>
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
+                        >
+                          {option.text}
+                        </motion.div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </motion.div>
         </div>
 
