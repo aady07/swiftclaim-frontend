@@ -8,10 +8,9 @@ import Contacts from "./pages/Contacts";
 import ClaimUpload from "./pages/ClaimUpload";
 import ChatbotPage from "./pages/ChatbotPage";
 import Navbar from "./components/Navbar";
-import Chatbot3D from "./components/Chatbot3D"; 
+import Chatbot3D from "./components/Chatbot3D";
 import Footer from "./components/Footer";
 import APIDocumentation from "./pages/APIDocumentation";
-
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -25,6 +24,9 @@ const ScrollToTop = () => {
 };
 
 const App = () => {
+  const location = useLocation();
+  const isChatbotPage = location.pathname === "/chatbotpage";
+  
   return (
     <>
       <Navbar />
@@ -40,7 +42,7 @@ const App = () => {
       </Routes>
       <Footer />
       <Analytics />
-      {window.location.pathname !== "/chatbotpage" && <Chatbot3D />}
+      {!isChatbotPage && <Chatbot3D />}
     </>
   );
 };

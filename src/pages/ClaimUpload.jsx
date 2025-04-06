@@ -181,7 +181,6 @@ const ClaimUpload = () => {
   };
   const handleDownloadPDF = () => {
     if (!previewUrl || !damageLabel) {
-      console.log("Missing required data for PDF generation");
       return;
     }
     
@@ -378,7 +377,6 @@ const ClaimUpload = () => {
             doc.addImage(partsImageUrl, 'JPEG', 20, 125, 80, 60, undefined, 'FAST');
           }
         } catch (imgError) {
-          console.error("Error adding images to PDF:", imgError);
           doc.setTextColor(220, 53, 69);
           doc.text("Error loading images", 20, 45);
         }
@@ -404,9 +402,7 @@ const ClaimUpload = () => {
       
       // Save the PDF
       doc.save(`mira-sita-damage-report-${carMake}-${carModel}.pdf`);
-      console.log("Enhanced PDF generated and download initiated");
     } catch (error) {
-      console.error("Error generating PDF:", error);
       // Show error to user
       alert("There was an error generating the PDF. Please try again.");
     }
