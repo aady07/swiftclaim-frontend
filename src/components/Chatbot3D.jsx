@@ -10,6 +10,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 
 
 
+
 const HumanoidAvatar = ({ isTalking, emotion }) => {
   const headRef = useRef();
   const mouthRef = useRef();
@@ -205,6 +206,12 @@ const Chatbot = ({ isFullPage = false }) => {
   const [isOpen, setIsOpen] = useState(isFullPage);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [showCarInput, setShowCarInput] = useState(false);
+  const [carInput, setCarInput] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("idle");
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (isFullPage) {
@@ -264,6 +271,8 @@ const Chatbot = ({ isFullPage = false }) => {
 
   const toggleMute = () => setIsMuted(!isMuted);
 
+  
+
   const speak = (text) => {
     if (!isMuted && "speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -293,11 +302,210 @@ const Chatbot = ({ isFullPage = false }) => {
     return "neutral";
   };
 
+  const isClaimRelatedQuery = (text) => {
+    const claimKeywords = [
+      'claim', 'accident', 'damage', 'car damage', 'vehicle damage',
+      'insurance claim', 'file claim', 'raise claim', 'report damage'
+    ];
+    const lowerText = text.toLowerCase();
+    return claimKeywords.some(keyword => lowerText.includes(keyword));
+  };
+
+  const handleCarDetails = async () => {
+    if (!carInput.includes(',')) {
+      const errorMessage = language === "en"
+        ? "Please provide car make and model separated by comma (e.g., Maruti,Swift)"
+        : "कृपया कार का मेक और मॉडल कॉमा से अलग करके दें (जैसे, Maruti,Swift)";
+      
+      // Reset states first
+      setUploadStatus("idle");
+      setShowCarInput(true); // Keep the car input visible
+      
+      // Show error message with avatar movement
+      setIsTyping(true);
+      setIsTalking(false);
+      
+      setTimeout(() => {
+        setIsTyping(false);
+        setIsTalking(true);
+        speak(errorMessage);
+        
+        setMessages(prev => [...prev, { text: errorMessage, fromBot: true }]);
+        scrollToBottom();
+        setTimeout(() => setIsTalking(false), 500);
+      }, 500);
+      return;
+    }
+
+    const [carMake, carModel] = carInput.split(',').map(item => item.trim());
+    
+    if (!carMake || !carModel) {
+      const errorMessage = language === "en"
+        ? "Please provide both car make and model"
+        : "कृपया कार का मेक और मॉडल दोनों प्रदान करें";
+      
+      setIsTyping(true);
+      setIsTalking(false);
+      
+      setTimeout(() => {
+        setIsTyping(false);
+        setIsTalking(true);
+        speak(errorMessage);
+        
+        setMessages(prev => [...prev, { text: errorMessage, fromBot: true }]);
+        scrollToBottom();
+        setTimeout(() => setIsTalking(false), 500);
+      }, 500);
+      return;
+    }
+
+    // Hide both car input and image container immediately when submit is clicked
+    setShowCarInput(false);
+    setShowImageUpload(false);
+
+    setUploadStatus("uploading");
+    const processingMessage = language === "en"
+      ? "I'm analyzing your vehicle damage. This will take just a moment..."
+      : "मैं आपके वाहन की क्षति का विश्लेषण कर रहा हूं। इसमें कुछ समय लगेगा...";
+    
+    setIsTyping(true);
+    setIsTalking(false);
+    
+    setTimeout(() => {
+      setIsTyping(false);
+      setIsTalking(true);
+      speak(processingMessage);
+      
+      setMessages(prev => [...prev, { text: processingMessage, fromBot: true }]);
+      scrollToBottom();
+      setTimeout(() => setIsTalking(false), 500);
+    }, 500);
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("carMake", carMake);
+    formData.append("carModel", carModel);
+
+    try {
+      const response = await axios.post("https://aadybackend.site/api/upload", formData);
+      
+      if (response.status === 200 && response.data) {
+        const damageStatus = response.data.model1_output?.[0]?.label || "Unknown";
+        const damagedParts = response.data.parts || [];
+        const costEstimates = response.data.cost || [];
+        
+        // Create a detailed message with each part and its price range
+        let detailedMessage = language === "en" 
+          ? `Based on my analysis:\n\n🔍 Damage Status: ${damageStatus}\n\n`
+          : `मेरे विश्लेषण के अनुसार:\n\n🔍 क्षति स्थिति: ${damageStatus}\n\n`;
+
+        // Add each damaged part with its price range
+        damagedParts.forEach((part, index) => {
+          const formattedPart = part.split('-').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+          ).join(' ');
+          const priceRange = costEstimates[index] || "Price not available";
+          
+          detailedMessage += language === "en"
+            ? `• ${formattedPart}: ₹${priceRange}\n`
+            : `• ${formattedPart}: ₹${priceRange}\n`;
+        });
+
+        // Add final question
+        detailedMessage += language === "en"
+          ? "\nWould you like to know anything else about your claim?"
+          : "\nक्या आप अपने दावे के बारे में कुछ और जानना चाहेंगे?";
+
+        // Reset states before showing the result
+        setUploadStatus("idle");
+        setSelectedFile(null);
+        setCarInput("");
+
+        // Show the result message with avatar movement
+        setIsTyping(false);
+        setIsTalking(true);
+        speak(detailedMessage);
+        setMessages(prev => [...prev, { text: detailedMessage, fromBot: true }]);
+        scrollToBottom();
+        setTimeout(() => setIsTalking(false), 500);
+
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error) {
+      // Handle error with conversational message and avatar movement
+      const errorMessage = language === "en"
+        ? "I'm having trouble analyzing your claim at the moment. This sometimes happens, but don't worry! Could you try uploading the image again?"
+        : "मुझे इस समय आपके दावे का विश्लेषण करने में परेशानी हो रही है। ऐसा कभी-कभी होता है, लेकिन चिंता न करें! क्या आप छवि को फिर से अपलोड करने का प्रयास कर सकते हैं?";
+
+      // Reset states but keep upload UI visible for retry
+      setUploadStatus("idle");
+      setSelectedFile(null);
+      setCarInput("");
+
+      // Show error message with avatar movement
+      setIsTyping(false);
+      setIsTalking(true);
+      speak(errorMessage);
+      setMessages(prev => [...prev, { text: errorMessage, fromBot: true }]);
+      scrollToBottom();
+      setTimeout(() => setIsTalking(false), 500);
+    }
+  };
+
   const handleSend = async (messageToSend = input) => {
     if (!messageToSend.trim()) return;
 
+    // Hide upload UI when new message is sent
+    setShowImageUpload(false);
+    setShowCarInput(false);
+    setSelectedFile(null);
+    setCarInput("");
+
     setMessages((prevMessages) => [...prevMessages, { text: messageToSend, fromBot: false }]);
     setInput("");
+
+    // Check if the message is claim-related
+    if (isClaimRelatedQuery(messageToSend)) {
+      const uploadMessage = language === "en"
+        ? "I understand you want to file a claim for your vehicle. I'll help you with that. Please upload a clear photo of the damage using one of the buttons below."
+        : "मैं समझता हूं कि आप अपने वाहन के लिए दावा दर्ज करना चाहते हैं। मैं आपकी मदद करूंगा। कृपया नीचे दिए गए बटनों में से किसी एक का उपयोग करके क्षति की एक स्पष्ट तस्वीर अपलोड करें।";
+      
+      setIsTyping(true);
+      setIsTalking(false);
+
+      // Add delay to simulate typing
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      setIsTyping(false);
+      setIsTalking(true);
+      speak(uploadMessage);
+
+      // Animate the text appearance
+      let displayedText = "";
+      let i = 0;
+      setMessages(prev => [...prev, { text: "", fromBot: true }]);
+
+      const interval = setInterval(() => {
+        if (i < uploadMessage.length) {
+          displayedText += uploadMessage[i];
+          setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            newMessages[newMessages.length - 1] = { text: displayedText, fromBot: true };
+            return newMessages;
+          });
+          i++;
+          scrollToBottom();
+        } else {
+          clearInterval(interval);
+          setIsTalking(false);
+          setShowImageUpload(true);
+        }
+      }, 30);
+      return;
+    }
+
+    // If not claim-related, proceed with the existing chat flow
     setIsTalking(false);
     setIsTyping(true);
 
@@ -306,7 +514,6 @@ const Chatbot = ({ isFullPage = false }) => {
         ? "You are a professional, helpful assistant for a large technology company. Respond in English."
         : "आप एक बड़ी प्रौद्योगिकी कंपनी के लिए एक पेशेवर, सहायक सहायक हैं। हिंदी में जवाब दें।";
 
-     
       const response = await axios.post(
         "https://aadybackend.site/api/chat",  
         {
@@ -323,25 +530,24 @@ const Chatbot = ({ isFullPage = false }) => {
 
       let botMessage;
 
-if (response.data && response.data.response) {
-  const responseString = response.data.response;
-  
-  const contentStart = responseString.indexOf("content=") + 8; // 8 is the length of "content="
-  const refusalStart = responseString.indexOf(", refusal=");
-  
-  if (contentStart !== -1 && refusalStart !== -1) {
-    botMessage = responseString.substring(contentStart, refusalStart);
+      if (response.data && response.data.response) {
+        const responseString = response.data.response;
+        
+        const contentStart = responseString.indexOf("content=") + 8; // 8 is the length of "content="
+        const refusalStart = responseString.indexOf(", refusal=");
+        
+        if (contentStart !== -1 && refusalStart !== -1) {
+          botMessage = responseString.substring(contentStart, refusalStart);
 
-  } else {
-    botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
-  }
-} else {
-  botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
-}
+        } else {
+          botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+        }
+      } else {
+        botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+      }
 
-
-const detectedEmotion = detectEmotion(botMessage);
-setEmotion(detectedEmotion);
+      const detectedEmotion = detectEmotion(botMessage);
+      setEmotion(detectedEmotion);
 
       setIsTyping(false);
       setIsTalking(true);
@@ -378,120 +584,118 @@ setEmotion(detectedEmotion);
     }
   };
 
-
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
+  useEffect(() => {
+    if (listening) {
+    }
+  }, [transcript, listening]);
+  useEffect(() => {
+    if (listening && transcript) {
+      setInput(transcript);
+    }
+  }, [transcript, listening]);
+  useEffect(() => {
+    const handleError = (event) => {
+      setIsListening(false);
+      console.log("SpeechRecognition Error:", event.error);
 
+      alert(language === "en"
+        ? "Speech recognition error. Please try again."
+        : "स्पीच रिकग्निशन त्रुटि। कृपया पुनः प्रयास करें।");
+    };
 
-useEffect(() => {
-  if (listening) {
-  }
-}, [transcript, listening]);
-useEffect(() => {
-  if (listening && transcript) {
-    setInput(transcript);
-  }
-}, [transcript, listening]);
-useEffect(() => {
-  const handleError = (event) => {
-    setIsListening(false);
-    alert(language === "en"
-      ? "Speech recognition error. Please try again."
-      : "स्पीच रिकग्निशन त्रुटि। कृपया पुनः प्रयास करें।");
-  };
+    if (browserSupportsSpeechRecognition) {
+      SpeechRecognition.getRecognition()?.addEventListener('error', handleError);
+      
+      return () => {
+        SpeechRecognition.getRecognition()?.removeEventListener('error', handleError);
+      };
+    }
+  }, [language, browserSupportsSpeechRecognition]);
 
-  if (browserSupportsSpeechRecognition) {
-    SpeechRecognition.getRecognition()?.addEventListener('error', handleError);
+  useEffect(() => {
+    if (!listening && isListening) {
+      setIsListening(false);
+      
+      if (transcript && transcript.trim()) {
+        handleSend(transcript);
+        resetTranscript();
+      }
+    }
+  }, [listening, isListening]);
+
+  useEffect(() => {
+    let timeoutId;
+    
+    if (isListening) {
+      timeoutId = setTimeout(() => {
+        stopListening();
+      }, 15000);
+    }
     
     return () => {
-      SpeechRecognition.getRecognition()?.removeEventListener('error', handleError);
+      if (timeoutId) clearTimeout(timeoutId);
     };
-  }
-}, [language, browserSupportsSpeechRecognition]);
-
-useEffect(() => {
-  if (!listening && isListening) {
-    setIsListening(false);
+  }, [isListening]);
+  useEffect(() => {
     
-    if (transcript && transcript.trim()) {
-      handleSend(transcript);
-      resetTranscript();
-    }
-  }
-}, [listening, isListening]);
-
-useEffect(() => {
-  let timeoutId;
-  
-  if (isListening) {
-    timeoutId = setTimeout(() => {
-      stopListening();
-    }, 15000);
-  }
-  
-  return () => {
-    if (timeoutId) clearTimeout(timeoutId);
-  };
-}, [isListening]);
-useEffect(() => {
-  
-  if (!listening && isListening) {
-    setIsListening(false);
-    
-    if (transcript && transcript.trim()) {
-      handleSend(transcript);
-      resetTranscript();
-    }
-  }
-}, [listening, isListening, transcript, handleSend, resetTranscript]);
-
-const startListening = () => {
-  if (!browserSupportsSpeechRecognition) {
-    alert(language === "en" 
-      ? "Your browser does not support speech recognition." 
-      : "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है।");
-    return;
-  }
-  
-  
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(() => {
-      resetTranscript();
-      setIsListening(true);
+    if (!listening && isListening) {
+      setIsListening(false);
       
-      SpeechRecognition.startListening({ 
-        continuous: true,
-        interimResults: true,  // Add this to get partial results
-        language: language === "en" ? "en-US" : "hi-IN" 
-      });
-    })
-    .catch(error => {
+      if (transcript && transcript.trim()) {
+        handleSend(transcript);
+        resetTranscript();
+      }
+    }
+  }, [listening, isListening, transcript, handleSend, resetTranscript]);
+
+  const startListening = () => {
+    if (!browserSupportsSpeechRecognition) {
       alert(language === "en" 
-        ? "Microphone access is required for voice input." 
-        : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
-    });
-};
-
-
-const stopListening = () => {
-  
-  const finalTranscript = transcript;
-  
-  setIsListening(false);
-  
-
-  SpeechRecognition.stopListening();
-  
-  if (finalTranscript && finalTranscript.trim()) {
-    setInput(finalTranscript);
+        ? "Your browser does not support speech recognition." 
+        : "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है।");
+      return;
+    }
     
-    setTimeout(() => {
-      handleSend(finalTranscript);
-      resetTranscript();
-    }, 300); 
-  } else {
-  }
-};
+    
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(() => {
+        resetTranscript();
+        setIsListening(true);
+        
+        SpeechRecognition.startListening({ 
+          continuous: true,
+          interimResults: true,  // Add this to get partial results
+          language: language === "en" ? "en-US" : "hi-IN" 
+        });
+      })
+      .catch(error => {
+        alert(language === "en" 
+          ? "Microphone access is required for voice input." 
+          : "वॉइस इनपुट के लिए माइक्रोफोन एक्सेस आवश्यक है।");
+      });
+  };
+
+  const stopListening = () => {
+    
+    const finalTranscript = transcript;
+    
+    setIsListening(false);
+    
+
+    SpeechRecognition.stopListening();
+    
+    if (finalTranscript && finalTranscript.trim()) {
+      setInput(finalTranscript);
+      
+      setTimeout(() => {
+        handleSend(finalTranscript);
+        resetTranscript();
+      }, 300); 
+    } else {
+    }
+  };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && input.trim()) {
       handleSend();
@@ -503,6 +707,43 @@ const stopListening = () => {
     placeholder: language === "en" ? "Type your message..." : "अपना संदेश टाइप करें...",
     chooseLanguage: language === "en" ? "Choose Language" : "भाषा चुनें",
     typingIndicator: language === "en" ? "Typing..." : "टाइप कर रहा है...",
+  };
+
+  const handleImageSelect = (file) => {
+    setSelectedFile(file);
+    const carDetailsMessage = language === "en"
+      ? "Please provide your car's make and model separated by a comma. For example: Maruti,Swift"
+      : "कृपया अपनी कार का मेक और मॉडल कॉमा से अलग करके प्रदान करें। उदाहरण के लिए: Maruti,Swift";
+
+    setIsTyping(true);
+    setIsTalking(false);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setIsTalking(true);
+      speak(carDetailsMessage);
+
+      let displayedText = "";
+      let i = 0;
+      setMessages(prev => [...prev, { text: "", fromBot: true }]);
+
+      const interval = setInterval(() => {
+        if (i < carDetailsMessage.length) {
+          displayedText += carDetailsMessage[i];
+          setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            newMessages[newMessages.length - 1] = { text: displayedText, fromBot: true };
+            return newMessages;
+          });
+          i++;
+          scrollToBottom();
+        } else {
+          clearInterval(interval);
+          setIsTalking(false);
+          setShowCarInput(true);
+        }
+      }, 30);
+    }, 500);
   };
 
   return (
@@ -611,6 +852,118 @@ const stopListening = () => {
                   <div ref={messagesEndRef} />
                 </div>
               
+                {/* Add this block for image upload UI */}
+                {showImageUpload && (
+                  <div className="upload-container p-2 bg-gray-800/20 rounded-lg mb-2">
+                    <div className="flex flex-col gap-2">
+                      {!selectedFile ? (
+                        <div className="flex gap-2 justify-center">
+                          <button
+                            onClick={() => {
+                              if (fileInputRef.current) {
+                                fileInputRef.current.removeAttribute('capture');
+                                fileInputRef.current.click();
+                              }
+                            }}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-700/50 text-gray-200 rounded-md hover:bg-gray-600/50 transition-colors text-sm border border-gray-600/30"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {language === "en" ? "Gallery" : "गैलरी"}
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (fileInputRef.current) {
+                                fileInputRef.current.setAttribute('capture', 'environment');
+                                fileInputRef.current.click();
+                              }
+                            }}
+                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-700/50 text-gray-200 rounded-md hover:bg-gray-600/50 transition-colors text-sm border border-gray-600/30"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {language === "en" ? "Camera" : "कैमरा"}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="relative inline-block" style={{ width: '60px', height: '40px', overflow: 'hidden' }}>
+                            <img 
+                              src={URL.createObjectURL(selectedFile)} 
+                              alt="Selected" 
+                              className="w-full h-full object-cover rounded-md"
+                              style={{ objectFit: 'cover' }}
+                            />
+                            <button
+                              onClick={() => {
+                                setSelectedFile(null);
+                                setShowCarInput(false);
+                              }}
+                              className="absolute -top-1 -right-1 p-1 bg-gray-800/70 text-gray-200 rounded-full hover:bg-gray-700/70"
+                              style={{ transform: 'scale(0.8)' }}
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                              const errorMessage = language === "en"
+                                ? "Image size should be less than 5MB"
+                                : "छवि का आकार 5MB से कम होना चाहिए";
+                              alert(errorMessage);
+                              return;
+                            }
+                            setSelectedFile(file);
+                            handleImageSelect(file);
+                          }
+                        }}
+                      />
+
+                      {showCarInput && (
+                        <div className="flex flex-col gap-2">
+                          <input
+                            type="text"
+                            value={carInput}
+                            onChange={(e) => setCarInput(e.target.value)}
+                            placeholder={language === "en" ? "Car Make,Car Model (e.g., Maruti,Swift)" : "कार मेक,कार मॉडल (जैसे, Maruti,Swift)"}
+                            className="w-full px-3 py-2 bg-gray-700/30 text-gray-200 text-sm rounded-md border border-gray-600/30 focus:outline-none focus:border-gray-500/50"
+                          />
+                          <button
+                            onClick={handleCarDetails}
+                            disabled={!carInput.includes(',') || uploadStatus === "uploading"}
+                            className={`w-full px-3 py-2 rounded-md transition-colors text-sm ${
+                              !carInput.includes(',') || uploadStatus === "uploading"
+                                ? "bg-gray-600/30 text-gray-400 cursor-not-allowed"
+                                : "bg-gray-700/50 text-gray-200 hover:bg-gray-600/50 border border-gray-600/30"
+                            }`}
+                          >
+                            {uploadStatus === "uploading"
+                              ? (language === "en" ? "Processing..." : "प्रसंस्करण...")
+                              : (language === "en" ? "Submit" : "जमा करें")}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 {/* Input area */}
                 <div className="input-area">
