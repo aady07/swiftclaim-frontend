@@ -396,7 +396,7 @@ const Chatbot = ({ isFullPage = false }) => {
         
         // Create a detailed message with each part and its price range
         let detailedMessage = language === "en" 
-          ? `Based on my analysis:\n\n🔍 Damage Status: ${damageStatus}\n\n`
+          ? `Based on my analysis:\n\n Damage Status: ${damageStatus}\n\n`
           : `मेरे विश्लेषण के अनुसार:\n\n🔍 क्षति स्थिति: ${damageStatus}\n\n`;
 
         // Add each damaged part with its price range
