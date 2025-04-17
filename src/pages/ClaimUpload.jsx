@@ -803,7 +803,7 @@ const ClaimUpload = () => {
                       type="text"
                       value={carMake}
                       onChange={(e) => setCarMake(e.target.value)}
-                      placeholder="e.g. Toyota, Honda, Ford"
+                      placeholder="e.g. Toyota, Honda, Maruti"
                       className="px-4 py-3 rounded-lg bg-gray-800/70 border border-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)" }}
                     />
@@ -815,7 +815,7 @@ const ClaimUpload = () => {
                       type="text"
                       value={carModel}
                       onChange={(e) => setCarModel(e.target.value)}
-                      placeholder="e.g. Camry, Civic, F-150"
+                      placeholder="e.g. Swift, Venue, City"
                       className="px-4 py-3 rounded-lg bg-gray-800/70 border border-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       style={{ boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)" }}
                     />

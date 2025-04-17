@@ -212,6 +212,8 @@ const Chatbot = ({ isFullPage = false }) => {
   const [carInput, setCarInput] = useState("");
   const [uploadStatus, setUploadStatus] = useState("idle");
   const fileInputRef = useRef(null);
+  const [damageImageUrl, setDamageImageUrl] = useState(null);
+  const [partsImageUrl, setPartsImageUrl] = useState(null);
 
   useEffect(() => {
     if (isFullPage) {
@@ -394,6 +396,33 @@ const Chatbot = ({ isFullPage = false }) => {
         const damagedParts = response.data.parts || [];
         const costEstimates = response.data.cost || [];
         
+        // Get damage and parts images from response
+        const damageImage = response.data.model1_output?.[0]?.output_image_base64;
+        const partsImage = response.data.model2_output?.[0]?.output2_image_base64;
+
+        // Reset states before showing the result
+        setUploadStatus("idle");
+        setSelectedFile(null);
+        setCarInput("");
+
+        // Show the images first
+        if (damageImage) {
+          const damageImageUrl = damageImage.startsWith('data') ? damageImage : `data:image/png;base64,${damageImage}`;
+          setMessages(prev => [...prev, { 
+            text: "Damage Detection Image:", 
+            fromBot: true,
+            image: damageImageUrl 
+          }]);
+        }
+        if (partsImage) {
+          const partsImageUrl = partsImage.startsWith('data') ? partsImage : `data:image/png;base64,${partsImage}`;
+          setMessages(prev => [...prev, { 
+            text: "Parts Detection Image:", 
+            fromBot: true,
+            image: partsImageUrl 
+          }]);
+        }
+        
         // Create a detailed message with each part and its price range
         let detailedMessage = language === "en" 
           ? `Based on my analysis:\n\n Damage Status: ${damageStatus}\n\n`
@@ -416,16 +445,12 @@ const Chatbot = ({ isFullPage = false }) => {
           ? "\nWould you like to know anything else about your claim?"
           : "\nक्या आप अपने दावे के बारे में कुछ और जानना चाहेंगे?";
 
-        // Reset states before showing the result
-        setUploadStatus("idle");
-        setSelectedFile(null);
-        setCarInput("");
-
-        // Show the result message with avatar movement
+        // Show the analysis text after images
         setIsTyping(false);
         setIsTalking(true);
         speak(detailedMessage);
         setMessages(prev => [...prev, { text: detailedMessage, fromBot: true }]);
+        
         scrollToBottom();
         setTimeout(() => setIsTalking(false), 500);
 
@@ -834,6 +859,16 @@ const Chatbot = ({ isFullPage = false }) => {
                     <div key={index} className={msg.fromBot ? "bot-msg" : "user-msg"}>
                       <div className="message-bubble">
                         {msg.text}
+                        {msg.image && (
+                          <div className="mt-2">
+                            <img 
+                              src={msg.image} 
+                              alt="Analysis" 
+                              className="max-w-full rounded-lg border border-gray-700"
+                              style={{ maxHeight: '200px', objectFit: 'contain' }}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
