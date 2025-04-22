@@ -110,7 +110,8 @@ const Navbar = () => {
     { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
     { id: 3, text: "Services", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
-    { id: 4, text: "Contacts", href: "/contacts", icon: <BiSupport className="text-xl" /> },
+    { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
+    { id: 5, text: "Contacts", href: "/contacts", icon: <BiSupport className="text-xl" /> },
   ];
 
   const serviceOptions = [
@@ -129,7 +130,6 @@ const Navbar = () => {
   return (
     <motion.div 
       className="fixed top-3 z-50 w-full lg:top-3 sm:top-0"
-      // Remove transition from main div to keep children in fixed position
       initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
     >
       {/* Enhanced Cylindrical highlight container - adjusted to extend only as needed */}
@@ -139,6 +139,7 @@ const Navbar = () => {
           initial={{ opacity: 0, scaleX: 0.9, scaleY: 0.7 }}
           animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
+          style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)' }}
         >
           {/* Enhanced highlighted glow effects */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-900/20 via-blue-400/10 to-blue-900/20"></div>
@@ -174,14 +175,16 @@ const Navbar = () => {
       <div className="relative flex justify-between items-center h-16 max-w-[1200px] mx-auto px-6">
         {/* Logo Container - Adjusted to align left with no extra space */}
         <div className="flex items-center z-10">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center" onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.location.href = '/';
+          }}>
             <div className="relative">
               <motion.img 
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
                 src="/images/logo.png" 
                 alt="logo" 
-                className="h-[140px] lg:h-[180px] w-auto object-contain translate-y-1 lg:translate-y-1.5"
+                className="h-[140px] lg:h-[180px] w-auto object-contain transform translate-y-0.5 lg:translate-y-1"
               />
             </div>
           </Link>

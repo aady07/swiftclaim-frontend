@@ -1,0 +1,62 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Marketing Intern",
+      "department": "Marketing",
+      "type": "Internship",
+      "location": "Remote",
+      "postedDate": "2025-04-22",
+      "description": "Miraista is looking for a passionate and creative Marketing Intern to join our growing team. You'll assist in executing digital marketing campaigns and enhancing our brand visibility across various platforms.",
+      "responsibilities": [
+        "Assist in planning and executing digital marketing campaigns",
+        "Create engaging content for social media and other digital platforms",
+        "Analyze marketing data and campaign performance",
+        "Support SEO and SEM efforts",
+        "Coordinate with design and content teams to ensure brand consistency"
+      ],
+      "requirements": [
+        "Pursuing a degree in Marketing, Communications, or a related field",
+        "Familiarity with social media platforms and marketing tools",
+        "Basic knowledge of SEO, content marketing, and analytics",
+        "Strong communication and organizational skills",
+        "Creative mindset and eagerness to learn"
+      ],
+      "perks": [
+        "Flexible remote working hours",
+        "Letter of recommendation upon successful completion",
+        "Hands-on experience with live marketing campaigns",
+        "Opportunity to contribute to real-world brand growth"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Software Developer Intern (Full Stack)",
+      "department": "Engineering",
+      "type": "Internship",
+      "location": "Remote",
+      "postedDate": "2025-04-22",
+      "description": "We’re seeking a Software Developer Intern with a passion for full-stack development. You'll work closely with our engineering team to build and improve scalable web applications.",
+      "responsibilities": [
+        "Develop frontend interfaces using HTML, CSS, JavaScript, and modern frameworks like React",
+        "Work on backend services using Node.js, Express, or Java",
+        "Assist in database design and API integration",
+        "Collaborate with designers and developers to build new features",
+        "Write clean, efficient, and testable code"
+      ],
+      "requirements": [
+        "Pursuing a degree in Computer Science, Engineering, or a related field",
+        "Basic understanding of frontend and backend technologies",
+        "Familiarity with databases (SQL or NoSQL)",
+        "Willingness to learn and take on new challenges",
+        "Good problem-solving skills and team collaboration"
+      ],
+      "perks": [
+        "Remote learning environment",
+        "Mentorship from experienced developers",
+        "Certificate and recommendation letter upon completion",
+        "Potential for full-time opportunity based on performance"
+      ]
+    }
+  ]
+}
