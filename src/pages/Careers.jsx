@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useScroll, useTransform } from "framer-motion";
 import { useForm } from '@formspree/react';
 import DOMPurify from 'dompurify';
+import jobsData from '../data/jobs.json';
 
 // Animation variants
 const fadeIn = {
@@ -65,7 +66,7 @@ const Careers = () => {
   const [activeLocation, setActiveLocation] = useState("All Locations");
   const [selectedJob, setSelectedJob] = useState(null);
   const [isApplying, setIsApplying] = useState(false);
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(jobsData.jobs);
   const [applicationData, setApplicationData] = useState({
     fullName: "",
     email: "",
@@ -88,14 +89,6 @@ const Careers = () => {
     exit: { scale: 0.8, opacity: 0 },
     transition: { duration: 0.5, ease: "easeInOut" }
   };
-
-  useEffect(() => {
-    // Fetch jobs data
-    fetch('/src/data/jobs.json')
-      .then(response => response.json())
-      .then(data => setJobs(data.jobs))
-      .catch(error => console.error('Error loading jobs:', error));
-  }, []);
 
   const sanitizeInput = (input) => {
     return DOMPurify.sanitize(input.trim());
