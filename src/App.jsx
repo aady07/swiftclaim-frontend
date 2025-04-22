@@ -12,6 +12,7 @@ import Chatbot3D from "./components/Chatbot3D";
 import Footer from "./components/Footer";
 import APIDocumentation from "./pages/APIDocumentation";
 import Careers from "./pages/Careers";
+import NotFound from "./pages/NotFound";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -29,23 +30,26 @@ const App = () => {
   const isChatbotPage = location.pathname === "/chatbotpage";
   
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Intro />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contacts" element={<Contacts />} />
-        <Route path="/claimupload" element={<ClaimUpload />} />
-        <Route path="/chatbotpage" element={<ChatbotPage />} />
-        <Route path="/apidocs" element={<APIDocumentation />} />
-        <Route path="/careers" element={<Careers />} />
-      </Routes>
+      <main className="flex-grow">
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Intro />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/claimupload" element={<ClaimUpload />} />
+          <Route path="/chatbotpage" element={<ChatbotPage />} />
+          <Route path="/apidocs" element={<APIDocumentation />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
       <Footer />
       <Analytics />
       {!isChatbotPage && <Chatbot3D />}
-    </>
+    </div>
   );
 };
 
