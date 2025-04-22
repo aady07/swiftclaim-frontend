@@ -718,8 +718,7 @@ const Careers = () => {
 
                         <div className="flex justify-between items-center pt-4 border-t border-gray-700/30">
                           <div className="flex items-center space-x-2">
-                            <FiStar className="text-yellow-400" />
-                            <span className="text-gray-300">Competitive Salary</span>
+
                           </div>
                           <motion.button
                             className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-violet-600 text-white font-medium relative overflow-hidden group"
