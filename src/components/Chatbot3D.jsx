@@ -172,8 +172,6 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
     { code: "hi", name: "हिन्दी (Hindi)" }
   ];
   
-  
-  
   return (
     <div className="language-picker">
       <p>{selectedLanguage === "en" ? "" : "भाषा चुनें:"}</p>
@@ -263,17 +261,12 @@ const Chatbot = ({ isFullPage = false }) => {
     }
   }, [isFullPage, messages]);
   
-
-
-
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
     setLanguageSelected(true);
   };
 
   const toggleMute = () => setIsMuted(!isMuted);
-
-  
 
   const speak = (text) => {
     if (!isMuted && "speechSynthesis" in window) {

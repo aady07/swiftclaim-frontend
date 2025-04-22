@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import Chatbot3D from "./components/Chatbot3D";
 import Footer from "./components/Footer";
 import APIDocumentation from "./pages/APIDocumentation";
+import Careers from "./pages/Careers";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/claimupload" element={<ClaimUpload />} />
         <Route path="/chatbotpage" element={<ChatbotPage />} />
         <Route path="/apidocs" element={<APIDocumentation />} />
+        <Route path="/careers" element={<Careers />} />
       </Routes>
       <Footer />
       <Analytics />
