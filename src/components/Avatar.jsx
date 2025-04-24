@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, Environment } from "@react-three/drei";
 import * as THREE from 'three';
@@ -8,49 +8,59 @@ const Avatar = ({ isTalking, emotion, isFullPage = false }) => {
   const { scene } = useGLTF("/avatar.glb");
   const headRef = useRef();
 
-  // Material configuration based on glTF Viewer
-  useEffect(() => {
-    if (!scene) return;
+  // Calculate position and scale once and store in ref
+  const positionScale = useMemo(() => {
+    if (!scene) return null;
     
-    // Calculate bounding box
     const box = new THREE.Box3().setFromObject(scene);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     
-    // Different positioning based on context
-    scene.position.x = -center.x;
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = isFullPage ? 4.8 / maxDim : 3.5 / maxDim;
     
-    // Different Y positioning based on whether we're in full page or sidebar
-    if (isFullPage) {
-      scene.position.y = -center.y - 3.5; // Less offset for full page
-      scene.position.z = -center.z;
-      
-      // Different scaling for full page
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 4.8 / maxDim; // Smaller scale for full page view
-      scene.scale.set(scale, scale, scale);
-    } else {
-      scene.position.y = -center.y - 2.2; // More vertical offset for sidebar
-      scene.position.z = -center.z;
-      
-      // Original scaling for sidebar
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 3.5 / maxDim;
-      scene.scale.set(scale, scale, scale);
-    }
+    return {
+      position: {
+        x: -center.x,
+        y: isFullPage ? -center.y - 3.5 : -center.y - 2.2,
+        z: -center.z
+      },
+      scale
+    };
+  }, [scene, isFullPage]);
+
+  // Apply position and scale consistently
+  useEffect(() => {
+    if (!scene || !positionScale) return;
+    
+    scene.position.set(
+      positionScale.position.x,
+      positionScale.position.y,
+      positionScale.position.z
+    );
+    scene.scale.setScalar(positionScale.scale);
+    
+    // Cleanup function to reset position and scale
+    return () => {
+      scene.position.set(0, 0, 0);
+      scene.scale.setScalar(1);
+    };
+  }, [scene, positionScale]);
+
+  // Material configuration
+  useEffect(() => {
+    if (!scene) return;
+    
     scene.traverse((child) => {
       if (child.isMesh) {
-        // Match viewer's material settings
-        child.material.toneMapped = true; // Using Linear tone mapping
+        child.material.toneMapped = true;
         child.material.envMapIntensity = 1.0;
         child.material.needsUpdate = true;
-        
-        // Optimize material properties
         child.material.metalness = 0.1;
         child.material.roughness = 0.7;
       }
     });
-  }, [scene, isFullPage]);
+  }, [scene]);
 
   // Animation logic (unchanged)
   useFrame(({ clock }) => {

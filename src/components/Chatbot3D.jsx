@@ -213,6 +213,16 @@ const Chatbot = ({ isFullPage = false }) => {
   const [damageImageUrl, setDamageImageUrl] = useState(null);
   const [partsImageUrl, setPartsImageUrl] = useState(null);
 
+  // Add a ref to track if the avatar has been initialized
+  const avatarInitialized = useRef(false);
+
+  // Reset avatar initialization when chatbot is closed
+  useEffect(() => {
+    if (!isOpen) {
+      avatarInitialized.current = false;
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     if (isFullPage) {
       setIsOpen(true);
@@ -768,39 +778,39 @@ const Chatbot = ({ isFullPage = false }) => {
     <>
       {/* Floating chat button */}
       {!isFullPage && (
-      <div className="chatbot-button" onClick={toggleChatbot}>
-        {isOpen ? (
-          <span className="close-icon">×</span>
-        ) : (
-          <div className="button-pulse"></div>
-        )}
-      </div>
-)}
+        <div className="chatbot-button" onClick={toggleChatbot}>
+          {isOpen ? (
+            <span className="close-icon">×</span>
+          ) : (
+            <div className="button-pulse"></div>
+          )}
+        </div>
+      )}
+      
       {/* Chat window */}
       {isOpen && (
         <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
-
-        {!isFullPage && (
-      <div className="chatbot-header">
-        <h3>{uiText.chatbotTitle}</h3>
-        <div className="header-controls">
-          <button className="close-btn" onClick={toggleChatbot}>×</button>
-        </div>
-      </div>
-    )}
+          {!isFullPage && (
+            <div className="chatbot-header">
+              <h3>{uiText.chatbotTitle}</h3>
+              <div className="header-controls">
+                <button className="close-btn" onClick={toggleChatbot}>×</button>
+              </div>
+            </div>
+          )}
+          
           {!languageSelected ? (
             <div className="language-selection-container">
               <LanguagePicker selectedLanguage={language} onSelectLanguage={selectLanguage} />
             </div>
-          
           ) : (
             <>
               <div className="avatar-container">
                 <Canvas
                   gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
                   camera={{
-                    position: isFullPage ? [0, 0.5, 2.5] : [0, 1.6, 1.0], // Adjusted for full-page
-                    fov: isFullPage ? 35 : 25, // Wider field of view for full-page
+                    position: isFullPage ? [0, 0.5, 2.5] : [0, 1.6, 1.0],
+                    fov: isFullPage ? 35 : 25,
                     near: 0.1,
                     far: 1000
                   }}
@@ -810,7 +820,6 @@ const Chatbot = ({ isFullPage = false }) => {
                   }}
                 >
                   <Suspense fallback={null}>
-                    {/* Lighting Setup */}
                     <Environment preset="studio" />
                     <ambientLight intensity={0.5} />
                     <directionalLight
@@ -823,15 +832,20 @@ const Chatbot = ({ isFullPage = false }) => {
                       position={[-5, 5, 5]} 
                     />
                     
-                    <Avatar isTalking={isTalking} emotion={emotion} isFullPage={isFullPage} />
+                    <Avatar 
+                      isTalking={isTalking} 
+                      emotion={emotion} 
+                      isFullPage={isFullPage}
+                      key={`${isFullPage}-${avatarInitialized.current}`}
+                    />
                     
                     <OrbitControls 
-  enableZoom={isFullPage}
-  minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page
-  maxPolarAngle={Math.PI/2 + (isFullPage ? 0.4 : 0.2)} // Less restricted in full-page
-  minAzimuthAngle={isFullPage ? -Math.PI/4 : -Math.PI/6}
-  maxAzimuthAngle={isFullPage ? Math.PI/4 : Math.PI/6}
-/>
+                      enableZoom={isFullPage}
+                      minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)}
+                      maxPolarAngle={Math.PI/2 + (isFullPage ? 0.4 : 0.2)}
+                      minAzimuthAngle={isFullPage ? -Math.PI/4 : -Math.PI/6}
+                      maxAzimuthAngle={isFullPage ? Math.PI/4 : Math.PI/6}
+                    />
                   </Suspense>
                 </Canvas>
                 
