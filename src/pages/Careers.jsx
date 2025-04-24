@@ -782,7 +782,7 @@ const Careers = () => {
                 </div>
                 <div>
                   <motion.button
-                    onClick={() => navigate("/contact")}
+                    onClick={() => navigate("/contacts")}
                     className="px-8 py-3 bg-white text-blue-900 rounded-lg font-bold flex items-center"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
