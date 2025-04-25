@@ -6,6 +6,7 @@ import { useForm } from '@formspree/react';
 import { useNavigate } from "react-router-dom";
 import { useScroll } from "framer-motion";
 import { useTransform } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 
 // Animation variants
@@ -161,6 +162,16 @@ const Contacts = () => {
 
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
+      <Helmet>
+        <title>Contact Us</title>
+        <meta name="description" content="Contact MiraIsta's team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support. We're here to help transform your business with cutting-edge AI technology." />
+        <meta name="keywords" content="contact MiraIsta, AI support, business inquiry, AI solutions contact, MiraIsta contact, AI experts" />
+        <meta property="og:title" content="Contact Us | MiraIsta - Get in Touch with Our AI Experts" />
+        <meta property="og:description" content="Contact our team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support." />
+        <meta property="og:url" content="https://www.miraista.com/contact" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://www.miraista.com/contact" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
         {/* Animated background gradient */}

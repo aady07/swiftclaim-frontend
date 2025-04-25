@@ -19,6 +19,7 @@ import { useScroll, useTransform } from "framer-motion";
 import { useForm } from '@formspree/react';
 import DOMPurify from 'dompurify';
 import jobsData from '../data/jobs.json';
+import { Helmet } from "react-helmet";
 
 // Animation variants
 const fadeIn = {
@@ -438,6 +439,16 @@ const Careers = () => {
 
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
+      <Helmet>
+        <title>Careers</title>
+        <meta name="description" content="Join MiraIsta's team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation. Shape the future of AI solutions." />
+        <meta name="keywords" content="AI careers, machine learning jobs, tech careers, MiraIsta jobs, AI development positions, tech innovation careers" />
+        <meta property="og:title" content="Careers at MiraIsta - Join Our AI Innovation Team" />
+        <meta property="og:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
+        <meta property="og:url" content="https://www.miraista.com/careers" />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://www.miraista.com/careers" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
         {/* Animated background gradient */}

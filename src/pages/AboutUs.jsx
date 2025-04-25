@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet"; // Import Helmet
+
 
 const AboutUs = () => {
   const { scrollYProgress } = useScroll();
@@ -118,6 +120,14 @@ const AboutUs = () => {
   
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
+       <Helmet>
+        <title>About Us </title>
+        <meta name="description" content="Learn more about the team and mission behind MiraIsta, a leader in AI-driven business solutions." />
+        <meta name="keywords" content="AI, business solutions, team, innovation, MiraIsta" />
+        <meta property="og:title" content="About Us - MiraIsta" />
+        <meta property="og:description" content="Learn more about the team and mission behind MiraIsta, a leader in AI-driven business solutions." />
+        <meta property="og:url" content="https://www.miraista.com/about-us" />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
         {/* Animated background gradient */}
