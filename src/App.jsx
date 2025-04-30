@@ -13,7 +13,7 @@ import Footer from "./components/Footer";
 import APIDocumentation from "./pages/APIDocumentation";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
