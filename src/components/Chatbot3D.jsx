@@ -820,7 +820,7 @@ const Chatbot = ({ isFullPage = false }) => {
                   }}
                 >
                   <Suspense fallback={null}>
-                    <Environment preset="studio" />
+                   {/*} <Environment preset="studio" />*/}
                     <ambientLight intensity={0.5} />
                     <directionalLight
                       intensity={1.5}

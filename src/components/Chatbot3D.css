@@ -182,8 +182,6 @@ body {
   overflow: hidden;
 }
 
-
-
 /* Speaking indicator */
 .speak-indicator {
   position: absolute;
@@ -583,6 +581,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 20px rgba(74, 92, 130, 0.5);
 }
+
 /* Voice recording button styling */
 .input-control-btn {
   display: flex;
@@ -610,11 +609,7 @@ body {
   margin: 5px 0;
   width: 100%;
   animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+  border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 .recording-wave {
@@ -628,7 +623,7 @@ body {
   display: block;
   width: 3px;
   height: 100%;
-  background-color: red;
+  background-color: #ff3b30;
   margin: 0 2px;
   border-radius: 3px;
   animation: recording-wave 1.2s infinite ease-in-out;
@@ -640,19 +635,17 @@ body {
 .recording-wave span:nth-child(4) { animation-delay: 0.6s; }
 .recording-wave span:nth-child(5) { animation-delay: 0.8s; }
 
-@keyframes recording-wave {
-  0%, 100% { transform: scaleY(0.4); }
-  50% { transform: scaleY(1); }
-}
 .recording-text {
   flex-grow: 1;
   font-weight: 500;
-  color: #555;
+  color: #ff3b30;
+  font-size: 14px;
 }
+
 .stop-recording-btn {
   background: none;
   border: none;
-  color: red;
+  color: #ff3b30;
   cursor: pointer;
   padding: 0;
   height: 24px;
@@ -662,10 +655,21 @@ body {
   justify-content: center;
   transition: transform 0.2s;
 }
+
 .stop-recording-btn:hover {
   transform: scale(1.1);
 }
 
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+@keyframes recording-wave {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
 
 .recording-indicator {
   display: flex;
@@ -695,11 +699,9 @@ body {
   transition: transform 0.2s;
 }
 
-
 .stop-recording-btn:hover {
   transform: scale(1.1);
 }
-
 
 @keyframes pulse {
   0% {
@@ -715,6 +717,7 @@ body {
     opacity: 0.7;
   }
 }
+
 /* Add to your CSS file */
 .voice-button.active {
   background-color: #ff3b30;
