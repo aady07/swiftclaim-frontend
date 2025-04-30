@@ -1,145 +1,243 @@
-import React, { useRef, useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF, Environment } from "@react-three/drei";
+import React, { useEffect, useRef, useState } from 'react';
+import { useGLTF, useAnimations } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Avatar = ({ isTalking, emotion, isFullPage = false }) => {
-
-  const { scene } = useGLTF("/avatar.glb");
+const Avatar = ({ audioStream, isTalking = false }) => {
+  const group = useRef();
   const headRef = useRef();
+  const teethRef = useRef();
+  const analyser = useRef(null);
+  const dataArray = useRef(null);
+  const audioContext = useRef(null);
+  const sourceNode = useRef(null);
 
-  // Calculate position and scale once and store in ref
-  const positionScale = useMemo(() => {
-    if (!scene) return null;
-    
-    const box = new THREE.Box3().setFromObject(scene);
-    const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = isFullPage ? 4.8 / maxDim : 3.5 / maxDim;
-    
-    return {
-      position: {
-        x: -center.x,
-        y: isFullPage ? -center.y - 3.5 : -center.y - 2.2,
-        z: -center.z
-      },
-      scale
-    };
-  }, [scene, isFullPage]);
+  const { scene: avatarScene } = useGLTF('/avatar.glb');
+  const { animations: idleAnims } = useGLTF('/idle_withskin.glb');
+  const { actions, mixer } = useAnimations(idleAnims, group);
 
-  // Apply position and scale consistently
+  const morphIndices = useRef({
+    eyeBlinkLeft: -1,
+    eyeBlinkRight: -1,
+    jawOpen: -1,
+    mouthClose: -1,
+    mouthFunnel: -1,
+    mouthPucker: -1,
+    mouthSmileLeft: -1,
+    mouthSmileRight: -1,
+  });
+
+  const blinkState = useRef({
+    timer: 0,
+    value: 0,
+    isBlinking: false,
+    interval: 3,
+  });
+
+  const mouthState = useRef({
+    previousOpenValue: 0,
+    closeTimer: 0,
+    isClosing: false,
+    closeDuration: 0.1,
+    closeInterval: 0.3 + Math.random() * 0.5, // Random interval between mouth closes
+    closeIntensity: 0,
+  });
+
+  // Setup models
   useEffect(() => {
-    if (!scene || !positionScale) return;
-    
-    scene.position.set(
-      positionScale.position.x,
-      positionScale.position.y,
-      positionScale.position.z
-    );
-    scene.scale.setScalar(positionScale.scale);
-    
-    // Cleanup function to reset position and scale
-    return () => {
-      scene.position.set(0, 0, 0);
-      scene.scale.setScalar(1);
-    };
-  }, [scene, positionScale]);
+    if (!avatarScene || !actions || idleAnims.length === 0) return;
 
-  // Material configuration
-  useEffect(() => {
-    if (!scene) return;
-    
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        child.material.toneMapped = true;
-        child.material.envMapIntensity = 1.0;
-        child.material.needsUpdate = true;
-        child.material.metalness = 0.1;
-        child.material.roughness = 0.7;
+    const head = avatarScene.getObjectByName('Wolf3D_Head');
+    const teeth = avatarScene.getObjectByName('Wolf3D_Teeth');
+
+    if (head) {
+      headRef.current = head;
+      if (head.morphTargetDictionary) {
+        morphIndices.current = {
+          eyeBlinkLeft: head.morphTargetDictionary['eyeBlinkLeft'] ?? -1,
+          eyeBlinkRight: head.morphTargetDictionary['eyeBlinkRight'] ?? -1,
+          jawOpen: head.morphTargetDictionary['jawOpen'] ?? -1,
+          mouthClose: head.morphTargetDictionary['mouthClose'] ?? -1,
+          mouthFunnel: head.morphTargetDictionary['mouthFunnel'] ?? -1,
+          mouthPucker: head.morphTargetDictionary['mouthPucker'] ?? -1,
+          mouthSmileLeft: head.morphTargetDictionary['mouthSmileLeft'] ?? -1,
+          mouthSmileRight: head.morphTargetDictionary['mouthSmileRight'] ?? -1,
+        };
       }
-    });
-  }, [scene]);
+    }
 
-  // Animation logic (unchanged)
-  useFrame(({ clock }) => {
-    const headMesh = scene.getObjectByName('Wolf3D_Head') || headRef.current;
-    if (!headMesh?.morphTargetDictionary) return;
-  
-    const morphDict = headMesh.morphTargetDictionary;
-    const influences = headMesh.morphTargetInfluences;
-  
-    // 👄 Enhanced Lip Sync with natural movement
+    if (teeth) {
+      teethRef.current = teeth;
+    }
+
+    // Play idle animation
+    const idleAction = actions[idleAnims[0]?.name];
+    if (idleAction) {
+      idleAction.reset().fadeIn(0.5).play();
+      idleAction.setLoop(THREE.LoopRepeat);
+    }
+  }, [avatarScene, actions, idleAnims]);
+
+  // Setup Audio Analyser
+  useEffect(() => {
+    if (audioStream) {
+      audioContext.current = new AudioContext();
+      sourceNode.current = audioContext.current.createMediaStreamSource(audioStream);
+      analyser.current = audioContext.current.createAnalyser();
+      analyser.current.fftSize = 512;
+      sourceNode.current.connect(analyser.current);
+
+      const bufferLength = analyser.current.frequencyBinCount;
+      dataArray.current = new Uint8Array(bufferLength);
+    }
+
+    return () => {
+      if (audioContext.current) {
+        audioContext.current.close();
+      }
+    };
+  }, [audioStream]);
+
+  useFrame((state, delta) => {
+    if (!headRef.current) return;
+
+    // Update mixer for animations
+    if (mixer) mixer.update(delta);
+
+    // === BLINK LOGIC ===
+    blinkState.current.timer += delta;
+    if (!blinkState.current.isBlinking && blinkState.current.timer >= blinkState.current.interval) {
+      blinkState.current.isBlinking = true;
+      blinkState.current.timer = 0;
+    }
+
+    if (blinkState.current.isBlinking) {
+      blinkState.current.value += delta / 0.25;
+      const progress = Math.sin(blinkState.current.value * Math.PI);
+      const intensity = THREE.MathUtils.clamp(progress, 0, 1);
+
+      if (morphIndices.current.eyeBlinkLeft !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.eyeBlinkLeft] = intensity;
+      if (morphIndices.current.eyeBlinkRight !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.eyeBlinkRight] = intensity;
+
+      if (blinkState.current.value >= 1) {
+        blinkState.current.isBlinking = false;
+        blinkState.current.value = 0;
+        blinkState.current.interval = 2 + Math.random() * 3;
+      }
+    }
+
+    // === MOUTH MOVEMENT BASED ON AUDIO ===
+    let rawOpenValue = 0;
+
+    if (isTalking && analyser.current && dataArray.current) {
+      analyser.current.getByteTimeDomainData(dataArray.current);
+      let sum = 0;
+      for (let i = 0; i < dataArray.current.length; i++) {
+        const normalized = dataArray.current[i] / 128 - 1;
+        sum += normalized * normalized;
+      }
+      const rms = Math.sqrt(sum / dataArray.current.length);
+      rawOpenValue = THREE.MathUtils.clamp((rms - 0.02) * 6, 0, 1);
+
+      // Smoothing
+      const smoothing = 0.3;
+      rawOpenValue = THREE.MathUtils.lerp(mouthState.current.previousOpenValue, rawOpenValue, smoothing);
+      mouthState.current.previousOpenValue = rawOpenValue;
+    }
+
+    // === MOUTH CLOSING DURING SPEECH ===
     if (isTalking) {
-      // Use sine wave for natural mouth movement during speech
-      const time = clock.getElapsedTime();
-      influences[morphDict["mouthOpen"]] = Math.sin(time * 10) * 0.4 + 0.5; // Oscillates between 0.1 and 0.9
+      mouthState.current.closeTimer += delta;
+      
+      // Check if it's time to close the mouth
+      if (!mouthState.current.isClosing && mouthState.current.closeTimer >= mouthState.current.closeInterval) {
+        mouthState.current.isClosing = true;
+        mouthState.current.closeTimer = 0;
+        mouthState.current.closeDuration = 0.05 + Math.random() * 0.15; // Random close duration
+        mouthState.current.closeInterval = 0.2 + Math.random() * 0.6; // Random interval until next close
+      }
+
+      // Handle mouth closing animation
+      if (mouthState.current.isClosing) {
+        mouthState.current.closeIntensity += delta / mouthState.current.closeDuration;
+        
+        if (mouthState.current.closeIntensity >= 1) {
+          mouthState.current.isClosing = false;
+          mouthState.current.closeIntensity = 0;
+        }
+      } else {
+        mouthState.current.closeIntensity = Math.max(0, mouthState.current.closeIntensity - delta / 0.1);
+      }
+
+      // Calculate final open value with closing effect
+      const closeEffect = Math.sin(mouthState.current.closeIntensity * Math.PI);
+      const openValue = rawOpenValue * (1 - closeEffect * 0.8); // Reduce openness during close
+
+      // Apply mouth movements
+      if (morphIndices.current.jawOpen !== -1) {
+        headRef.current.morphTargetInfluences[morphIndices.current.jawOpen] = 
+          THREE.MathUtils.lerp(0.4, 1.0, openValue);
+      }
+
+      // Apply mouthClose morph target during closing
+      if (morphIndices.current.mouthClose !== -1) {
+        headRef.current.morphTargetInfluences[morphIndices.current.mouthClose] = 
+          closeEffect * 0.7;
+      }
+
+      if (teethRef.current && teethRef.current.morphTargetDictionary?.jawOpen !== undefined) {
+        const teethJawIndex = teethRef.current.morphTargetDictionary.jawOpen;
+        teethRef.current.morphTargetInfluences[teethJawIndex] = 
+          THREE.MathUtils.lerp(0.7, 1.0, openValue);
+      }
+
+      // Other mouth expressions
+      if (morphIndices.current.mouthFunnel !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.mouthFunnel] = openValue * 0.5;
+
+      if (morphIndices.current.mouthPucker !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.mouthPucker] = openValue * 0.3;
+
+      if (morphIndices.current.mouthSmileLeft !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.mouthSmileLeft] = openValue * 0.2;
+
+      if (morphIndices.current.mouthSmileRight !== -1)
+        headRef.current.morphTargetInfluences[morphIndices.current.mouthSmileRight] = openValue * 0.2;
     } else {
-      influences[morphDict["mouthOpen"]] = 0;
-    }
-  
-    // 👀 Auto-blink (unchanged)
-    if (Math.random() > 0.995 && !isTalking) {
-      influences[morphDict["EyeLeft"]] = 1;
-      influences[morphDict["EyeRight"]] = 1;
-      setTimeout(() => {
-        influences[morphDict["EyeLeft"]] = 0;
-        influences[morphDict["EyeRight"]] = 0;
-      }, 200);
-    }
-  
-    // 🎭 Expressions (unchanged)
-    switch (emotion) {
-      case "happy":
-        influences[morphDict["mouthSmile"]] = 1;
-        break;
-      case "sad":
-        influences[morphDict["EyeLeft"]] = 0.3;
-        influences[morphDict["EyeRight"]] = 0.3;
-        break;
-      case "angry":
-        influences[morphDict["EyeLeft"]] = 0.5;
-        influences[morphDict["EyeRight"]] = 0.5;
-        break;
-      case "surprised":
-        influences[morphDict["mouthOpen"]] = 1;
-        break;
-      default:
-        // Reset all expressions except mouth during speech
-        Object.entries(morphDict).forEach(([name, index]) => {
-          if (name !== "mouthOpen" || !isTalking) {
-            influences[index] = 0;
-          }
-        });
+      // Reset mouth smoothly when not talking
+      Object.entries(morphIndices.current).forEach(([key, index]) => {
+        if (index !== -1) {
+          headRef.current.morphTargetInfluences[index] = THREE.MathUtils.lerp(
+            headRef.current.morphTargetInfluences[index] || 0,
+            0,
+            0.1
+          );
+        }
+      });
+
+      if (teethRef.current && teethRef.current.morphTargetDictionary?.jawOpen !== undefined) {
+        const teethJawIndex = teethRef.current.morphTargetDictionary.jawOpen;
+        teethRef.current.morphTargetInfluences[teethJawIndex] = THREE.MathUtils.lerp(
+          teethRef.current.morphTargetInfluences[teethJawIndex] || 0,
+          0,
+          0.1
+        );
+      }
+
+      // Reset mouth state
+      mouthState.current.closeTimer = 0;
+      mouthState.current.isClosing = false;
+      mouthState.current.closeIntensity = 0;
+      mouthState.current.previousOpenValue = 0;
     }
   });
 
   return (
-    <>
-      {/* Lighting matching glTF Viewer exactly */}
-      <Environment 
-        preset="studio"
-        background
-        blur={0.5}
-      />
-      <ambientLight 
-        intensity={0.3} 
-        color="#ffffff"  // White ambient light
-      />
-      <directionalLight
-        intensity={2.5}
-        color="#ffffff"  // White direct light
-        position={[5, 5, 5]}
-        castShadow
-      />
-      
-      {/* Avatar with morph targets */}
-      <primitive 
-        object={scene} 
-        ref={headRef}
-      />
-    </>
+    <group ref={group}>
+      <primitive object={avatarScene} position={[-0.1, -2.15, 0.1]} scale={[1.4, 1.37, 1.37]} />
+    </group>
   );
 };
 
