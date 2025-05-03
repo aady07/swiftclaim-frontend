@@ -174,7 +174,6 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
   
   return (
     <div className="language-picker">
-      <p>{selectedLanguage === "en" ? "" : "भाषा चुनें:"}</p>
       <div className="language-buttons">
         {languages.map((lang) => (
           <button
@@ -228,11 +227,41 @@ const Chatbot = ({ isFullPage = false }) => {
       setIsOpen(true);
     }
   }, [isFullPage]);
+
+  // Add iframe detection and ID handling
+  const isInIframe = window !== window.parent;
+  const urlParams = new URLSearchParams(window.location.search);
+  const iframeId = urlParams.get('id');
+
+  // Modify the toggleChatbot function
   const toggleChatbot = () => {
     if (!isFullPage) {
       setIsOpen(!isOpen);
+      // If in iframe, notify parent window
+      if (isInIframe) {
+        window.parent.postMessage({
+          type: 'CHATBOT_TOGGLE',
+          isOpen: !isOpen,
+          id: iframeId
+        }, '*');
+      }
     }
   };
+
+  // Add message listener for iframe communication
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data && event.data.type === 'CHATBOT_TOGGLE') {
+        // Verify the ID matches
+        if (event.data.id === iframeId) {
+          setIsOpen(event.data.isOpen);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [iframeId]);
 
   // Initialize welcome message based on selected language
   useEffect(() => {
@@ -297,7 +326,7 @@ const Chatbot = ({ isFullPage = false }) => {
       if (lowerText.includes("surprised") || lowerText.includes("wow") || lowerText.includes("amazing")) return "surprised";
     } 
     // For Hindi
-    else {
+    else if (language === "hi") {
       const lowerText = text.toLowerCase();
       if (lowerText.includes("खुश") || lowerText.includes("अच्छा") || lowerText.includes("बढ़िया")) return "happy";
       if (lowerText.includes("दुखी") || lowerText.includes("बुरा") || lowerText.includes("उदास")) return "sad";
@@ -686,7 +715,6 @@ const Chatbot = ({ isFullPage = false }) => {
       return;
     }
     
-    
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(() => {
         resetTranscript();
@@ -694,8 +722,8 @@ const Chatbot = ({ isFullPage = false }) => {
         
         SpeechRecognition.startListening({ 
           continuous: true,
-          interimResults: true,  // Add this to get partial results
-          language: language === "en" ? "en-US" : "hi-IN" 
+          interimResults: true,
+          language: language === "en" ? "en-US" : "hi-IN"
         });
       })
       .catch(error => {
@@ -776,8 +804,8 @@ const Chatbot = ({ isFullPage = false }) => {
 
   return (
     <>
-      {/* Floating chat button */}
-      {!isFullPage && (
+      {/* Floating chat button - only show if not in iframe or not fullscreen */}
+      {!isFullPage && !isInIframe && (
         <div className="chatbot-button" onClick={toggleChatbot}>
           {isOpen ? (
             <span className="close-icon">×</span>

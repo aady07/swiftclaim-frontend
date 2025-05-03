@@ -435,7 +435,6 @@ body {
   border-radius: 0;
   background: linear-gradient(to bottom, #1a1f2e, #2d3b58);
   z-index: 9999;
-  
 }
 
 .chatbot-container.fullscreen .avatar-container {
