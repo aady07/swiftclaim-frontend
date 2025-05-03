@@ -7,6 +7,7 @@ import Services from "./pages/Services";
 import Contacts from "./pages/Contacts";
 import ClaimUpload from "./pages/ClaimUpload";
 import ChatbotPage from "./pages/ChatbotPage";
+import ChatbotIframePage from "./pages/ChatbotIframePage";
 import Navbar from "./components/Navbar";
 import Chatbot3D from "./components/Chatbot3D";
 import Footer from "./components/Footer";
@@ -29,10 +30,11 @@ const ScrollToTop = () => {
 const App = () => {
   const location = useLocation();
   const isChatbotPage = location.pathname === "/chatbotpage";
+  const isChatbotIframe = location.pathname === "/chatbot-iframe";
   
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      {!isChatbotIframe && <Navbar />}
       <main className="flex-grow">
         <ScrollToTop />
         <Routes>
@@ -42,15 +44,16 @@ const App = () => {
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/claimupload" element={<ClaimUpload />} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />
+          <Route path="/chatbot-iframe" element={<ChatbotIframePage />} />
           <Route path="/apidocs" element={<APIDocumentation />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <Footer />
+      {!isChatbotIframe && <Footer />}
       <Analytics />
       <SpeedInsights/>
-      {!isChatbotPage && <Chatbot3D />}
+      {!isChatbotPage && !isChatbotIframe && <Chatbot3D />}
     </div>
   );
 };
