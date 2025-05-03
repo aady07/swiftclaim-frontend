@@ -41,19 +41,43 @@ const ChatbotIframe = () => {
 
   return (
     <div className="relative w-full h-screen">
-      {!isOpen && (
-        <div 
-          className="fixed bottom-8 right-8 w-16 h-16 bg-blue-600 rounded-full cursor-pointer flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
-          onClick={toggleChatbot}
-        >
-          <div className="w-4 h-4 bg-white rounded-full animate-pulse"></div>
-        </div>
-      )}
+      <div 
+        className="chatbot-button"
+        onClick={toggleChatbot}
+        style={{ display: isOpen ? 'none' : 'flex' }}
+      >
+        <div className="button-pulse"></div>
+      </div>
       
       {isOpen && (
-        <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black bg-opacity-50" onClick={toggleChatbot}></div>
-          <div className="absolute bottom-0 right-0 w-full h-full md:w-96 md:h-[600px]">
+        <div className="chatbot-container fullscreen">
+          <div className="chatbot-header" style={{ maxWidth: '100%', width: '100%', padding: '10px 24px' }}>
+            <h3 style={{ 
+              fontWeight: '600',
+              fontSize: '16px',
+              letterSpacing: '0.2px',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(to right, #fff, #d4e1ff)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              width: 'auto',
+              maxWidth: '200px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              lineHeight: '1.2',
+              margin: '0'
+            }}>Enterprise Assistant</h3>
+            <div className="header-controls">
+              <button className="close-btn" onClick={toggleChatbot}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-hidden">
             <Chatbot3D isFullPage={true} />
           </div>
         </div>

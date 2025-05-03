@@ -7,10 +7,18 @@
   padding: 0;
 }
 
+html, body, #root {
+  background-color: transparent !important;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   color: #333;
-  background-color: #f9f9f9;
+  background-color: transparent !important;
 }
 
 /* Floating chatbot button - futuristic subtle style */
@@ -437,6 +445,17 @@ body {
   z-index: 9999;
 }
 
+.chatbot-container.fullscreen::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+}
+
 .chatbot-container.fullscreen .avatar-container {
   height: 40vh;
   width: 100%;
@@ -763,4 +782,20 @@ body {
     right: 20px;
     bottom: 20px;
   }
+}
+
+.chatbot-container.fullscreen .chatbot-header {
+  position: relative;
+  z-index: 10000;
+}
+
+.chatbot-container.fullscreen .header-controls {
+  position: relative;
+  z-index: 10000;
+}
+
+.chatbot-container.fullscreen .close-btn {
+  position: relative;
+  z-index: 10000;
+  cursor: pointer;
 }
