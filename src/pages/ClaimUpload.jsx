@@ -27,6 +27,9 @@ const ClaimUpload = () => {
   const [partsImageUrl, setPartsImageUrl] = useState(null);
   const color = useMotionValue(COLORS_TOP[0]);
   const fileInputRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
   useEffect(() => {
     animate(color, COLORS_TOP, {
@@ -410,14 +413,16 @@ const ClaimUpload = () => {
   // Animation variants
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    visible: { opacity: 1, y: 0 }
   };
 
   const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.1 }
+      transition: {
+        staggerChildren: 0.2
+      }
     }
   };
 
@@ -503,20 +508,43 @@ const ClaimUpload = () => {
         <link rel="canonical" href="https://www.miraista.com/claim-upload" />
       </Helmet>
       <motion.div
-        className="relative min-h-screen overflow-hidden bg-nile-900 px-4 py-16 text-gray-200"
-        style={{
-          backgroundImage,
-          backgroundPosition: `center ${scrollY * 0.5}px`,
-        }}
+        className="relative min-h-screen overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900" />
+        
+        {/* Animated particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full bg-white opacity-70"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, Math.random() * 100 - 50],
+                opacity: [0.7, 0.1, 0.7],
+                scale: [1, Math.random() * 1.5, 1]
+              }}
+              transition={{
+                duration: Math.random() * 5 + 5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+
         <motion.div
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          className="relative z-10 flex flex-col items-center max-w-5xl mx-auto"
+          className="relative z-10 flex flex-col items-center max-w-5xl mx-auto px-4 pt-32 pb-16"
         >
           <motion.span 
             variants={fadeInUp}
@@ -975,53 +1003,7 @@ const ClaimUpload = () => {
               ))}
             </div>
           </motion.div>
-          
-          {/* Footer content remains the same... */}
         </motion.div>
-        
-        {/* Background effects */}
-        <div className="absolute inset-0 z-0">
-  <Canvas>
-    <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
-  </Canvas>
-</div>
-        
-        {/* Animated particles */}
-        <div className="absolute inset-0 overflow-hidden">
-  {[...Array(20)].map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 rounded-full bg-gray-500 opacity-70"
-      style={{
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-      }}
-      animate={{
-        y: [0, Math.random() * 100 - 50],
-        opacity: [0.7, 0.1, 0.7],
-        scale: [1, Math.random() * 1.5, 1]
-      }}
-      transition={{
-        duration: Math.random() * 5 + 5,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    />
-  ))}
-</div>
-
-        {/* Add this right after your form or somewhere visible */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="fixed bottom-4 right-4 z-50">
-            <button
-              type="button"
-              onClick={testUIWithMockData}
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg shadow-lg"
-            >
-              Test UI
-            </button>
-          </div>
-        )}
       </motion.div>
     </div>
   );
