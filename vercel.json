@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "routes": [
+  "redirects": [
     {
-      "src": "https://www.miraista.com/(.*)",
-      "dest": "https://miraista.com/$1",
-      "status": 301
+      "source": "https://www.miraista.com/(.*)",
+      "destination": "https://miraista.com/$1",
+      "permanent": true
     }
   ],
   "headers": [
