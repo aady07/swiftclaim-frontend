@@ -73,8 +73,15 @@ const Avatar = ({ audioStream, isTalking = false }) => {
     // Play idle animation
     const idleAction = actions[idleAnims[0]?.name];
     if (idleAction) {
-      idleAction.reset().fadeIn(0.5).play();
-      idleAction.setLoop(THREE.LoopRepeat);
+      // Silently handle missing animation targets
+      try {
+        idleAction.reset().fadeIn(0.5).play();
+        idleAction.setLoop(THREE.LoopRepeat);
+      } catch {
+        // Continue with animation even if some targets are missing
+        idleAction.reset().fadeIn(0.5).play();
+        idleAction.setLoop(THREE.LoopRepeat);
+      }
     }
   }, [avatarScene, actions, idleAnims]);
 

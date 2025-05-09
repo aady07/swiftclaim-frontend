@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatbotIframe from '../components/ChatbotIframe';
+import ChatbotIframe from '../components/chatbot/ChatbotIframe';
 import { Helmet } from 'react-helmet';
 
 const ChatbotIframePage = () => {

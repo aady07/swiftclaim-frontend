@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Chatbot3D from "../components/Chatbot3D";
+import Chatbot3D from "../components/chatbot/Chatbot3D";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
@@ -8,14 +8,46 @@ const ChatbotPage = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-950">
       <Helmet>
-        <title>AI Chatbot</title>
-        <meta name="description" content="Experience MiraIsta's advanced AI chatbot. Our intelligent virtual assistant provides instant support, answers queries, and helps streamline your business processes with cutting-edge AI technology." />
-        <meta name="keywords" content="AI chatbot, virtual assistant, intelligent chatbot, MiraIsta chatbot, AI support, business automation" />
-        <meta property="og:title" content="AI Chatbot | MiraIsta - Intelligent Virtual Assistant" />
-        <meta property="og:description" content="Experience our advanced AI chatbot. Get instant support and streamline your business processes with our intelligent virtual assistant." />
+        <title>AI Chatbot Assistant | MiraIsta - Intelligent Virtual Support</title>
+        <meta name="description" content="Experience MiraIsta's advanced AI chatbot powered by cutting-edge technology. Our intelligent virtual assistant provides instant support, answers queries, and helps streamline your business processes with natural language understanding and real-time responses." />
+        <meta name="keywords" content="AI chatbot, virtual assistant, intelligent chatbot, MiraIsta chatbot, AI support, business automation, conversational AI, natural language processing, virtual support, automated assistance" />
+        <meta property="og:title" content="AI Chatbot Assistant | MiraIsta - Intelligent Virtual Support" />
+        <meta property="og:description" content="Experience our advanced AI chatbot powered by cutting-edge technology. Get instant support and streamline your business processes with our intelligent virtual assistant." />
         <meta property="og:url" content="https://www.miraista.com/chatbot" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://www.miraista.com/images/chatbot-preview.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AI Chatbot Assistant | MiraIsta - Intelligent Virtual Support" />
+        <meta name="twitter:description" content="Experience our advanced AI chatbot powered by cutting-edge technology. Get instant support and streamline your business processes." />
+        <meta name="twitter:image" content="https://www.miraista.com/images/chatbot-preview.jpg" />
         <link rel="canonical" href="https://www.miraista.com/chatbot" />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="MiraIsta" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "MiraIsta AI Chatbot",
+            "description": "Advanced AI-powered virtual assistant for business support and automation",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "Natural language processing",
+              "Real-time responses",
+              "Business process automation",
+              "24/7 availability",
+              "Multi-language support"
+            ]
+          })}
+        </script>
       </Helmet>
       
       {/* Background Gradient - Matched exactly with Service page */}

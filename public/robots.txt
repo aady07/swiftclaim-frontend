@@ -1,0 +1,18 @@
+# Handle www and non-www versions
+User-agent: *
+Allow: /
+
+# Canonical domain
+Host: https://miraista.com
+
+# Sitemap locations
+Sitemap: https://miraista.com/sitemap.xml
+Sitemap: https://www.miraista.com/sitemap.xml
+
+# Disallow admin and private routes
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Crawl-delay for all bots
+Crawl-delay: 10 

@@ -121,12 +121,71 @@ const AboutUs = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
        <Helmet>
-        <title>About Us </title>
-        <meta name="description" content="Learn more about the team and mission behind MiraIsta, a leader in AI-driven business solutions." />
-        <meta name="keywords" content="AI, business solutions, team, innovation, MiraIsta" />
-        <meta property="og:title" content="About Us - MiraIsta" />
-        <meta property="og:description" content="Learn more about the team and mission behind MiraIsta, a leader in AI-driven business solutions." />
+        <title>About MiraIsta - Our Mission & Team | AI Innovation Leaders</title>
+        <meta name="description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists, learn about our mission to transform businesses through cutting-edge artificial intelligence solutions." />
+        <meta name="keywords" content="MiraIsta team, AI experts, artificial intelligence company, machine learning specialists, AI innovation leaders, tech company culture, AI transformation" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.miraista.com/about-us" />
+        <meta property="og:title" content="About MiraIsta - Our Mission & Team | AI Innovation Leaders" />
+        <meta property="og:description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
+        <meta property="og:image" content="https://www.miraista.com/about-og-image.jpg" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.miraista.com/about-us" />
+        <meta property="twitter:title" content="About MiraIsta - Our Mission & Team | AI Innovation Leaders" />
+        <meta property="twitter:description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
+        <meta property="twitter:image" content="https://www.miraista.com/about-og-image.jpg" />
+        
+        {/* Additional SEO tags */}
+        <link rel="canonical" href="https://www.miraista.com/about-us" />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="MiraIsta" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "About MiraIsta",
+            "description": "Learn about MiraIsta's mission, team, and commitment to AI innovation",
+            "publisher": {
+              "@type": "Organization",
+              "name": "MiraIsta",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.miraista.com/logo.png"
+              }
+            },
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "MiraIsta",
+              "description": "AI-Powered Business Solutions & Innovation",
+              "founders": [
+                {
+                  "@type": "Person",
+                  "name": "Rachit",
+                  "jobTitle": "Co-Founder"
+                },
+                {
+                  "@type": "Person",
+                  "name": "Bharat Parmar",
+                  "jobTitle": "Co-Founder"
+                },
+                {
+                  "@type": "Person",
+                  "name": "Adarsh",
+                  "jobTitle": "Co-Founder"
+                }
+              ]
+            }
+          })}
+        </script>
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -222,8 +281,9 @@ const AboutUs = () => {
       </section>
 
       {/* Main content with gradient background */}
-      <div className="bg-gradient-to-b from-gray-900 to-black">
-        <div className="relative z-10 container mx-auto px-4 py-16 pb-32">
+      <div className="relative -mt-1 bg-gray-950">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-950"></div>
+        <div className="relative z-10 container mx-auto px-4 py-16">
           {/* Our Story Section - ENHANCED TEXT SECTION */}
           {/* Our Story Section - SIMPLIFIED TEXT SECTION */}
           <div className="py-20 bg-gradient-to-b from-gray-900 to-black">

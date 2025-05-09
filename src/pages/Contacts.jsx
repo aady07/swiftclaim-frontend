@@ -163,14 +163,56 @@ const Contacts = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Contact Us</title>
-        <meta name="description" content="Contact MiraIsta's team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support. We're here to help transform your business with cutting-edge AI technology." />
-        <meta name="keywords" content="contact MiraIsta, AI support, business inquiry, AI solutions contact, MiraIsta contact, AI experts" />
-        <meta property="og:title" content="Contact Us | MiraIsta - Get in Touch with Our AI Experts" />
-        <meta property="og:description" content="Contact our team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support." />
-        <meta property="og:url" content="https://www.miraista.com/contact" />
+        <title>Contact MiraIsta - Get in Touch with Our AI Experts | Support & Inquiries</title>
+        <meta name="description" content="Contact MiraIsta's team of AI experts for inquiries about our solutions, partnerships, or support. We're here to help transform your business with cutting-edge AI technology." />
+        <meta name="keywords" content="contact MiraIsta, AI support, business inquiry, AI solutions contact, MiraIsta contact, AI experts, technical support, partnership inquiry" />
+        
+        {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.miraista.com/contact" />
+        <meta property="og:title" content="Contact MiraIsta - Get in Touch with Our AI Experts | Support & Inquiries" />
+        <meta property="og:description" content="Contact our team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support." />
+        <meta property="og:image" content="https://www.miraista.com/contact-og-image.jpg" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.miraista.com/contact" />
+        <meta property="twitter:title" content="Contact MiraIsta - Get in Touch with Our AI Experts | Support & Inquiries" />
+        <meta property="twitter:description" content="Contact our team of AI experts. Get in touch for inquiries about our AI solutions, partnerships, or support." />
+        <meta property="twitter:image" content="https://www.miraista.com/contact-og-image.jpg" />
+        
+        {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com/contact" />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="MiraIsta" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact MiraIsta",
+            "description": "Get in touch with MiraIsta's AI experts for support and inquiries",
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "MiraIsta",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+91 9601185083",
+                "contactType": "customer service",
+                "email": "customersupport@miraista.com",
+                "availableLanguage": ["English"]
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "IN"
+              }
+            }
+          })}
+        </script>
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -266,8 +308,9 @@ const Contacts = () => {
       </section>
 
       {/* Main content with gradient background */}
-      <div className="bg-gradient-to-b from-gray-900 to-black">
-        <div className="relative z-10 container mx-auto px-4 py-16 pb-32">
+      <div className="relative -mt-1 bg-gray-950">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-950"></div>
+        <div className="relative z-10 container mx-auto px-4 py-16">
           <motion.div 
             className="text-center mb-16"
             variants={fadeIn}
