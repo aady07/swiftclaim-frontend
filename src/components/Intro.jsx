@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "./Navbar";
-import AnimatedRoutes from "./AnimatedRoutes";
-import ScrollToTop from "./ScrollToTop";
+import Navbar from "./common/Navbar";
+import AnimatedRoutes from "./layout/AnimatedRoutes";
+import ScrollToTop from "./common/ScrollToTop";
 
 // Simplified component that just renders the main content immediately
 const IntroContent = () => {

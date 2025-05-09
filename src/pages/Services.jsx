@@ -8,16 +8,25 @@ import { Helmet } from "react-helmet";
 
 // Animation variants - updated to match Home component
 const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
 };
 
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: {
+  visible: 
+  {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
+      staggerChildren: 0.15,
+      delayChildren: 0.1
     }
   }
 };
@@ -29,8 +38,8 @@ const Services = () => {
   const navigate = useNavigate();
 
   // Parallax effect - updated to match Home
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, 50]);
 
   const services = {
     individual: [
@@ -184,49 +193,51 @@ const Services = () => {
         
         {/* Hero content */}
         <motion.div 
-          className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen"
+          className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center justify-center min-h-screen"
           style={{ opacity: heroOpacity, y: heroY }}
         >
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="text-center"
+            className="text-center max-w-4xl mx-auto"
           >
-            <motion.span
-              variants={fadeInUp}
-              className="mb-1.5 inline-block rounded-full bg-gray-600/70 backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-wider"
-            >
-              OUR SERVICES
-            </motion.span>
-            
             <motion.h1
               variants={fadeInUp}
-              className="max-w-4xl text-center text-5xl font-bold sm:text-7xl mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6"
             >
-              <span className="bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                AI-Powered Verification Solutions
+              <span className="block mb-2 sm:mb-4">AI-Powered</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Verification Solutions
               </span>
             </motion.h1>
             
             <motion.p
               variants={fadeInUp}
-              className="my-6 max-w-2xl text-center text-xl md:text-2xl text-gray-300"
+              className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-8 sm:mb-10 text-gray-300 px-4 sm:px-0"
             >
               We offer cutting-edge verification services powered by artificial intelligence to ensure accuracy and reliability for individuals and businesses alike.
             </motion.p>
             
             <motion.div
               variants={fadeInUp}
-              className="flex justify-center mt-8"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate("/contacts")}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg text-lg font-medium"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg text-base sm:text-lg font-medium"
               >
                 Contact Us
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/services")}
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-base sm:text-lg font-medium"
+              >
+                Learn More
               </motion.button>
             </motion.div>
           </motion.div>
@@ -256,7 +267,7 @@ const Services = () => {
           >
             <motion.h6 
               variants={fadeInUp}
-              className="text-gray-400 uppercase tracking-wider mb-2"
+              className="text-blue-400 uppercase tracking-wider mb-2"
             >
               What We Offer
             </motion.h6>
@@ -268,7 +279,7 @@ const Services = () => {
             </motion.h2>
             <motion.div 
               variants={fadeInUp}
-              className="w-24 h-1 bg-gradient-to-r from-gray-500 to-gray-700 mx-auto"
+              className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"
             />
           </motion.div>
           
@@ -303,7 +314,7 @@ const Services = () => {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             key={activeTab}
           >
             {services[activeTab].map((service, index) => (
@@ -311,9 +322,9 @@ const Services = () => {
                 key={index}
                 variants={fadeInUp}
                 className="bg-gray-800/40 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 flex flex-col h-full"
-                transition={{ duration: 0.5, delay: index * 0.1 }} // Faster animation like AboutUs
+                transition={{ duration: 0.6, delay: index * 0.15 }}
                 whileHover={{ 
-                  y: -10, 
+                  y: -5, 
                   boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
                   borderColor: ["#0f766e", "#0e7490", "#0369a1", "#1d4ed8"][index % 4],
                 }}
@@ -338,6 +349,7 @@ const Services = () => {
                     className="w-full py-2 rounded-lg bg-slate-700/70 hover:bg-slate-700 transition-colors text-white font-medium"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate("/contacts")}
                   >
                     Learn More
                   </motion.button>
@@ -387,10 +399,10 @@ const Services = () => {
                 className={`relative flex md:items-center mb-12 ${
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 } flex-col`}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }} // Faster animation like AboutUs
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
               >
                 <div className={`md:w-1/2 flex ${
                   index % 2 === 0 ? "md:justify-end md:pr-8" : "md:justify-start md:pl-8"
@@ -420,82 +432,35 @@ const Services = () => {
         </div>
       </div>
       
-      {/* Stats Section */}
-      <motion.div 
-        className="py-20 bg-gradient-to-b from-black to-gray-900"
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-        <div className="container mx-auto px-4">
-          <motion.div 
-            variants={fadeInUp}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            <CountUp end={98} label="Accuracy Rate (%)" />
-            <CountUp end={5000} label="Verifications Completed" />
-            <CountUp end={250} label="Enterprise Clients" />
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* CTA Section - Updated animation properties */}
-      <div className="py-20 bg-gradient-to-r from-gray-900 to-black relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(10)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute bg-gray-600 rounded-full"
-              style={{
-                width: Math.random() * 300 + 50,
-                height: Math.random() * 300 + 50,
-                borderRadius: '50%',
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.5
-              }}
-              animate={{
-                x: [0, Math.random() * 100 - 50],
-                y: [0, Math.random() * 100 - 50],
-                opacity: [0.1, 0.3, 0.1]
-              }}
-              transition={{
-                duration: Math.random() * 10 + 10,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          ))}
-        </div>
-        
+      {/* CTA Section */}
+      <div className="py-20 bg-gradient-to-r from-slate-700 to-slate-800 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }} // Faster animation
-            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-100px" }}
             className="max-w-4xl mx-auto text-center"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Ready to Transform Your Verification Process?
             </h2>
-            <p className="text-xl text-gray-300 mb-10">
+            <p className="text-xl text-blue-100 mb-10">
               Join thousands of satisfied customers who trust our AI-powered verification services for their most critical decisions.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-wrap gap-6 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate("/claimupload")}
-                className="px-10 py-4 bg-white text-gray-900 rounded-lg shadow-xl font-bold text-lg"
+                className="px-10 py-4 bg-white text-slate-700 rounded-lg shadow-xl font-bold text-lg"
               >
                 Get Started
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/aboutus")}
+                onClick={() => navigate("/contacts")}
                 className="px-10 py-4 bg-transparent border-2 border-white text-white rounded-lg font-bold text-lg"
               >
                 Learn More
@@ -503,13 +468,6 @@ const Services = () => {
             </div>
           </motion.div>
         </div>
-      </div>
-      
-      {/* Starry background */}
-      <div className="absolute inset-0 z-0 opacity-40">
-        <Canvas>
-          <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
-        </Canvas>
       </div>
     </div>
   );

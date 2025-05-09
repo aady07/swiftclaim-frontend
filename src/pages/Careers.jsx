@@ -440,14 +440,57 @@ const Careers = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Careers</title>
-        <meta name="description" content="Join MiraIsta's team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation. Shape the future of AI solutions." />
-        <meta name="keywords" content="AI careers, machine learning jobs, tech careers, MiraIsta jobs, AI development positions, tech innovation careers" />
-        <meta property="og:title" content="Careers at MiraIsta - Join Our AI Innovation Team" />
-        <meta property="og:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
-        <meta property="og:url" content="https://www.miraista.com/careers" />
+        <title>Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities</title>
+        <meta name="description" content="Join MiraIsta's team of AI innovators. Explore exciting career opportunities in AI development, machine learning, data science, and business transformation. Shape the future of AI solutions." />
+        <meta name="keywords" content="AI careers, machine learning jobs, tech careers, MiraIsta jobs, AI development positions, tech innovation careers, data science jobs, AI engineering positions" />
+        
+        {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.miraista.com/careers" />
+        <meta property="og:title" content="Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities" />
+        <meta property="og:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
+        <meta property="og:image" content="https://www.miraista.com/careers-og-image.jpg" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.miraista.com/careers" />
+        <meta property="twitter:title" content="Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities" />
+        <meta property="twitter:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
+        <meta property="twitter:image" content="https://www.miraista.com/careers-og-image.jpg" />
+        
+        {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com/careers" />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="MiraIsta" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "JobPosting",
+            "title": "AI and Machine Learning Positions at MiraIsta",
+            "description": "Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation.",
+            "hiringOrganization": {
+              "@type": "Organization",
+              "name": "MiraIsta",
+              "sameAs": "https://www.miraista.com"
+            },
+            "jobLocation": {
+              "@type": "Place",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "IN"
+              }
+            },
+            "employmentType": ["FULL_TIME", "CONTRACT"],
+            "workHours": "40 hours per week",
+            "datePosted": new Date().toISOString(),
+            "validThrough": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString()
+          })}
+        </script>
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -539,8 +582,9 @@ const Careers = () => {
       </section>
 
       {/* Main content with gradient background */}
-      <div className="bg-gradient-to-b from-gray-900 to-black">
-        <div ref={jobListingsRef} className="relative z-10 container mx-auto px-4 py-16 pb-32">
+      <div className="relative -mt-1 bg-gray-950">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-950"></div>
+        <div ref={jobListingsRef} className="relative z-10 container mx-auto px-4 py-16">
           {/* Header with subtle glow effect */}
           <motion.div 
             className="text-center mb-16"

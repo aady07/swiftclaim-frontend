@@ -66,24 +66,26 @@ const Footer = () => {
                 style={{ maxWidth: "150px" }}
               />
             </Link>
-            <div className="flex space-x-6 -mt-7 ml-0 lg:-mt-8">
+            <ul className="flex space-x-6 -mt-7 ml-0 lg:-mt-8 list-none">
               {[
-                { icon: <FaLinkedin />, href: "#" },
-                { icon: <FaTwitter />, href: "#" },
-                { icon: <FaGithub />, href: "#" },
-                { icon: <FaEnvelope />, href: "#" }
+                { icon: <FaLinkedin />, href: "#", label: "LinkedIn" },
+                { icon: <FaTwitter />, href: "#", label: "Twitter" },
+                { icon: <FaGithub />, href: "#", label: "GitHub" },
+                { icon: <FaEnvelope />, href: "#", label: "Email" }
               ].map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  className="text-gray-400 hover:text-blue-400 transition-colors"
-                  whileHover={{ scale: 1.2, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {social.icon}
-                </motion.a>
+                <li key={index}>
+                  <motion.a
+                    href={social.href}
+                    className="text-gray-400 hover:text-blue-400 transition-colors"
+                    whileHover={{ scale: 1.2, y: -2 }}
+                    whileTap={{ scale: 0.9 }}
+                    aria-label={`Visit our ${social.label} page`}
+                  >
+                    {social.icon}
+                  </motion.a>
+                </li>
               ))}
-            </div>
+            </ul>
           </motion.div>
 
           {/* Navigation Links */}
@@ -95,11 +97,11 @@ const Footer = () => {
             transition={{ delay: 0.1 }}
             className="flex flex-col items-center md:items-start md:pl-8"
           >
-            <h4 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Navigation</h4>
-            <ul className="space-y-3 w-full">
+            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Navigation</h5>
+            <ul className="space-y-3 w-full list-none">
               {navItems.map((item) => (
                 <li key={item.id} className="w-full">
-                  <Link to={item.href} className="block">
+                  <Link to={item.href} className="block" aria-label={`Navigate to ${item.text}`}>
                     <motion.div
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.95 }}
@@ -123,14 +125,15 @@ const Footer = () => {
             transition={{ delay: 0.15 }}
             className="flex flex-col items-center md:items-start md:pl-8"
           >
-            <h4 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Resources</h4>
-            <ul className="space-y-3 w-full">
+            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Resources</h5>
+            <ul className="space-y-3 w-full list-none">
               <li className="w-full">
                 <motion.a 
                   href="/apidocs" 
                   whileHover={{ x: 5 }}
                   whileTap={{ scale: 0.95 }}
                   className="block text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
+                  aria-label="View API Documentation"
                 >
                   API Documentation
                 </motion.a>
@@ -147,11 +150,11 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             className="flex flex-col items-center md:items-start md:pl-8"
           >
-            <h4 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Service Options</h4>
-            <ul className="space-y-3 w-full">
+            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Service Options</h5>
+            <ul className="space-y-3 w-full list-none">
               {serviceOptions.map((option) => (
                 <li key={option.id} className="w-full">
-                  <Link to={option.href} className="block">
+                  <Link to={option.href} className="block" aria-label={`Learn more about ${option.text}`}>
                     <motion.div
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.95 }}
@@ -179,17 +182,21 @@ const Footer = () => {
             &copy; {currentYear} MiraIsta. All rights reserved.
           </p>
           <div className="flex space-x-8">
-            {["Privacy Policy", "Terms of Service"].map((item, index) => (
-              <motion.a 
-                key={index} 
-                href="#" 
-                whileHover={{ x: 5 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300"
-              >
-                {item}
-              </motion.a>
-            ))}
+            <ul className="flex space-x-8 list-none">
+              {["Privacy Policy", "Terms of Service"].map((item, index) => (
+                <li key={index}>
+                  <motion.a 
+                    href="#" 
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300"
+                    aria-label={`View ${item}`}
+                  >
+                    {item}
+                  </motion.a>
+                </li>
+              ))}
+            </ul>
           </div>
         </motion.div>
       </div>

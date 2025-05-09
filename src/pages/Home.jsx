@@ -199,16 +199,49 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>MiraIsta</title>
-        <meta name="description" content="MiraIsta delivers cutting-edge AI solutions for businesses. Transform your operations with our advanced AI technology, machine learning, and data analytics services." />
-        <meta name="keywords" content="AI solutions, business transformation, machine learning, data analytics, AI innovation, MiraIsta, artificial intelligence services" />
+        <title>MiraIsta - AI-Powered Business Solutions & Innovation</title>
+        <meta name="description" content="Transform your business with MiraIsta's cutting-edge AI solutions. We deliver advanced machine learning, data analytics, and AI innovation services to drive growth and efficiency." />
+        <meta name="keywords" content="AI solutions, business transformation, machine learning, data analytics, AI innovation, MiraIsta, artificial intelligence services, predictive analytics, natural language processing, computer vision" />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.miraista.com" />
         <meta property="og:title" content="MiraIsta - AI-Powered Business Solutions & Innovation" />
         <meta property="og:description" content="Transform your business with MiraIsta's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
-        <meta property="og:url" content="https://www.miraista.com" />
-        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://www.miraista.com/og-image.jpg" />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://www.miraista.com" />
+        <meta property="twitter:title" content="MiraIsta - AI-Powered Business Solutions & Innovation" />
+        <meta property="twitter:description" content="Transform your business with MiraIsta's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
+        <meta property="twitter:image" content="https://www.miraista.com/og-image.jpg" />
+        
+        {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="MiraIsta" />
+        <meta name="language" content="English" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="generator" content="React" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "MiraIsta",
+            "url": "https://www.miraista.com",
+            "logo": "https://www.miraista.com/logo.png",
+            "description": "AI-Powered Business Solutions & Innovation",
+            "sameAs": [
+              "https://www.linkedin.com/company/miraista",
+              "https://twitter.com/miraista",
+              "https://www.facebook.com/miraista"
+            ]
+          })}
+        </script>
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -242,54 +275,54 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         
         {/* Hero content */}
         <motion.div 
-className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center min-h-screen"
-style={{ opacity: heroOpacity, y: heroY }}
->
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="text-center"
+          className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center justify-center min-h-screen"
+          style={{ opacity: heroOpacity, y: heroY }}
         >
-          <motion.h1
-            variants={fadeInUp}
-            className="text-5xl md:text-7xl font-bold mb-6"
-          >
-            <span className="block mb-2">Transforming Business</span>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-              Through AI Innovation
-            </span>
-          </motion.h1>
-          
-          <motion.p
-            variants={fadeInUp}
-            className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 text-gray-300"
-          >
-            Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
-          </motion.p>
-          
           <motion.div
-            variants={fadeInUp}
-            className="flex flex-wrap gap-6 justify-center"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="text-center max-w-4xl mx-auto"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleTryItNow}
-              className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg text-lg font-medium"
+            <motion.h1
+              variants={fadeInUp}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6"
             >
-              Try It Now
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/services")}
-              className="px-8 py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-lg font-medium"
+              <span className="block mb-2 sm:mb-4">Transforming Business</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                Through AI Innovation
+              </span>
+            </motion.h1>
+            
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-8 sm:mb-10 text-gray-300 px-4 sm:px-0"
             >
-              Learn More
-            </motion.button>
+              Unlock the full potential of your data with our cutting-edge AI solutions that drive growth, efficiency, and innovation.
+            </motion.p>
+            
+            <motion.div
+              variants={fadeInUp}
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleTryItNow}
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg text-base sm:text-lg font-medium"
+              >
+                Try It Now
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/services")}
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-base sm:text-lg font-medium"
+              >
+                Learn More
+              </motion.button>
+            </motion.div>
           </motion.div>
-        </motion.div>
         </motion.div>
 
       
@@ -309,8 +342,9 @@ style={{ opacity: heroOpacity, y: heroY }}
 
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
-      <div className="container mx-auto px-4">
+      <section className="relative -mt-1 py-16 bg-gray-950">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-gray-950"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial="hidden"
             whileInView="visible"

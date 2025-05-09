@@ -192,12 +192,12 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex flex-1 justify-end z-10">
-          <ul className="flex space-x-3 items-center">
+          <ul className="flex space-x-3 items-center list-none">
             {navItems.map((item) => (
-              <div key={item.id} className="relative" ref={item.isDropdown ? dropdownRef : null}>
+              <li key={item.id} className="relative" ref={item.isDropdown ? dropdownRef : null}>
                 {!item.isDropdown ? (
                   <Link to={item.href}>
-                    <motion.li
+                    <motion.div
                       className={`flex items-center gap-1 px-5 py-2 rounded-full cursor-pointer text-base font-semibold
                                ${scrolled 
                                   ? isActive(item.href)
@@ -207,13 +207,14 @@ const Navbar = () => {
                                     ? "text-blue-300 bg-blue-900/20 border border-blue-500/20 shadow-inner shadow-blue-500/10" // Active state less intense
                                     : "text-white hover:text-blue-300"}`}
                       whileHover={{ scale: 1.05 }}
+                      aria-label={`Navigate to ${item.text}`}
                     >
                       <span>{item.text}</span>
-                    </motion.li>
+                    </motion.div>
                   </Link>
                 ) : (
                   <div className="relative">
-                    <motion.div
+                    <motion.button
                       className={`flex items-center gap-1 px-5 py-2 rounded-full cursor-pointer text-base font-semibold ${
                                  scrolled
                                     ? servicesDropdown || isServicePage
@@ -225,6 +226,8 @@ const Navbar = () => {
                                }`}
                       onClick={toggleServicesDropdown}
                       whileHover={{ scale: 1.05 }}
+                      aria-label={`Toggle ${item.text} dropdown menu`}
+                      aria-expanded={servicesDropdown}
                     >
                       <span>{item.text}</span>
                       <motion.div
@@ -233,7 +236,7 @@ const Navbar = () => {
                       >
                         <FaAngleDown className="text-sm ml-1" />
                       </motion.div>
-                    </motion.div>
+                    </motion.button>
                     
                     {/* Enhanced Dropdown Menu */}
                     <AnimatePresence>
@@ -244,33 +247,40 @@ const Navbar = () => {
                           exit={{ opacity: 0, y: -5 }}
                           transition={{ duration: 0.15 }}
                           className="absolute right-0 mt-2 w-48 bg-gray-800/95 backdrop-blur-md shadow-lg rounded-lg overflow-hidden z-50 border border-gray-700/50"
+                          role="menu"
+                          aria-label={`${item.text} options`}
                         >
                           {/* Dropdown highlight gradient */}
                           <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none"></div>
                           
-                          {serviceOptions.map((option) => (
-                            <Link to={option.href} key={option.id}>
-                              <motion.div
-                                className={`px-5 py-3 hover:bg-gray-700/70 transition-all duration-150 text-base font-medium border-b border-gray-700/50 last:border-0 relative
-                                  ${location.pathname === option.href 
-                                    ? "text-blue-400 bg-blue-900/30 border-l-4 border-l-blue-500/70 pl-4" // Active state styling
-                                    : "text-gray-200 hover:text-blue-400"}`}
-                                whileHover={{ x: 2 }}
-                                onClick={() => setServicesDropdown(false)}
-                              >
-                                {option.text}
-                                {location.pathname === option.href && (
-                                  <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
-                                )}
-                              </motion.div>
-                            </Link>
-                          ))}
+                          <ul className="list-none">
+                            {serviceOptions.map((option) => (
+                              <li key={option.id}>
+                                <Link to={option.href}>
+                                  <motion.div
+                                    className={`px-5 py-3 hover:bg-gray-700/70 transition-all duration-150 text-base font-medium border-b border-gray-700/50 last:border-0 relative
+                                      ${location.pathname === option.href 
+                                        ? "text-blue-400 bg-blue-900/30 border-l-4 border-l-blue-500/70 pl-4" // Active state styling
+                                        : "text-gray-200 hover:text-blue-400"}`}
+                                    whileHover={{ x: 2 }}
+                                    onClick={() => setServicesDropdown(false)}
+                                    role="menuitem"
+                                  >
+                                    {option.text}
+                                    {location.pathname === option.href && (
+                                      <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
+                                    )}
+                                  </motion.div>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
                 )}
-              </div>
+              </li>
             ))}
           </ul>
         </div>
