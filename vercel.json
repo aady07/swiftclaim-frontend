@@ -2,7 +2,13 @@
   "version": 2,
   "redirects": [
     {
-      "source": "https://www.miraista.com/(.*)",
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.miraista.com"
+        }
+      ],
       "destination": "https://miraista.com/$1",
       "permanent": true
     }
