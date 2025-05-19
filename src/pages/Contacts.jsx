@@ -388,7 +388,9 @@ const Contacts = () => {
               <h3 className="text-lg font-medium mb-4 text-white">Follow Us</h3>
               <div className="flex space-x-3">
                 <motion.a 
-                  href="#" 
+                  href="https://www.linkedin.com/company/miraista" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-gray-700/50 p-3 rounded-lg hover:bg-blue-600/50 transition-colors"
                   whileHover={{ y: -5 }}
                 >
@@ -402,11 +404,11 @@ const Contacts = () => {
                   <FiTwitter className="text-white" size={18} />
                 </motion.a>
                 <motion.a 
-                  href="#" 
+                  href="mailto:customersupport@miraista.com"
                   className="bg-gray-700/50 p-3 rounded-lg hover:bg-blue-800/50 transition-colors"
                   whileHover={{ y: -5 }}
                 >
-                  <FiFacebook className="text-white" size={18} />
+                  <FiMail className="text-white" size={18} />
                 </motion.a>
               </div>
             </motion.div>

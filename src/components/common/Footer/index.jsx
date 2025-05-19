@@ -47,45 +47,51 @@ const Footer = () => {
             variants={fadeInUp}
             className="flex flex-col items-center md:items-start"
           >
-            <Link 
-              to="/" 
-              className="flex items-center justify-center md:justify-start"
-              onClick={() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: 'smooth'
-                });
-              }}
-            >
-              <motion.img 
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-                src="/images/logo.png" 
-                alt="logo" 
-                className="h-auto w-auto max-h-[130px] md:max-h-[150px] lg:max-h-[170px] -mt-8 object-contain"
-                style={{ maxWidth: "150px" }}
-              />
-            </Link>
-            <ul className="flex space-x-6 -mt-7 ml-0 lg:-mt-8 list-none">
-              {[
-                { icon: <FaLinkedin />, href: "#", label: "LinkedIn" },
-                { icon: <FaTwitter />, href: "#", label: "Twitter" },
-                { icon: <FaGithub />, href: "#", label: "GitHub" },
-                { icon: <FaEnvelope />, href: "#", label: "Email" }
-              ].map((social, index) => (
-                <li key={index}>
-                  <motion.a
-                    href={social.href}
-                    className="text-gray-400 hover:text-blue-400 transition-colors"
-                    whileHover={{ scale: 1.2, y: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    aria-label={`Visit our ${social.label} page`}
-                  >
-                    {social.icon}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-col items-center md:items-start">
+              <Link 
+                to="/" 
+                className="flex items-center justify-center md:justify-start"
+                onClick={() => {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                  });
+                }}
+              >
+                <motion.img 
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                  src="/images/logo.png" 
+                  alt="logo" 
+                  className="h-auto w-auto max-h-[130px] md:max-h-[150px] lg:max-h-[170px] -mt-8 object-contain"
+                  style={{ maxWidth: "150px" }}
+                />
+              </Link>
+              <div className="mt-4">
+                <ul className="flex space-x-6 list-none">
+                  {[
+                    { icon: <FaLinkedin />, href: "https://www.linkedin.com/company/miraista", label: "LinkedIn" },
+                    { icon: <FaTwitter />, href: "#", label: "Twitter" },
+                    { icon: <FaGithub />, href: "#", label: "GitHub" },
+                    { icon: <FaEnvelope />, href: "mailto:customersupport@miraista.com", label: "Email" }
+                  ].map((social, index) => (
+                    <li key={index}>
+                      <motion.a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-blue-400 transition-colors"
+                        whileHover={{ scale: 1.2, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        aria-label={`Visit our ${social.label} page`}
+                      >
+                        {social.icon}
+                      </motion.a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </motion.div>
 
           {/* Navigation Links */}
