@@ -143,29 +143,29 @@ const ClaimUpload = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>AI-Powered Claim Upload & Verification | MiraIsta</title>
-        <meta name="description" content="Upload and process your insurance claims with MiraIsta's advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs. Our AI-powered verification ensures fast, reliable claim processing." />
-        <meta name="keywords" content="claim upload, insurance claims, AI claim processing, damage assessment, claim analysis, MiraIsta claims, vehicle damage verification, AI damage detection, automated claim processing, insurance verification" />
-        <meta property="og:title" content="AI-Powered Claim Upload & Verification | MiraIsta" />
+        <title>AI-Powered Claim Upload & Verification | Miraista</title>
+        <meta name="description" content="Upload and process your insurance claims with Miraista's advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs. Our AI-powered verification ensures fast, reliable claim processing." />
+        <meta name="keywords" content="claim upload, insurance claims, AI claim processing, damage assessment, claim analysis, Miraista claims, vehicle damage verification, AI damage detection, automated claim processing, insurance verification" />
+        <meta property="og:title" content="AI-Powered Claim Upload & Verification | Miraista" />
         <meta property="og:description" content="Upload and process your insurance claims with our advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs." />
         <meta property="og:url" content="https://www.miraista.com/claim-upload" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.miraista.com/images/claim-upload-preview.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI-Powered Claim Upload & Verification | MiraIsta" />
+        <meta name="twitter:title" content="AI-Powered Claim Upload & Verification | Miraista" />
         <meta name="twitter:description" content="Upload and process your insurance claims with our advanced AI system. Get instant analysis and accurate damage assessment." />
         <meta name="twitter:image" content="https://www.miraista.com/images/claim-upload-preview.jpg" />
         <link rel="canonical" href="https://www.miraista.com/claim-upload" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="author" content="MiraIsta" />
+        <meta name="author" content="Miraista" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "MiraIsta Claim Upload",
+            "name": "Miraista Claim Upload",
             "description": "AI-powered insurance claim processing and verification system",
             "applicationCategory": "BusinessApplication",
             "operatingSystem": "Web",

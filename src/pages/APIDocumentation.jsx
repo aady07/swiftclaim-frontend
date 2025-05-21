@@ -121,10 +121,10 @@ const APIDocumentation = () => {
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
         <title>API Documentation</title>
-        <meta name="description" content="Comprehensive API documentation for MiraIsta's AI-powered claim processing system. Integrate our advanced AI solutions into your applications with detailed endpoints, examples, and guides." />
-        <meta name="keywords" content="API documentation, AI integration, claim processing API, MiraIsta API, developer resources, AI endpoints" />
-        <meta property="og:title" content="API Documentation | MiraIsta" />
-        <meta property="og:description" content="Access comprehensive API documentation for MiraIsta's AI-powered claim processing system. Detailed guides, endpoints, and integration examples." />
+        <meta name="description" content="Comprehensive API documentation for Miraista's AI-powered claim processing system. Integrate our advanced AI solutions into your applications with detailed endpoints, examples, and guides." />
+        <meta name="keywords" content="API documentation, AI integration, claim processing API, Miraista API, developer resources, AI endpoints" />
+        <meta property="og:title" content="API Documentation | Miraista" />
+        <meta property="og:description" content="Access comprehensive API documentation for Miraista's AI-powered claim processing system. Detailed guides, endpoints, and integration examples." />
         <meta property="og:url" content="https://www.miraista.com/api-documentation" />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://www.miraista.com/api-documentation" />

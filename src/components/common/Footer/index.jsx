@@ -185,7 +185,7 @@ const Footer = () => {
           className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800"
         >
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {currentYear} MiraIsta. All rights reserved.
+            &copy; {currentYear} Miraista. All rights reserved.
           </p>
           <div className="flex space-x-8">
             <ul className="flex space-x-8 list-none">

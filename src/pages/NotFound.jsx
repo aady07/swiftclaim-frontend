@@ -29,10 +29,10 @@ const NotFound = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>404-Not Found | MiraIsta</title>
-        <meta name="description" content="The page you're looking for doesn't exist or has been moved. Return to MiraIsta's homepage for AI-powered claim processing solutions." />
+        <title>404-Not Found | Miraista</title>
+        <meta name="description" content="The page you're looking for doesn't exist or has been moved. Return to Miraista's homepage for AI-powered claim processing solutions." />
         <meta name="robots" content="noindex, nofollow" />
-        <meta property="og:title" content="404 - Page Not Found | MiraIsta" />
+        <meta property="og:title" content="404 - Page Not Found | Miraista" />
         <meta property="og:description" content="The page you're looking for doesn't exist or has been moved." />
         <meta property="og:url" content="https://www.miraista.com/404" />
         <meta property="og:type" content="website" />
