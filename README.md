@@ -1,7 +1,7 @@
-# MiraIsta Frontend
+# Miraista Frontend
 
 ## Overview
-MiraIsta's frontend application for insurance claim processing. This repository contains the production codebase for the client-facing web application.
+Miraista's frontend application for insurance claim processing. This repository contains the production codebase for the client-facing web application.
 
 ## Development Setup
 
@@ -144,4 +144,4 @@ src/
 - Security: [Name] (email)
 
 ## License
-Proprietary - MiraIsta Inc. All rights reserved.
+Proprietary - Miraista Inc. All rights reserved.

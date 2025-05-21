@@ -31,7 +31,7 @@ export const generateClaimReport = (data) => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text(`MiraIsta`, 20, 22);
+    doc.text(`Miraista`, 20, 22);
     doc.text(`Vehicle Assessment Report`, 105, 22, { align: 'center' });
 
     // Vehicle Info
@@ -190,7 +190,7 @@ const addImagesSection = (doc, previewUrl, damageImageUrl, partsImageUrl) => {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
-  doc.text(`MiraIsta`, 20, 22);
+  doc.text(`Miraista`, 20, 22);
   doc.text(`Damage Analysis Images`, 105, 22, { align: 'center' });
 
   let yPos = 40;
@@ -280,7 +280,7 @@ const addFooter = (doc) => {
     doc.setTextColor(150, 150, 150);
     doc.setDrawColor(200, 200, 200);
     doc.line(14, 280, 196, 280);
-    doc.text("MiraIsta Vehicle Damage Assessment", 14, 287);
+    doc.text("Miraista Vehicle Damage Assessment", 14, 287);
     doc.text(`Page ${i} of ${pageCount}`, 196, 287, { align: 'right' });
   }
 };

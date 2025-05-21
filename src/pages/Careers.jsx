@@ -440,21 +440,21 @@ const Careers = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities</title>
-        <meta name="description" content="Join MiraIsta's team of AI innovators. Explore exciting career opportunities in AI development, machine learning, data science, and business transformation. Shape the future of AI solutions." />
-        <meta name="keywords" content="AI careers, machine learning jobs, tech careers, MiraIsta jobs, AI development positions, tech innovation careers, data science jobs, AI engineering positions" />
+        <title>Careers at Miraista - Join Our AI Innovation Team | Job Opportunities</title>
+        <meta name="description" content="Join Miraista's team of AI innovators. Explore exciting career opportunities in AI development, machine learning, data science, and business transformation. Shape the future of AI solutions." />
+        <meta name="keywords" content="AI careers, machine learning jobs, tech careers, Miraista jobs, AI development positions, tech innovation careers, data science jobs, AI engineering positions" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.miraista.com/careers" />
-        <meta property="og:title" content="Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities" />
+        <meta property="og:title" content="Careers at Miraista - Join Our AI Innovation Team | Job Opportunities" />
         <meta property="og:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
         <meta property="og:image" content="https://www.miraista.com/careers-og-image.jpg" />
         
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.miraista.com/careers" />
-        <meta property="twitter:title" content="Careers at MiraIsta - Join Our AI Innovation Team | Job Opportunities" />
+        <meta property="twitter:title" content="Careers at Miraista - Join Our AI Innovation Team | Job Opportunities" />
         <meta property="twitter:description" content="Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation." />
         <meta property="twitter:image" content="https://www.miraista.com/careers-og-image.jpg" />
         
@@ -462,7 +462,7 @@ const Careers = () => {
         <link rel="canonical" href="https://www.miraista.com/careers" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="author" content="MiraIsta" />
+        <meta name="author" content="Miraista" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
         
@@ -471,11 +471,11 @@ const Careers = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "JobPosting",
-            "title": "AI and Machine Learning Positions at MiraIsta",
+            "title": "AI and Machine Learning Positions at Miraista",
             "description": "Join our team of AI innovators. Explore exciting career opportunities in AI development, machine learning, and business transformation.",
             "hiringOrganization": {
               "@type": "Organization",
-              "name": "MiraIsta",
+              "name": "Miraista",
               "sameAs": "https://www.miraista.com"
             },
             "jobLocation": {

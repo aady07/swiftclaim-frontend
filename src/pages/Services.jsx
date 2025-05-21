@@ -154,9 +154,9 @@ const Services = () => {
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
         <title>Services</title>
-        <meta name="description" content="Discover MiraIsta's comprehensive AI-powered verification services. From individual claim verification to enterprise solutions, we provide accurate and efficient verification systems." />
-        <meta name="keywords" content="AI verification services, claim verification, enterprise solutions, data analysis, user profiling, MiraIsta services" />
-        <meta property="og:title" content="Services | MiraIsta - AI-Powered Verification Solutions" />
+        <meta name="description" content="Discover Miraista's comprehensive AI-powered verification services. From individual claim verification to enterprise solutions, we provide accurate and efficient verification systems." />
+        <meta name="keywords" content="AI verification services, claim verification, enterprise solutions, data analysis, user profiling, Miraista services" />
+        <meta property="og:title" content="Services | Miraista - AI-Powered Verification Solutions" />
         <meta property="og:description" content="Explore our range of AI-powered verification services designed for both individuals and businesses. Get accurate, efficient, and secure verification solutions." />
         <meta property="og:url" content="https://www.miraista.com/services" />
         <meta property="og:type" content="website" />

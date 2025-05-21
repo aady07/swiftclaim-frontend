@@ -167,7 +167,7 @@ const HomePage = () => {
       answer: "Yes, our solutions are designed for seamless integration with popular business platforms, databases, and APIs. We have experience working with a wide range of systems and can develop custom connectors when needed."
     },
     {
-      question: "What makes MiraIsta different from other AI companies?",
+      question: "What makes Miraista different from other AI companies?",
       answer: "Our team combines deep technical expertise with practical business experience. We focus on delivering measurable ROI rather than implementing technology for its own sake. Additionally, our continuous support model ensures your AI solutions evolve alongside your business needs."
     }
   ];
@@ -199,29 +199,29 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>MiraIsta - AI-Powered Business Solutions & Innovation</title>
-        <meta name="description" content="Transform your business with MiraIsta's cutting-edge AI solutions. We deliver advanced machine learning, data analytics, and AI innovation services to drive growth and efficiency." />
-        <meta name="keywords" content="AI solutions, business transformation, machine learning, data analytics, AI innovation, MiraIsta, artificial intelligence services, predictive analytics, natural language processing, computer vision" />
+        <title>Miraista - AI-Powered Business Solutions & Innovation</title>
+        <meta name="description" content="Transform your business with Miraista's cutting-edge AI solutions. We deliver advanced machine learning, data analytics, and AI innovation services to drive growth and efficiency." />
+        <meta name="keywords" content="AI solutions, business transformation, machine learning, data analytics, AI innovation, Miraista, artificial intelligence services, predictive analytics, natural language processing, computer vision" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.miraista.com" />
-        <meta property="og:title" content="MiraIsta - AI-Powered Business Solutions & Innovation" />
-        <meta property="og:description" content="Transform your business with MiraIsta's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
+        <meta property="og:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
+        <meta property="og:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
         <meta property="og:image" content="https://www.miraista.com/og-image.jpg" />
         
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.miraista.com" />
-        <meta property="twitter:title" content="MiraIsta - AI-Powered Business Solutions & Innovation" />
-        <meta property="twitter:description" content="Transform your business with MiraIsta's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
+        <meta property="twitter:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
+        <meta property="twitter:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
         <meta property="twitter:image" content="https://www.miraista.com/og-image.jpg" />
         
         {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="author" content="MiraIsta" />
+        <meta name="author" content="Miraista" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
         <meta name="generator" content="React" />
@@ -231,7 +231,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "MiraIsta",
+            "name": "Miraista",
             "url": "https://www.miraista.com",
             "logo": "https://www.miraista.com/logo.png",
             "description": "AI-Powered Business Solutions & Innovation",

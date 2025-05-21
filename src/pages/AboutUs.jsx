@@ -121,29 +121,29 @@ const AboutUs = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
        <Helmet>
-        <title>About MiraIsta - Our Mission & Team | AI Innovation Leaders</title>
-        <meta name="description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists, learn about our mission to transform businesses through cutting-edge artificial intelligence solutions." />
-        <meta name="keywords" content="MiraIsta team, AI experts, artificial intelligence company, machine learning specialists, AI innovation leaders, tech company culture, AI transformation" />
+        <title>About Miraista - Our Mission & Team | AI Innovation Leaders</title>
+        <meta name="description" content="Discover Miraista's journey in AI innovation. Meet our expert team of AI specialists, learn about our mission to transform businesses through cutting-edge artificial intelligence solutions." />
+        <meta name="keywords" content="Miraista team, AI experts, artificial intelligence company, machine learning specialists, AI innovation leaders, tech company culture, AI transformation" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.miraista.com/about-us" />
-        <meta property="og:title" content="About MiraIsta - Our Mission & Team | AI Innovation Leaders" />
-        <meta property="og:description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
+        <meta property="og:title" content="About Miraista - Our Mission & Team | AI Innovation Leaders" />
+        <meta property="og:description" content="Discover Miraista's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
         <meta property="og:image" content="https://www.miraista.com/about-og-image.jpg" />
         
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.miraista.com/about-us" />
-        <meta property="twitter:title" content="About MiraIsta - Our Mission & Team | AI Innovation Leaders" />
-        <meta property="twitter:description" content="Discover MiraIsta's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
+        <meta property="twitter:title" content="About Miraista - Our Mission & Team | AI Innovation Leaders" />
+        <meta property="twitter:description" content="Discover Miraista's journey in AI innovation. Meet our expert team of AI specialists and learn about our mission to transform businesses." />
         <meta property="twitter:image" content="https://www.miraista.com/about-og-image.jpg" />
         
         {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com/about-us" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="author" content="MiraIsta" />
+        <meta name="author" content="Miraista" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
         
@@ -152,11 +152,11 @@ const AboutUs = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "AboutPage",
-            "name": "About MiraIsta",
-            "description": "Learn about MiraIsta's mission, team, and commitment to AI innovation",
+            "name": "About Miraista",
+            "description": "Learn about Miraista's mission, team, and commitment to AI innovation",
             "publisher": {
               "@type": "Organization",
-              "name": "MiraIsta",
+              "name": "Miraista",
               "logo": {
                 "@type": "ImageObject",
                 "url": "https://www.miraista.com/logo.png"
@@ -164,7 +164,7 @@ const AboutUs = () => {
             },
             "mainEntity": {
               "@type": "Organization",
-              "name": "MiraIsta",
+              "name": "Miraista",
               "description": "AI-Powered Business Solutions & Innovation",
               "founders": [
                 {
@@ -233,7 +233,7 @@ const AboutUs = () => {
             >
               <span className="block mb-2">Welcome to</span>
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                MiraIsta
+                Miraista
               </span>
             </motion.h1>
             
@@ -324,7 +324,7 @@ const AboutUs = () => {
                 >
                   <div className="w-20 h-1 bg-blue-500 mb-6"></div>
                   <p className="text-lg text-gray-300 mb-6">
-                    At MiraIsta, we are dedicated to revolutionizing businesses through intelligent AI solutions. Our core focus is on developing transformative technologies that solve complex challenges across industries. We believe in the power of artificial intelligence to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
+                    At Miraista, we are dedicated to revolutionizing businesses through intelligent AI solutions. Our core focus is on developing transformative technologies that solve complex challenges across industries. We believe in the power of artificial intelligence to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
                   </p>
                   <p className="text-lg text-gray-300">
                     Our approach combines cutting-edge research, strategic innovation, and a deep understanding of technological potential. We don't just develop AI solutions; we craft intelligent systems that adapt, learn, and drive tangible business value. From financial platforms to enterprise solutions, we're committed to pushing the boundaries of what's possible with artificial intelligence.
