@@ -81,7 +81,7 @@ const HomePage = () => {
       color: "from-blue-600/20 to-blue-700/20"
     },
     {
-      name: "Deloitte",
+      name: "Deloitteasd",
       logo: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Deloitte.svg",
       color: "from-green-500/20 to-green-600/20"
     },
