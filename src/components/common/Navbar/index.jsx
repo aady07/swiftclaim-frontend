@@ -111,7 +111,6 @@ const Navbar = () => {
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
     { id: 3, text: "Services", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
     { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 5, text: "Contacts", href: "/contacts", icon: <BiSupport className="text-xl" /> },
   ];
 
   const serviceOptions = [
@@ -135,11 +134,14 @@ const Navbar = () => {
       {/* Enhanced Cylindrical highlight container - adjusted to extend only as needed */}
       {(scrolled || getWindowWidth() < 1024) && (
         <motion.div 
-          className={`absolute inset-0 mx-auto w-full ${getWindowWidth() >= 1024 ? 'max-w-[1200px]' : 'max-w-[1100px]'} bg-gray-900/95 backdrop-blur-md rounded-full border border-gray-700/50 shadow-lg h-16`}
+          className={`absolute inset-0 mx-auto w-full ${getWindowWidth() >= 1024 ? 'max-w-[1400px]' : 'max-w-[1100px]'} bg-gray-900/95 backdrop-blur-md rounded-full border border-gray-700/50 shadow-lg h-16`}
           initial={{ opacity: 0, scaleX: 0.9, scaleY: 0.7 }}
           animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)' }}
+          style={{ 
+            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+            transform: getWindowWidth() >= 1024 ? 'translateX(-50px)' : 'none'
+          }}
         >
           {/* Enhanced highlighted glow effects */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-900/20 via-blue-400/10 to-blue-900/20"></div>
@@ -172,8 +174,8 @@ const Navbar = () => {
         </motion.div>
       )}
 
-      <div className="relative flex justify-between items-center h-16 max-w-[1200px] mx-auto px-6">
-        {/* Logo Container - Adjusted to align left with no extra space */}
+      <div className="relative flex justify-between items-center h-16 max-w-[1400px] mx-auto px-4 lg:px-8">
+        {/* Logo Container */}
         <div className="flex items-center z-10">
           <Link to="/" className="flex items-center" onClick={(e) => {
             e.preventDefault();
@@ -184,15 +186,15 @@ const Navbar = () => {
               <motion.img 
                 src="/images/logo.png" 
                 alt="logo" 
-                className="h-[140px] lg:h-[180px] w-auto object-contain transform translate-y-0.5 lg:translate-y-1"
+                className="h-[120px] lg:h-[160px] w-auto object-contain transform translate-y-0.5 lg:translate-y-1"
               />
             </div>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex flex-1 justify-end z-10">
-          <ul className="flex space-x-3 items-center list-none">
+        <div className="hidden lg:flex flex-1 justify-start z-10 ml-8">
+          <ul className="flex space-x-4 items-center list-none">
             {navItems.map((item) => (
               <li key={item.id} className="relative" ref={item.isDropdown ? dropdownRef : null}>
                 {!item.isDropdown ? (
@@ -248,33 +250,21 @@ const Navbar = () => {
                           transition={{ duration: 0.15 }}
                           className="absolute right-0 mt-2 w-48 bg-gray-800/95 backdrop-blur-md shadow-lg rounded-lg overflow-hidden z-50 border border-gray-700/50"
                           role="menu"
-                          aria-label={`${item.text} options`}
                         >
-                          {/* Dropdown highlight gradient */}
-                          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none"></div>
-                          
-                          <ul className="list-none">
-                            {serviceOptions.map((option) => (
-                              <li key={option.id}>
-                                <Link to={option.href}>
-                                  <motion.div
-                                    className={`px-5 py-3 hover:bg-gray-700/70 transition-all duration-150 text-base font-medium border-b border-gray-700/50 last:border-0 relative
-                                      ${location.pathname === option.href 
-                                        ? "text-blue-400 bg-blue-900/30 border-l-4 border-l-blue-500/70 pl-4" // Active state styling
-                                        : "text-gray-200 hover:text-blue-400"}`}
-                                    whileHover={{ x: 2 }}
-                                    onClick={() => setServicesDropdown(false)}
-                                    role="menuitem"
-                                  >
-                                    {option.text}
-                                    {location.pathname === option.href && (
-                                      <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
-                                    )}
-                                  </motion.div>
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                          {serviceOptions.map((option) => (
+                            <Link
+                              key={option.id}
+                              to={option.href}
+                              className={`block px-4 py-3 text-sm ${
+                                isActive(option.href)
+                                  ? "text-blue-400 bg-blue-900/30"
+                                  : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
+                              } transition-colors duration-200`}
+                              role="menuitem"
+                            >
+                              {option.text}
+                            </Link>
+                          ))}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -285,159 +275,141 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Mobile Menu Button and Services dropdown toggle */}
-        <div className="lg:hidden flex items-center justify-end space-x-2 h-full z-10">
-          <motion.div
-            ref={servicesMobileRef}
-            className={`flex items-center font-semibold text-base ${isServicePage ? "text-blue-400 font-bold" : "text-blue-400"}`}
-            onClick={toggleServicesDropdown}
-          >
-            Services
-            <motion.div
-              animate={{ rotate: servicesDropdown ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="ml-1"
+        {/* Special Contacts Button */}
+        <div className="hidden lg:block z-10">
+          <Link to="/contacts">
+            <motion.button
+              className={`px-6 py-2 rounded-full text-base font-semibold ${
+                scrolled
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
+                  : "bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg shadow-blue-400/25 hover:shadow-blue-400/40"
+              } transition-all duration-300`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <FaAngleDown size={16} />
-            </motion.div>
-          </motion.div>
-          
-          <motion.button 
-            whileTap={{ scale: 0.95 }}
-            onClick={handleNavbar} 
-            className="relative p-2 rounded-full text-gray-200"
-            aria-label="Toggle menu"
+              Contact Us
+            </motion.button>
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden z-10">
+          <motion.button
+            onClick={handleNavbar}
+            className="p-2 text-white hover:text-blue-400 transition-colors duration-200"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Toggle mobile menu"
           >
             {nav ? (
-              <AiOutlineClose size={24} className="text-blue-400" />
+              <AiOutlineClose size={24} />
             ) : (
-              <div className="relative">
-                <HiMenuAlt4 size={24} className="text-blue-400 relative z-10" />
-              </div>
+              <HiMenuAlt4 size={24} />
             )}
           </motion.button>
         </div>
 
-        {/* Enhanced Mobile Menu Dropdown */}
+        {/* Mobile Menu */}
         <AnimatePresence>
           {nav && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="lg:hidden fixed top-16 right-0 left-0 bg-gray-900/98 backdrop-blur-md shadow-lg z-40 border-t border-gray-800/50"
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ duration: 0.3 }}
+              className="fixed top-0 right-0 w-full h-screen bg-gray-900/95 backdrop-blur-md z-40 lg:hidden"
             >
-              {/* Mobile menu highlight gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none"></div>
-              
-              <div className="flex flex-col max-h-[calc(100vh-4rem)] overflow-y-auto">
-                {navItems.map((item) => (
-                  <div key={item.id}>
-                    {!item.isDropdown ? (
-                      <Link to={item.href}>
-                        <motion.div
-                          className={`flex items-center justify-between px-6 py-3 border-b border-gray-800/50 hover:bg-blue-900/10
-                            ${isActive(item.href) 
-                              ? "text-blue-400 bg-blue-900/20 border-l-4 border-l-blue-500/70 px-5" // Active state for mobile
-                              : "text-gray-200 hover:text-blue-400"}`}
-                          whileTap={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
-                          onClick={() => setNav(false)}
-                        >
-                          <span className="font-semibold text-base">{item.text}</span>
-                          <div className={isActive(item.href) ? "text-blue-400" : "text-blue-500"}>{item.icon}</div>
-                        </motion.div>
-                      </Link>
-                    ) : (
-                      <>
-                        <motion.div
-                          className={`flex items-center justify-between px-6 py-3 border-b border-gray-800/50 cursor-pointer hover:bg-blue-900/10
-                            ${isServicePage 
-                              ? "text-blue-400 bg-blue-900/20 border-l-4 border-l-blue-500/70 px-5" // Active for services
-                              : "text-gray-200 hover:text-blue-400"}`}
-                          whileTap={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setServicesDropdown(!servicesDropdown);
-                          }}
-                        >
-                          <span className="font-semibold text-base">{item.text}</span>
-                          <div className="flex items-center text-blue-500">
-                            {item.icon}
-                            <motion.div
-                              animate={{ rotate: servicesDropdown ? 180 : 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="ml-2"
-                            >
-                              <FaAngleDown size={16} />
-                            </motion.div>
-                          </div>
-                        </motion.div>
-
-                        <AnimatePresence>
-                          {servicesDropdown && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden bg-gray-800/70"
-                            >
-                              {serviceOptions.map((option) => (
-                                <Link to={option.href} key={option.id}>
-                                  <motion.div
-                                    className={`px-10 py-2 border-b border-gray-800/30 hover:text-blue-400 text-base
-                                      ${location.pathname === option.href 
-                                        ? "text-blue-400 bg-blue-900/30 border-l-4 border-l-blue-500/70 px-9" // Active state for submenu
-                                        : "text-gray-300"}`}
-                                    whileTap={{ backgroundColor: "rgba(59, 130, 246, 0.15)" }}
-                                    onClick={() => {
-                                      setNav(false);
-                                      setServicesDropdown(false);
-                                    }}
-                                  >
-                                    {option.text}
-                                  </motion.div>
-                                </Link>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Enhanced Services Dropdown for Mobile (when clicking "Services" text) */}
-        <AnimatePresence>
-          {servicesDropdown && getWindowWidth() < 1024 && !nav && (
-            <motion.div
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.15 }}
-              className="lg:hidden absolute top-16 right-20 w-48 bg-gray-800/95 backdrop-blur-md shadow-lg rounded-lg overflow-hidden z-50 border border-gray-700/50"
-            >
-              {/* Mobile services dropdown highlight gradient */}
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none"></div>
-              
-              {serviceOptions.map((option) => (
-                <Link to={option.href} key={option.id}>
-                  <motion.div
-                    className={`px-5 py-2 hover:bg-blue-900/10 transition-all duration-150 text-base font-medium border-b border-gray-700/50 last:border-0
-                      ${location.pathname === option.href 
-                        ? "text-blue-400 bg-blue-900/30 border-l-4 border-l-blue-500/70 pl-4" // Active state
-                        : "text-gray-200 hover:text-blue-400"}`}
-                    whileHover={{ x: 2 }}
-                    onClick={() => setServicesDropdown(false)}
+              <div className="flex flex-col h-full">
+                <div className="flex justify-end p-4">
+                  <motion.button
+                    onClick={handleNavbar}
+                    className="p-2 text-white hover:text-blue-400 transition-colors duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    aria-label="Close mobile menu"
                   >
-                    {option.text}
-                  </motion.div>
-                </Link>
-              ))}
+                    <AiOutlineClose size={24} />
+                  </motion.button>
+                </div>
+                <nav className="flex-1 px-6 py-4">
+                  <ul className="space-y-4">
+                    {navItems.map((item) => (
+                      <li key={item.id} ref={item.isDropdown ? servicesMobileRef : null}>
+                        {!item.isDropdown ? (
+                          <Link
+                            to={item.href}
+                            className={`flex items-center gap-2 px-4 py-3 rounded-lg text-lg font-semibold ${
+                              isActive(item.href)
+                                ? "text-blue-400 bg-blue-900/30"
+                                : "text-white hover:text-blue-400 hover:bg-blue-900/20"
+                            } transition-colors duration-200`}
+                          >
+                            {item.icon}
+                            <span>{item.text}</span>
+                          </Link>
+                        ) : (
+                          <div>
+                            <button
+                              onClick={toggleServicesDropdown}
+                              className={`flex items-center justify-between w-full px-4 py-3 rounded-lg text-lg font-semibold ${
+                                servicesDropdown || isServicePage
+                                  ? "text-blue-400 bg-blue-900/30"
+                                  : "text-white hover:text-blue-400 hover:bg-blue-900/20"
+                              } transition-colors duration-200`}
+                            >
+                              <div className="flex items-center gap-2">
+                                {item.icon}
+                                <span>{item.text}</span>
+                              </div>
+                              <motion.div
+                                animate={{ rotate: servicesDropdown ? 180 : 0 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <FaAngleDown />
+                              </motion.div>
+                            </button>
+                            <AnimatePresence>
+                              {servicesDropdown && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="mt-2 ml-4 space-y-2"
+                                >
+                                  {serviceOptions.map((option) => (
+                                    <Link
+                                      key={option.id}
+                                      to={option.href}
+                                      className={`block px-4 py-2 rounded-lg text-base ${
+                                        isActive(option.href)
+                                          ? "text-blue-400 bg-blue-900/30"
+                                          : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
+                                      } transition-colors duration-200`}
+                                    >
+                                      {option.text}
+                                    </Link>
+                                  ))}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                    {/* Add Contacts to mobile menu */}
+                    <li>
+                      <Link
+                        to="/contacts"
+                        className="flex items-center gap-2 px-4 py-3 rounded-lg text-lg font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+                      >
+                        <BiSupport className="text-xl" />
+                        <span>Contact Us</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
