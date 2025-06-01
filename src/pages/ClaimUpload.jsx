@@ -192,6 +192,7 @@ const ClaimUpload = () => {
       >
         {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900" />
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
         
         {/* Animated particles */}
         <div className="absolute inset-0 overflow-hidden">
@@ -224,15 +225,18 @@ const ClaimUpload = () => {
           transition={{ duration: 0.5 }}
         >
           <motion.span 
-            className="mb-1.5 inline-block rounded-full bg-gray-800/70 backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-wider"
+            className="mb-1.5 inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500/10 to-blue-600/10 rounded-full backdrop-blur-sm border border-green-200/20 hover:scale-105 transition-transform duration-300"
           >
-            INSTANT AI VERIFICATION
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 text-sm font-medium">INSTANT AI VERIFICATION</span>
           </motion.span>
           
           <motion.h1 
-            className="max-w-3xl bg-gradient-to-br from-gray-200 to-gray-400 bg-clip-text text-center text-4xl font-bold leading-tight text-transparent sm:text-5xl md:text-6xl"
+            className="max-w-3xl text-center text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
           >
             Upload & Verify Your Claim
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mt-2 hover:scale-105 transition-transform duration-300">
+              Powered by AI
+            </span>
           </motion.h1>
           
           <motion.p 
@@ -242,7 +246,7 @@ const ClaimUpload = () => {
           </motion.p>
           
           <motion.div
-            className="w-full max-w-4xl p-8 rounded-xl bg-gray-900/70 backdrop-blur-md border border-gray-800"
+            className="w-full max-w-4xl p-8 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
             style={{ boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -343,7 +347,7 @@ const ClaimUpload = () => {
           >
             {/* Step 1 */}
             <motion.div 
-              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-900/70 backdrop-blur-md border border-gray-800"
+              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
               whileHover={{ 
                 scale: 1.01,
                 transition: { duration: 0.2 }
@@ -353,18 +357,18 @@ const ClaimUpload = () => {
                 transition: { duration: 0.1 }
               }}
             >
-              <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500/20 to-blue-600/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-200">Upload Document</h3>
-              <p className="text-gray-400">Upload your claim document or image in seconds</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Upload Document</h3>
+              <p className="text-gray-300">Upload your claim document or image in seconds</p>
             </motion.div>
 
             {/* Step 2 */}
             <motion.div 
-              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-900/70 backdrop-blur-md border border-gray-800"
+              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
               whileHover={{ 
                 scale: 1.01,
                 transition: { duration: 0.2 }
@@ -374,18 +378,18 @@ const ClaimUpload = () => {
                 transition: { duration: 0.1 }
               }}
             >
-              <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500/20 to-blue-600/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-200">AI Analysis</h3>
-              <p className="text-gray-400">Our advanced AI analyzes the content with high accuracy</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">AI Analysis</h3>
+              <p className="text-gray-300">Our advanced AI analyzes the content with high accuracy</p>
             </motion.div>
           
             {/* Step 3 */}
             <motion.div
-              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-900/70 backdrop-blur-md border border-gray-800"
+              className="flex flex-col items-center text-center p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
               whileHover={{ 
                 scale: 1.01,
                 transition: { duration: 0.2 }
@@ -395,14 +399,14 @@ const ClaimUpload = () => {
                 transition: { duration: 0.1 }
               }}
             >
-              <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500/20 to-blue-600/20 flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                  </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-200">Instant Verification</h3>
-              <p className="text-gray-400">Get instant verification results and recommended next steps</p>
-                </motion.div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-white">Instant Verification</h3>
+              <p className="text-gray-300">Get instant verification results and recommended next steps</p>
+            </motion.div>
           </motion.div>
         </motion.div>
       </motion.div>
