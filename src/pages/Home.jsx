@@ -260,6 +260,30 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900" />
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
         
+        {/* Decorative Elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          {/* Floating Orbs */}
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/10 to-green-500/10 rounded-full blur-3xl animate-pulse" />
+          
+          {/* Animated Lines */}
+          <div className="absolute inset-0">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute h-px bg-gradient-to-r from-transparent via-green-500/20 to-transparent"
+                style={{
+                  top: `${20 + i * 15}%`,
+                  left: '0',
+                  right: '0',
+                  transform: `rotate(${i * 10}deg)`,
+                  animation: `float ${5 + i}s infinite ease-in-out`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+        
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
@@ -270,13 +294,6 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               variants={staggerContainer}
               className="max-w-2xl transform-gpu"
             >
-              <motion.div
-                variants={fadeInUp}
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500/10 to-blue-600/10 rounded-full mb-8 backdrop-blur-sm border border-green-200/20 hover:scale-105 transition-transform duration-300"
-              >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 text-sm font-medium">Your AI Workflow Agent</span>
-              </motion.div>
-
               <div className="mb-8">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -327,6 +344,25 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 </motion.button>
               </motion.div>
 
+              {/* Stats Section */}
+              <motion.div
+                variants={fadeInUp}
+                className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-6"
+              >
+                {[
+                  { value: "99.8%", label: "Accuracy" },
+                  { value: "24/7", label: "Support" },
+                  { value: "10x", label: "Faster" },
+                ].map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-gray-400">{stat.label}</div>
+                  </div>
+                ))}
+              </motion.div>
+
               {/* Carousel Indicators with 3D Effect */}
               <div className="flex gap-3 mt-8 transform-gpu">
                 {heroTexts.map((_, index) => (
@@ -356,13 +392,15 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                     ? 'w-[400px] h-[600px]' // Vertical for chat.mp4
                     : 'w-[700px] h-[450px]' // Horizontal for claim.mp4
                 }`}>
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl blur-2xl transform -rotate-6" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-2xl blur-2xl transform rotate-6" />
                   <video
                     key={currentTextIndex}
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="w-full h-full object-cover rounded-2xl"
+                    className="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl"
                     ref={(el) => {
                       if (el) {
                         el.playbackRate = 1.3;
@@ -371,6 +409,10 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   >
                     <source src={heroTexts[currentTextIndex].videoSource} type="video/mp4" />
                   </video>
+                  
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full blur-2xl animate-pulse" />
+                  <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-full blur-2xl animate-pulse" />
                 </div>
               ) : (
                 <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-gray-700 transform hover:scale-105 transition-transform duration-500">
@@ -1104,27 +1146,26 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
             {/* Center Chatbot */}
             <motion.div
-  initial={{ opacity: 0, scale: 0.8 }}
-  whileInView={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.5 }}
-  viewport={{ once: true }}
-  className="absolute z-30"
-  style={{ 
-    left: '545px',
-    top: '230px',
-    transform: 'translate(-50%, -50%)'
-  }}
->
-
-              <div className="relative w-16 h-16">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 rounded-2xl transform rotate-45"></div>
-                <div className="absolute   inset-0 bg-gradient-to-r from-green-400 to-blue-400 rounded-2xl transform rotate-45 animate-pulse"></div>
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 45 }} // 90 degrees to the right
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="absolute z-30"
+              style={{ 
+                left: '535px',
+                top: '205px',
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <div className="relative w-24 h-24">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl transform rotate-45 backdrop-blur-sm"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-blue-400/20 rounded-2xl transform rotate-45 animate-pulse"></div>
                 <div className="absolute inset-0 flex items-center justify-center transform -rotate-45">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
-                    <path d="M12 6C8.69 6   6 8.69 6   12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor"/>
-                    <path d="M12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10Z" fill="currentColor"/>
-                  </svg>
+                  <img 
+                    src="/dodgelogo.png" 
+                    alt="Dodge Logo" 
+                    className="w-16 h-16 object-contain filter brightness-0 invert"
+                  />
                 </div>
               </div>
             </motion.div>
