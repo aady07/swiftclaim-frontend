@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const ChatInterface = ({
   messages,
@@ -24,7 +24,8 @@ const ChatInterface = ({
   handleCarDetails,
   uploadStatus,
   setShowCarInput,
-  setShowImageUpload
+  setShowImageUpload,
+  messagesEndRef
 }) => {
   const uiText = {
     chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
@@ -33,36 +34,58 @@ const ChatInterface = ({
     typingIndicator: language === "en" ? "Typing..." : "टाइप कर रहा है...",
   };
 
+  // Auto scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef?.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping]);
+
   return (
     <div className="chat-interface">
       <div className="messages">
         {messages.map((msg, index) => (
           <div key={index} className={msg.fromBot ? "bot-msg" : "user-msg"}>
-            <div className="message-bubble">
-              {msg.text}
-              {msg.image && (
-                <div className="mt-2">
-                  <img 
-                    src={msg.image} 
-                    alt="Analysis" 
-                    className="max-w-full rounded-lg border border-gray-700"
-                    style={{ maxHeight: '200px', objectFit: 'contain' }}
-                  />
-                </div>
-              )}
+            {msg.fromBot && (
+              <div className="bot-avatar">
+                <img src="/dodgelogo.png" alt="Miraista" />
+              </div>
+            )}
+            <div className="message-content">
+              {msg.fromBot && <div className="bot-name">Miraista</div>}
+              <div className="message-bubble">
+                {msg.text}
+                {msg.image && (
+                  <div className="mt-2">
+                    <img 
+                      src={msg.image} 
+                      alt="Analysis" 
+                      className="max-w-full rounded-lg border border-gray-700"
+                      style={{ maxHeight: '200px', objectFit: 'contain' }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
         
         {isTyping && (
           <div className="bot-msg">
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="bot-avatar">
+              <img src="/dodgelogo.png" alt="Miraista" />
+            </div>
+            <div className="message-content">
+              <div className="bot-name">Miraista</div>
+              <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {showImageUpload && (
@@ -253,6 +276,9 @@ const ChatInterface = ({
             )}
           </>
         )}
+      </div>
+      <div className="powered-by">
+        Powered by Miraista
       </div>
     </div>
   );

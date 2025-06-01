@@ -115,13 +115,18 @@ const Chatbot = ({ isFullPage = false }) => {
     <>
       {/* Floating chat button - only show if not in iframe or not fullscreen */}
       {!isFullPage && !isInIframe && (
-        <div className="chatbot-button" onClick={toggleChatbot}>
-          {isOpen ? (
-            <span className="close-icon">×</span>
-          ) : (
-            <div className="button-pulse"></div>
-          )}
-        </div>
+        <>
+          <div className="assistant-popup">
+            {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
+          </div>
+          <div className="chatbot-button" onClick={toggleChatbot}>
+            {isOpen ? (
+              <span className="close-icon">×</span>
+            ) : (
+              <div className="button-pulse"></div>
+            )}
+          </div>
+        </>
       )}
       
       {/* Chat window */}
@@ -220,6 +225,7 @@ const Chatbot = ({ isFullPage = false }) => {
                 uploadStatus={uploadStatus}
                 setShowCarInput={setShowCarInput}
                 setShowImageUpload={setShowImageUpload}
+                messagesEndRef={messagesEndRef}
               />
             </>
           )}
