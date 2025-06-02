@@ -36,8 +36,8 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-950 py-12">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <footer className="bg-gray-950 py-12 w-full">
+      <div className="container mx-auto px-6 max-w-7xl w-full">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <motion.div
@@ -175,36 +175,53 @@ const Footer = () => {
           </motion.div>
         </div>
 
-        {/* Copyright */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeInUp}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800"
-        >
-          <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {currentYear} Miraista. All rights reserved.
-          </p>
-          <div className="flex space-x-8">
-            <ul className="flex space-x-8 list-none">
-              {["Privacy Policy", "Terms of Service"].map((item, index) => (
-                <li key={index}>
+        {/* Copyright - Restructured */}
+        <div className="border-t border-gray-800 pt-8">
+          <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
+            <div className="text-center md:text-left">
+              <p className="text-white text-sm">
+                &copy; {currentYear} Miraista. A subsidiary of NexoraTrading Ventures PVT LTD. All rights reserved.
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <ul className="flex flex-wrap justify-center md:justify-end space-x-8 list-none">
+                <li>
                   <motion.a 
-                    href="#" 
+                    href="/legal#privacy"
                     whileHover={{ x: 5 }}
                     whileTap={{ scale: 0.95 }}
                     className="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300"
-                    aria-label={`View ${item}`}
+                    aria-label="View Privacy Policy"
                   >
-                    {item}
+                    Privacy Policy
                   </motion.a>
                 </li>
-              ))}
-            </ul>
+                <li>
+                  <motion.a 
+                    href="/legal#terms"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300"
+                    aria-label="View Terms of Service"
+                  >
+                    Terms of Service
+                  </motion.a>
+                </li>
+                <li>
+                  <motion.a 
+                    href="/legal"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300"
+                    aria-label="View Legal Information"
+                  >
+                    Legal Information
+                  </motion.a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );

@@ -14,6 +14,7 @@ import Footer from "./components/common/Footer";
 import APIDocumentation from "./pages/APIDocumentation";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
+import Legal from "./pages/Legal";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // ScrollToTop component to reset scroll position on route change
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/chatbot-iframe" element={<ChatbotIframePage />} />
           <Route path="/apidocs" element={<APIDocumentation />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/legal" element={<Legal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
