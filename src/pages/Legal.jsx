@@ -112,13 +112,28 @@ const Legal = () => {
               <h2 className="text-2xl font-bold text-white mb-4">Company Information</h2>
               <div className="w-20 h-1 bg-blue-500 mb-6"></div>
               <p className="text-gray-300 mb-4">
-                Miraista is a brand and brand of NexoraTrading Ventures PVT LTD, a registered company in India. Our parent company provides the legal framework and foundation for our innovative AI solutions.
+                Miraista is a brand of NexoraTrading Ventures PVT LTD, a registered company in India. Our parent company provides the legal framework and foundation for our innovative AI solutions.
               </p>
-              <p className="text-gray-300">
-                <strong>Parent Company:</strong> NexoraTrading Ventures PVT LTD<br />
-                <strong>Brand Name:</strong> Miraista<br />
-                <strong>Website:</strong> www.miraista.com
-              </p>
+              <div className="bg-gray-900/50 p-6 rounded-lg border border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Brand Name</p>
+                    <p className="text-white font-medium">Miraista</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Legal Entity</p>
+                    <p className="text-white font-medium">NexoraTrading Ventures PVT LTD</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">CIN Number</p>
+                    <p className="text-white font-medium">U46102DL2025PTC446621</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Website</p>
+                    <p className="text-white font-medium">www.miraista.com</p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Terms of Service */}
