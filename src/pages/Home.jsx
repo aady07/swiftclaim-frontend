@@ -4,16 +4,61 @@ import { useNavigate } from "react-router-dom";
 import { useScroll, useTransform } from "framer-motion";
 import { Helmet } from "react-helmet";
 
+// Typewriter effect component
+const TypewriterText = ({ text, variations, color = "from-green-500 to-blue-600" }) => {
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentVariation, setCurrentVariation] = useState(0);
+
+  useEffect(() => {
+    const currentText = variations[currentVariation];
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        if (displayText === currentText) {
+          // Start deleting after a pause
+          setTimeout(() => setIsDeleting(true), 1500);
+        } else {
+          setDisplayText(currentText.slice(0, displayText.length + 1));
+        }
+      } else {
+        if (displayText === "") {
+          setIsDeleting(false);
+          setCurrentVariation((prev) => (prev + 1) % variations.length);
+        } else {
+          setDisplayText(currentText.slice(0, displayText.length - 1));
+        }
+      }
+    }, isDeleting ? 50 : 100);
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, currentVariation, variations]);
+
+  return (
+    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mt-2 hover:scale-105 transition-transform duration-300">
+      {displayText}
+      <span className="animate-blink">|</span>
+    </span>
+  );
+};
+
 const HomePage = () => {
   const { scrollYProgress } = useScroll();
 
   const navigate = useNavigate();
   
-  // Hero section text carousel data
+  // Hero section text carousel data with variations
   const heroTexts = [
     {
       title: "Meet Your AI Agent",
       subtitle: "Smart Chatbot Assistant",
+      subtitleVariations: [
+        "Smart Chatbot Assistant",
+        "Intelligent AI Companion",
+        "24/7 Virtual Assistant",
+        "Context-Aware Helper",
+        "Natural Language Expert"
+      ],
       description: "Our advanced AI chatbot isn't just a simple assistant - it's your dedicated agent that understands context, handles complex queries, and provides intelligent responses. Experience natural conversations with an AI that truly understands you.",
       previewPosition: "right",
       type: "video",
@@ -22,6 +67,13 @@ const HomePage = () => {
     {
       title: "Auto Claim Processing",
       subtitle: "Powered by AI",
+      subtitleVariations: [
+        "Powered by AI",
+        "Intelligent Processing",
+        "Automated Excellence",
+        "Smart Document Analysis",
+        "Real-time Validation"
+      ],
       description: "Transform your claims processing with our AI-powered system. Upload documents, and watch as our intelligent agent automatically extracts information, validates claims, and processes them with unprecedented speed and accuracy.",
       previewPosition: "left",
       type: "video",
@@ -255,7 +307,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
       </Helmet>
       
       {/* Hero Section */}
-      <section className="relative min-h-screen overflow-hidden">
+      <section className="relative min-h-screen overflow-hidden pt-16">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900" />
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
@@ -306,12 +358,13 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   >
                     <h1 className="text-5xl lg:text-7xl font-bold mb-6 text-white leading-tight hover:scale-105 transition-transform duration-300">
                       {heroTexts[currentTextIndex].title}
-                      <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mt-2 hover:scale-105 transition-transform duration-300">
-                        {heroTexts[currentTextIndex].subtitle}
-                      </span>
+                      <TypewriterText 
+                        text={heroTexts[currentTextIndex].subtitle}
+                        variations={heroTexts[currentTextIndex].subtitleVariations}
+                      />
                     </h1>
                     
-                    <p className="text-xl text-gray-300 mb-8 leading-relaxed hover:scale-105 transition-transform duration-300">
+                    <p className="text-xl text-gray-300 mb-12 leading-relaxed hover:scale-105 transition-transform duration-300">
                       {heroTexts[currentTextIndex].description}
                     </p>
                   </motion.div>
@@ -320,7 +373,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
               <motion.div
                 variants={fadeInUp}
-                className="flex flex-col sm:flex-row gap-4 transform-gpu"
+                className="flex flex-col sm:flex-row gap-4 transform-gpu mb-12"
               >
                 <motion.button
                   whileHover={{ scale: 1.05, rotateX: 5 }}
