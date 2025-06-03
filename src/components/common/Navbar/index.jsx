@@ -134,7 +134,7 @@ const Navbar = () => {
       {/* Enhanced Cylindrical highlight container - adjusted to extend only as needed */}
       {(scrolled || getWindowWidth() < 1024) && (
         <motion.div 
-          className={`absolute inset-0 mx-auto w-full ${getWindowWidth() >= 1024 ? 'max-w-[1200px]' : 'max-w-[1100px]'} bg-gray-900/95 backdrop-blur-md rounded-full border border-gray-700/50 shadow-lg h-16`}
+          className={`absolute inset-0 mx-auto w-full max-w-[1200px] bg-gray-900/95 backdrop-blur-md rounded-full border border-gray-700/50 shadow-lg h-16`}
           initial={{ opacity: 0, scaleX: 0.9, scaleY: 0.7 }}
           animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -174,7 +174,7 @@ const Navbar = () => {
         </motion.div>
       )}
 
-      <div className="relative flex justify-between items-center h-16 max-w-[1200px] mx-auto px-4 lg:px-8">
+      <div className="relative flex justify-between items-center h-16 max-w-[1200px] mx-auto px-6 lg:px-8">
         {/* Logo Container */}
         <div className="flex items-center z-10">
           <Link to="/" className="flex items-center" onClick={(e) => {
