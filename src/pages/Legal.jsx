@@ -26,7 +26,7 @@ const Legal = () => {
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
         <title>Legal Information | Miraista</title>
-        <meta name="description" content="Legal information, terms of service, and privacy policy for Miraista - A subsidiary of NexoraTrading Ventures PVT LTD." />
+        <meta name="description" content="Legal information, terms of service, and privacy policy for Miraista - A brand of NexoraTrading Ventures PVT LTD." />
         <meta name="keywords" content="legal information, terms of service, privacy policy, Miraista legal, company information" />
       </Helmet>
 
@@ -112,7 +112,7 @@ const Legal = () => {
               <h2 className="text-2xl font-bold text-white mb-4">Company Information</h2>
               <div className="w-20 h-1 bg-blue-500 mb-6"></div>
               <p className="text-gray-300 mb-4">
-                Miraista is a brand and subsidiary of NexoraTrading Ventures PVT LTD, a registered company in India. Our parent company provides the legal framework and foundation for our innovative AI solutions.
+                Miraista is a brand and brand of NexoraTrading Ventures PVT LTD, a registered company in India. Our parent company provides the legal framework and foundation for our innovative AI solutions.
               </p>
               <p className="text-gray-300">
                 <strong>Parent Company:</strong> NexoraTrading Ventures PVT LTD<br />
