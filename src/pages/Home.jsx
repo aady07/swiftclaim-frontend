@@ -337,7 +337,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         </div>
         
         {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-6 lg:px-8">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
             {/* Left Content */}
             <motion.div
@@ -442,7 +442,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               {heroTexts[currentTextIndex].type === 'video' ? (
                 <div className={`relative mx-auto ${
                   currentTextIndex === 0 
-                    ? 'w-[400px] h-[600px]' // Vertical for chat.mp4
+                    ? 'w-[400px] h-[600px] -mt-10'
                     : 'w-[700px] h-[450px]' // Horizontal for claim.mp4
                 }`}>
                   <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl blur-2xl transform -rotate-6" />
