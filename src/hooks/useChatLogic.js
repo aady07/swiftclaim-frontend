@@ -1,6 +1,6 @@
 import { useChatState } from './useChatState';
 import { useFileUpload } from './useFileUpload';
-import { useSpeechRecognition } from './useSpeechRecognition';
+import { useCustomSpeechRecognition } from './useSpeechRecognition';
 import { useSpeechService } from '../services/speechService';
 import { useEmotionService } from '../services/emotionService';
 import { useMessageService } from '../services/messageService';
@@ -132,7 +132,7 @@ export const useChatLogic = (language) => {
     }, 30);
   };
 
-  const { startListening, stopListening } = useSpeechRecognition(language, {
+  const { startListening, stopListening } = useCustomSpeechRecognition(language, {
     setInput,
     handleSend,
     setIsListening

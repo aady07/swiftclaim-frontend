@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useSpeechService } from '../services/speechService';
 
-export const useSpeechRecognition = (language, { setInput, handleSend, setIsListening }) => {
+export const useCustomSpeechRecognition = (language, { setInput, handleSend, setIsListening }) => {
   const {
     transcript,
     listening,
