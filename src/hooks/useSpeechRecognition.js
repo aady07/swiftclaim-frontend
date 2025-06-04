@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import SpeechRecognition from 'react-speech-recognition';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { useSpeechService } from '../services/speechService';
 
 export const useSpeechRecognition = (language, { setInput, handleSend, setIsListening }) => {
@@ -11,6 +11,26 @@ export const useSpeechRecognition = (language, { setInput, handleSend, setIsList
     startListening: startSpeechListening,
     stopListening: stopSpeechListening
   } = useSpeechService(language);
+
+  useEffect(() => {
+    // Initialize speech recognition
+    if (browserSupportsSpeechRecognition) {
+      console.log('Initializing speech recognition...');
+      try {
+        const recognition = SpeechRecognition.getRecognition();
+        if (recognition) {
+          recognition.lang = language === "en" ? "en-US" : "hi-IN";
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          console.log('Speech recognition initialized successfully');
+        } else {
+          console.error('Failed to get speech recognition instance');
+        }
+      } catch (error) {
+        console.error('Error initializing speech recognition:', error);
+      }
+    }
+  }, [language, browserSupportsSpeechRecognition]);
 
   useEffect(() => {
     if (listening) {
@@ -26,8 +46,8 @@ export const useSpeechRecognition = (language, { setInput, handleSend, setIsList
 
   useEffect(() => {
     const handleError = (event) => {
+      console.error('SpeechRecognition Error:', event.error);
       setIsListening(false);
-      console.log("SpeechRecognition Error:", event.error);
 
       alert(language === "en"
         ? "Speech recognition error. Please try again."
@@ -35,11 +55,13 @@ export const useSpeechRecognition = (language, { setInput, handleSend, setIsList
     };
 
     if (browserSupportsSpeechRecognition) {
-      SpeechRecognition.getRecognition()?.addEventListener('error', handleError);
-      
-      return () => {
-        SpeechRecognition.getRecognition()?.removeEventListener('error', handleError);
-      };
+      const recognition = SpeechRecognition.getRecognition();
+      if (recognition) {
+        recognition.addEventListener('error', handleError);
+        return () => {
+          recognition.removeEventListener('error', handleError);
+        };
+      }
     }
   }, [language, browserSupportsSpeechRecognition, setIsListening]);
 
