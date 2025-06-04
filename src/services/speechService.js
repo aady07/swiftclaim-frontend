@@ -22,57 +22,44 @@ export const useSpeechService = (language) => {
   };
 
   const startListening = (setIsListening) => {
-    console.log('Starting speech recognition...');
-    
     if (isProcessing || isSending) {
-      console.log('Already processing or sending speech');
       return;
     }
     
     if (!browserSupportsSpeechRecognition) {
-      console.log('Speech recognition not supported');
       alert(language === "en" 
         ? "Your browser does not support speech recognition." 
         : "आपका ब्राउज़र स्पीच रिकग्निशन का समर्थन नहीं करता है।");
       return;
     }
     
-    // Reset all buffers and states
     speechBuffer = '';
     finalTranscriptBuffer = '';
     lastSpeechTime = Date.now();
     
-    console.log('Requesting microphone access...');
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(() => {
-        console.log('Microphone access granted');
-        
-        // Clear any existing timeout
         if (recognitionTimeout) {
           clearTimeout(recognitionTimeout);
           recognitionTimeout = null;
         }
         
-        // Stop any existing recognition
         try {
           SpeechRecognition.stopListening();
         } catch (error) {
           console.error('Error stopping existing recognition:', error);
         }
         
-        // Reset state
         resetTranscript();
         setIsListening(true);
         isProcessing = true;
         
         try {
-          console.log('Starting SpeechRecognition...');
           SpeechRecognition.startListening({ 
             continuous: true, // Keep continuous to capture complete phrases
             interimResults: true, // Enable interim results to build complete phrase
             language: language === "en" ? "en-US" : "hi-IN"
           });
-          console.log('SpeechRecognition started successfully');
         } catch (error) {
           console.error('Error starting SpeechRecognition:', error);
           setIsListening(false);
@@ -92,10 +79,7 @@ export const useSpeechService = (language) => {
   };
 
   const stopListening = (setIsListening, handleSend) => {
-    console.log('Stopping speech recognition...');
-    
     if (!isProcessing || isSending) {
-      console.log('Not currently processing speech or already sending');
       return;
     }
     
@@ -104,7 +88,6 @@ export const useSpeechService = (language) => {
     
     try {
       SpeechRecognition.stopListening();
-      console.log('SpeechRecognition stopped successfully');
     } catch (error) {
       console.error('Error stopping SpeechRecognition:', error);
     }
@@ -112,7 +95,6 @@ export const useSpeechService = (language) => {
     // Check if the speech duration is long enough
     const speechDuration = Date.now() - lastSpeechTime;
     if (speechDuration < MIN_SPEECH_DURATION) {
-      console.log('Speech duration too short, ignoring');
       return;
     }
     
@@ -120,9 +102,6 @@ export const useSpeechService = (language) => {
     const finalTranscript = finalTranscriptBuffer || transcript;
     
     if (finalTranscript && finalTranscript.trim()) {
-      console.log('Sending final transcript:', finalTranscript);
-      
-      // Set sending flag to prevent multiple sends
       isSending = true;
       
       // Wait for speech to end before sending

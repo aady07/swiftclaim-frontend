@@ -16,18 +16,13 @@ export const useCustomSpeechRecognition = (language, { setInput, handleSend, set
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    // Initialize speech recognition
     if (browserSupportsSpeechRecognition) {
-      console.log('Initializing speech recognition...');
       try {
         const recognition = SpeechRecognition.getRecognition();
         if (recognition) {
           recognition.lang = language === "en" ? "en-US" : "hi-IN";
           recognition.continuous = true;
           recognition.interimResults = true;
-          console.log('Speech recognition initialized successfully');
-        } else {
-          console.error('Failed to get speech recognition instance');
         }
       } catch (error) {
         console.error('Error initializing speech recognition:', error);
@@ -89,15 +84,12 @@ export const useCustomSpeechRecognition = (language, { setInput, handleSend, set
       if (transcript && transcript.trim()) {
         isProcessingRef.current = true;
         
-        // Add a longer delay before sending to ensure we have the complete phrase
         setTimeout(() => {
-          // Only send if we have a meaningful transcript
           if (transcript.trim().length > 0) {
             handleSend(transcript);
             resetTranscript();
           }
           
-          // Reset processing flag after a longer delay
           timeoutRef.current = setTimeout(() => {
             isProcessingRef.current = false;
           }, 2000);
@@ -110,10 +102,9 @@ export const useCustomSpeechRecognition = (language, { setInput, handleSend, set
     let timeoutId;
     
     if (listening) {
-      // Increase the timeout for continuous listening
       timeoutId = setTimeout(() => {
         stopSpeechListening(setIsListening, handleSend);
-      }, 30000); // Increased from 15000 to 30000
+      }, 30000);
     }
     
     return () => {
@@ -124,7 +115,7 @@ export const useCustomSpeechRecognition = (language, { setInput, handleSend, set
   return {
     startListening: () => {
       if (!isProcessingRef.current) {
-        resetTranscript(); // Reset transcript before starting
+        resetTranscript();
         startSpeechListening(setIsListening);
       }
     },

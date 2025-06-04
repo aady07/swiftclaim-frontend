@@ -75,7 +75,6 @@ export const useChatLogic = (language) => {
       window.lastSentMessage = messageToSend.trim();
       window.lastSentTime = currentTime;
     } else {
-      console.log('Duplicate message detected, ignoring');
       return;
     }
 
