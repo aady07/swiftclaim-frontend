@@ -1,6 +1,13 @@
 # Handle www and non-www versions
 User-agent: *
 Allow: /
+Allow: /claim-upload
+Allow: /about-us
+Allow: /services
+Allow: /contacts
+Allow: /chatbotpage
+Allow: /careers
+Allow: /legal
 
 # Canonical domain
 Host: https://miraista.com
@@ -13,6 +20,7 @@ Sitemap: https://www.miraista.com/sitemap.xml
 Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
+Disallow: /chatbot-iframe
 
 # Crawl-delay for all bots
 Crawl-delay: 10 
