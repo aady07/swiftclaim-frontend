@@ -43,7 +43,7 @@ const Avatar = ({ audioStream, isTalking = false }) => {
     closeIntensity: 0,
   });
 
-  // Setup models
+  // Setup modelss
   useEffect(() => {
     if (!avatarScene || !actions || idleAnims.length === 0) return;
 
