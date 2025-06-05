@@ -5,9 +5,13 @@
 !public/
 !src/
 !package.json
+!package-lock.json
 !vite.config.js
 !index.html
 !vercel.json
+!.gitignore
+!tsconfig.json
+!jsconfig.json
 
 # And not these specific files
 !public/avatar.glb
