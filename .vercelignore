@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files...
+!public/
+!src/
+!package.json
+!vite.config.js
+!index.html
+!vercel.json
+
+# And not these specific files
+!public/avatar.glb
+!public/idle_withskin.glb 
