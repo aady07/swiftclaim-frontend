@@ -55,27 +55,61 @@ const ClaimUpload = () => {
   };
 
   const processClaimResponse = (data) => {
-    if (data.model1_output?.[0]) {
-      const model1Data = data.model1_output[0];
-      if (model1Data.confidence) {
-        setConfidenceScore((model1Data.confidence * 100).toFixed(2));
+    console.log('Processing claim response data:', data);
+    
+    // Handle model1_output - damage detection
+    if (data.model1_output && data.model1_output.length > 0) {
+      // First object contains damage detection info
+      const damageInfo = data.model1_output.find(item => item.label);
+      if (damageInfo) {
+        console.log('Damage info:', damageInfo);
+        if (damageInfo.confidence) {
+          setConfidenceScore((damageInfo.confidence * 100).toFixed(2));
+        }
+        setFileFormat(damageInfo.file_format);
+        setDamageLabel(damageInfo.label);
       }
-      setFileFormat(model1Data.file_format);
-      setDamageLabel(model1Data.label);
-      setDamageImageUrl(model1Data.output_image_base64?.startsWith('data') 
-        ? model1Data.output_image_base64 
-        : `data:image/${model1Data.file_format || 'png'};base64,${model1Data.output_image_base64}`);
+      
+      // Second object contains image data
+      const damageImageData = data.model1_output.find(item => item.output_image_base64);
+      if (damageImageData && damageImageData.output_image_base64 && damageImageData.output_image_base64 !== 'undefined') {
+        console.log('Damage image found');
+        const damageImage = damageImageData.output_image_base64;
+        setDamageImageUrl(damageImage.startsWith('data') 
+          ? damageImage 
+          : `data:image/${damageInfo?.file_format || 'png'};base64,${damageImage}`);
+      }
     }
 
-    if (data.model2_output?.[0]) {
-      const model2Data = data.model2_output[0];
-      setPartsImageUrl(model2Data.output2_image_base64?.startsWith('data')
-        ? model2Data.output2_image_base64
-        : `data:image/${fileFormat || 'png'};base64,${model2Data.output2_image_base64}`);
+    // Handle model2_output - parts detection
+    if (data.model2_output && data.model2_output.length > 0) {
+      // Extract parts from objects with labels
+      const partsData = data.model2_output.filter(item => item.label);
+      console.log('Parts data:', partsData);
+      
+      // Extract parts image data
+      const partsImageData = data.model2_output.find(item => item.output2_image_base64);
+      if (partsImageData && partsImageData.output2_image_base64 && partsImageData.output2_image_base64 !== 'undefined') {
+        console.log('Parts image found');
+        const partsImage = partsImageData.output2_image_base64;
+        setPartsImageUrl(partsImage.startsWith('data')
+          ? partsImage
+          : `data:image/${fileFormat || 'png'};base64,${partsImage}`);
+      }
     }
 
-    if (data.parts) setDamagedParts(data.parts);
-    if (data.cost) setCostEstimates(data.cost);
+    // Handle costing data
+    if (data.costing && Array.isArray(data.costing)) {
+      console.log('Costing data:', data.costing);
+      
+      // Extract parts from costing array
+      const parts = data.costing.map(item => item.part).filter(part => part !== 'Unknown');
+      setDamagedParts(parts);
+      
+      // Extract prices from costing array
+      const costs = data.costing.map(item => item.price).filter(Boolean);
+      setCostEstimates(costs);
+    }
   };
 
   const resetResults = () => {
