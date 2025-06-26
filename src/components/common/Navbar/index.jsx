@@ -42,6 +42,11 @@ const Navbar = () => {
     setServicesDropdown(!servicesDropdown);
   };
 
+  // Function to close dropdown when a service option is clicked
+  const handleServiceOptionClick = () => {
+    setServicesDropdown(false);
+  };
+
   // Handle scroll effect with debounce to prevent flickering
   useEffect(() => {
     const handleScroll = () => {
@@ -261,6 +266,7 @@ const Navbar = () => {
                                   : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
                               } transition-colors duration-200`}
                               role="menuitem"
+                              onClick={handleServiceOptionClick}
                             >
                               {option.text}
                             </Link>
@@ -386,6 +392,7 @@ const Navbar = () => {
                                           ? "text-blue-400 bg-blue-900/30"
                                           : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
                                       } transition-colors duration-200`}
+                                      onClick={handleServiceOptionClick}
                                     >
                                       {option.text}
                                     </Link>
