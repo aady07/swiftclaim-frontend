@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://aadybackend.site/api';
+const API_BASE_URL = 'https://aadybackend.site/api';
 
 export const claimService = {
   uploadClaim: async (formData) => {
