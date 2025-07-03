@@ -16,6 +16,7 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import Widget from "./pages/Widget";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -32,10 +33,11 @@ const App = () => {
   const location = useLocation();
   const isChatbotPage = location.pathname === "/chatbotpage";
   const isChatbotIframe = location.pathname === "/chatbot-iframe";
+  const isWidget = location.pathname === "/widget";
   
   return (
     <div className="flex flex-col min-h-screen">
-      {!isChatbotIframe && <Navbar />}
+      {!isChatbotIframe && !isWidget && <Navbar />}
       <main className="flex-grow">
         <ScrollToTop />
         <Routes>
@@ -49,13 +51,14 @@ const App = () => {
           <Route path="/apidocs" element={<APIDocumentation />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/legal" element={<Legal />} />
+          <Route path="/widget" element={<Widget />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!isChatbotIframe && <Footer />}
+      {!isChatbotIframe && !isWidget && <Footer />}
       <Analytics />
       <SpeedInsights/>
-      {!isChatbotPage && !isChatbotIframe && <Chatbot3D />}
+      {!isChatbotPage && !isChatbotIframe && !isWidget && <Chatbot3D />}
     </div>
   );
 };
