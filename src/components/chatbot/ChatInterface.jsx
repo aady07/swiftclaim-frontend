@@ -25,7 +25,10 @@ const ChatInterface = ({
   uploadStatus,
   setShowCarInput,
   setShowImageUpload,
-  messagesEndRef
+  messagesEndRef,
+  widgetMode = false,
+  clientName = '',
+  clientLogo = ''
 }) => {
   const uiText = {
     chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
@@ -48,11 +51,11 @@ const ChatInterface = ({
           <div key={index} className={msg.fromBot ? "bot-msg" : "user-msg"}>
             {msg.fromBot && (
               <div className="bot-avatar">
-                <img src="/dodgelogo.png" alt="Miraista" />
+                <img src={widgetMode && clientLogo ? clientLogo : "/dodgelogo.png"} alt={widgetMode && clientName ? clientName : "Miraista"} />
               </div>
             )}
             <div className="message-content">
-              {msg.fromBot && <div className="bot-name">Miraista</div>}
+              {msg.fromBot && <div className="bot-name">{widgetMode && clientName ? clientName : "Miraista"}</div>}
               <div className="message-bubble">
                 {msg.text}
                 {msg.image && (
@@ -73,10 +76,10 @@ const ChatInterface = ({
         {isTyping && (
           <div className="bot-msg">
             <div className="bot-avatar">
-              <img src="/dodgelogo.png" alt="Miraista" />
+              <img src={widgetMode && clientLogo ? clientLogo : "/dodgelogo.png"} alt={widgetMode && clientName ? clientName : "Miraista"} />
             </div>
             <div className="message-content">
-              <div className="bot-name">Miraista</div>
+              <div className="bot-name">{widgetMode && clientName ? clientName : "Miraista"}</div>
               <div className="typing-indicator">
                 <span></span>
                 <span></span>

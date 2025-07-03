@@ -11,10 +11,10 @@ import LanguagePicker from "./LanguagePicker";
 import ChatInterface from "./ChatInterface";
 import { useChatLogic } from '../../hooks/useChatLogic';
 
-const Chatbot = ({ isFullPage = false }) => {
+const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '' }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
-  const [isOpen, setIsOpen] = useState(isFullPage);
+  const [isOpen, setIsOpen] = useState(isFullPage || widgetMode);
   const avatarInitialized = useRef(false);
 
   const {
@@ -55,10 +55,10 @@ const Chatbot = ({ isFullPage = false }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (isFullPage) {
+    if (isFullPage || widgetMode) {
       setIsOpen(true);
     }
-  }, [isFullPage]);
+  }, [isFullPage, widgetMode]);
 
   // Add iframe detection and ID handling
   const isInIframe = window !== window.parent;
@@ -113,8 +113,8 @@ const Chatbot = ({ isFullPage = false }) => {
 
   return (
     <>
-      {/* Floating chat button - only show if not in iframe or not fullscreen */}
-      {!isFullPage && !isInIframe && (
+      {/* Floating chat button - only show if not in iframe or not fullscreen or widgetMode */}
+      {!isFullPage && !isInIframe && !widgetMode && (
         <>
           <div className="assistant-popup">
             {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
@@ -131,8 +131,14 @@ const Chatbot = ({ isFullPage = false }) => {
       
       {/* Chat window */}
       {isOpen && (
-        <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''}`}>
-          {!isFullPage && (
+        <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''} ${widgetMode ? 'widget-mode' : ''}`}>
+          {/* Header for widget mode */}
+          {widgetMode ? (
+            <div className="chatbot-header widget-header" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 32, width: 32, borderRadius: 6 }} />}
+              <h3 style={{ margin: 0 }}>{clientName}</h3>
+            </div>
+          ) : !isFullPage && (
             <div className="chatbot-header">
               <h3>{language === "en" ? "Enterprise Assistant" : "उद्यम सहायक"}</h3>
               <div className="header-controls">
@@ -147,59 +153,58 @@ const Chatbot = ({ isFullPage = false }) => {
             </div>
           ) : (
             <>
-              <div className="avatar-container">
-                <Canvas
-                  gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
-                  camera={{
-                    position: isFullPage ? [0, 0.5, 2.5] : [0, 1.6, 1.0],
-                    fov: isFullPage ? 35 : 25,
-                    near: 0.1,
-                    far: 1000
-                  }}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <Suspense fallback={null}>
-                    <ambientLight intensity={0.5} />
-                    <directionalLight
-                      intensity={1.5}
-                      position={[5, 5, 5]}
-                      castShadow
-                    />
-                    <directionalLight 
-                      intensity={1} 
-                      position={[-5, 5, 5]} 
-                    />
-                    
-                    <Avatar 
-                      isTalking={isTalking} 
-                      emotion={emotion} 
-                      isFullPage={isFullPage}
-                      key={`${isFullPage}-${avatarInitialized.current}`}
-                    />
-                    
-                    <OrbitControls 
-                      enableZoom={isFullPage}
-                      minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)}
-                      maxPolarAngle={Math.PI/2 + (isFullPage ? 0.4 : 0.2)}
-                      minAzimuthAngle={isFullPage ? -Math.PI/4 : -Math.PI/6}
-                      maxAzimuthAngle={isFullPage ? Math.PI/4 : Math.PI/6}
-                    />
-                  </Suspense>
-                </Canvas>
-                
-                {/* Speaking indicator */}
-                {isTalking && (
-                  <div className="speak-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                )}
-              </div>
-
+              {/* Only show avatar if not in widgetMode */}
+              {!widgetMode && (
+                <div className="avatar-container">
+                  <Canvas
+                    gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
+                    camera={{
+                      position: isFullPage ? [0, 0.5, 2.5] : [0, 1.6, 1.0],
+                      fov: isFullPage ? 35 : 25,
+                      near: 0.1,
+                      far: 1000
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    <Suspense fallback={null}>
+                      <ambientLight intensity={0.5} />
+                      <directionalLight
+                        intensity={1.5}
+                        position={[5, 5, 5]}
+                        castShadow
+                      />
+                      <directionalLight 
+                        intensity={1} 
+                        position={[-5, 5, 5]} 
+                      />
+                      <Avatar 
+                        isTalking={isTalking} 
+                        emotion={emotion} 
+                        isFullPage={isFullPage}
+                        key={`${isFullPage}-${avatarInitialized.current}`}
+                      />
+                      <OrbitControls 
+                        enableZoom={isFullPage}
+                        minPolarAngle={Math.PI/2 - (isFullPage ? 0.4 : 0.2)}
+                        maxPolarAngle={Math.PI/2 + (isFullPage ? 0.4 : 0.2)}
+                        minAzimuthAngle={isFullPage ? -Math.PI/4 : -Math.PI/6}
+                        maxAzimuthAngle={isFullPage ? Math.PI/4 : Math.PI/6}
+                      />
+                    </Suspense>
+                  </Canvas>
+                  {/* Speaking indicator */}
+                  {isTalking && (
+                    <div className="speak-indicator">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  )}
+                </div>
+              )}
               <ChatInterface
                 messages={messages}
                 input={input}
@@ -226,6 +231,9 @@ const Chatbot = ({ isFullPage = false }) => {
                 setShowCarInput={setShowCarInput}
                 setShowImageUpload={setShowImageUpload}
                 messagesEndRef={messagesEndRef}
+                widgetMode={widgetMode}
+                clientName={clientName}
+                clientLogo={clientLogo}
               />
             </>
           )}
