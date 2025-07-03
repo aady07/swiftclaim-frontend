@@ -21,7 +21,7 @@
   ],
   "headers": [
     {
-      "source": "/widget",
+      "source": "/widget(.*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
