@@ -11,7 +11,7 @@ import LanguagePicker from "./LanguagePicker";
 import ChatInterface from "./ChatInterface";
 import { useChatLogic } from '../../hooks/useChatLogic';
 
-const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '' }) => {
+const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '', widgetSize = null }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(isFullPage);
@@ -136,7 +136,15 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
       
       {/* Chat window */}
       {isOpen && (
-        <div className={`chatbot-container ${isFullPage ? 'fullscreen' : ''} ${widgetMode ? 'widget-mode' : ''}`}>
+        <div 
+          className={`chatbot-container ${isFullPage ? 'fullscreen' : ''} ${widgetMode ? 'widget-mode' : ''}`}
+          style={widgetMode && widgetSize ? {
+            width: widgetSize.width,
+            height: widgetSize.height,
+            maxWidth: widgetSize.width,
+            maxHeight: widgetSize.height
+          } : {}}
+        >
           {/* Header for widget mode */}
           {widgetMode ? (
             <div className="chatbot-header widget-header" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
