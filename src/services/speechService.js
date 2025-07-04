@@ -12,12 +12,22 @@ let finalTranscriptBuffer = ''; // Buffer for final transcript
 export const useSpeechService = (language) => {
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
-  const speak = (text, isMuted) => {
-    if (!isMuted && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === "en" ? "en-US" : "hi-IN";
-      utterance.rate = 1;
-      window.speechSynthesis.speak(utterance);
+  const speak = async (text, isMuted) => {
+    if (isMuted) return;
+    try {
+      const formData = new FormData();
+      formData.append('text', text);
+      const response = await fetch('https://aadybackend.site/api/speech/tts', {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) throw new Error('TTS API error');
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new window.Audio(audioUrl);
+      audio.play();
+    } catch (err) {
+      console.error('TTS error:', err);
     }
   };
 
