@@ -23,8 +23,17 @@ const Widget = () => {
   }
 
   return (
-    <div style={{ width: "100vw", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f9f9f9" }}>
-      <Chatbot3D widgetMode clientName={client.name} clientLogo={client.logo} />
+    <div style={{ 
+      width: "100%", 
+      height: "100vh", 
+      position: "relative",
+      background: "transparent" 
+    }}>
+      <Chatbot3D 
+        widgetMode={true} 
+        clientName={client.name} 
+        clientLogo={client.logo} 
+      />
     </div>
   );
 };

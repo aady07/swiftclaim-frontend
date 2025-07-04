@@ -14,7 +14,7 @@ import { useChatLogic } from '../../hooks/useChatLogic';
 const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '' }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
-  const [isOpen, setIsOpen] = useState(isFullPage || widgetMode);
+  const [isOpen, setIsOpen] = useState(isFullPage);
   const avatarInitialized = useRef(false);
 
   const {
@@ -55,10 +55,10 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   }, [isOpen]);
 
   useEffect(() => {
-    if (isFullPage || widgetMode) {
+    if (isFullPage) {
       setIsOpen(true);
     }
-  }, [isFullPage, widgetMode]);
+  }, [isFullPage]);
 
   // Add iframe detection and ID handling
   const isInIframe = window !== window.parent;
@@ -111,15 +111,20 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     setLanguageSelected(true);
   };
 
+  // Dynamic button styling for widget mode
+  const buttonStyle = widgetMode && clientLogo ? {
+    '--button-logo': `url(${clientLogo})`
+  } : {};
+
   return (
     <>
-      {/* Floating chat button - only show if not in iframe or not fullscreen or widgetMode */}
-      {!isFullPage && !isInIframe && !widgetMode && (
+      {/* Floating chat button - show if not fullscreen and (not in iframe OR in widgetMode) */}
+      {!isFullPage && (!isInIframe || widgetMode) && (
         <>
           <div className="assistant-popup">
             {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
           </div>
-          <div className="chatbot-button" onClick={toggleChatbot}>
+          <div className="chatbot-button" onClick={toggleChatbot} style={buttonStyle}>
             {isOpen ? (
               <span className="close-icon">×</span>
             ) : (
