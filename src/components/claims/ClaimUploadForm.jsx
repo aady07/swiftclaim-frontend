@@ -125,7 +125,7 @@ const ClaimUploadForm = ({
           whileTap={{ scale: 0.95 }}
           disabled={!selectedFile || !carMake.trim() || !carModel.trim() || uploadStatus === "uploading"}
         >
-          {uploadStatus === "uploading" ? "Verifying..." : "Verify Claim"}
+          {uploadStatus === "uploading" ? "Uploading & Processing..." : "Verify Claim"}
         </motion.button>
       </div>
     </motion.div>

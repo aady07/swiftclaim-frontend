@@ -3,14 +3,16 @@ import { motion } from 'framer-motion';
 import { Helmet } from "react-helmet";
 import ClaimUploadForm from '../components/claims/ClaimUploadForm';
 import ClaimResults from '../components/claims/ClaimResults';
-import { claimService } from '../services/api/claimService';
+import { useS3Upload } from '../hooks/useS3Upload';
 import { generateClaimReport } from '../utils/pdfGenerator';
 
 const ClaimUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState("idle");
   const [confidenceScore, setConfidenceScore] = useState(null);
+  
+  // Use the S3 upload hook
+  const { uploadFileToS3, uploadStatus, uploadProgress, resetUpload } = useS3Upload();
   const [fileFormat, setFileFormat] = useState(null);
   const [damageLabel, setDamageLabel] = useState(null);
   const [carMake, setCarMake] = useState("");
@@ -34,22 +36,22 @@ const ClaimUpload = () => {
     event.preventDefault();
     if (!selectedFile || !carMake.trim() || !carModel.trim()) return;
 
-    setUploadStatus("uploading");
+    // Prevent multiple submissions
+    if (uploadStatus === 'uploading') {
+      console.log('Upload already in progress, ignoring duplicate submission');
+      return;
+    }
+
     resetResults();
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    formData.append("carMake", carMake);
-    formData.append("carModel", carModel);
-
     try {
-      const data = await claimService.uploadClaim(formData);
+      console.log('Starting claim submission for file:', selectedFile.name);
+      const data = await uploadFileToS3(selectedFile, carMake, carModel);
       processClaimResponse(data);
-      setUploadStatus("success");
-    } catch {
-      setUploadStatus("error");
+    } catch (error) {
+      console.error('Claim submission error:', error);
       setTimeout(() => {
-        setUploadStatus("idle");
+        resetUpload();
       }, 3000);
     }
   };
@@ -132,7 +134,7 @@ const ClaimUpload = () => {
   const handleNewUpload = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
-    setUploadStatus("idle");
+    resetUpload();
     resetResults();
     setCarMake("");
     setCarModel("");
@@ -337,14 +339,19 @@ const ClaimUpload = () => {
                       <motion.div 
                         className="h-full rounded-full bg-blue-500"
                         initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
+                        animate={{ width: `${uploadProgress}%` }}
                         transition={{ 
-                          duration: 2,
+                          duration: 0.3,
                           ease: [0.4, 0, 0.2, 1]
                         }}
                       />
                     </motion.div>
-                    <span className="text-sm font-medium whitespace-nowrap">Processing your claim...</span>
+                    <span className="text-sm font-medium whitespace-nowrap">
+                      {uploadProgress < 30 ? "Getting upload URL..." :
+                       uploadProgress < 70 ? "Uploading to cloud..." :
+                       uploadProgress < 90 ? "Processing claim..." :
+                       "Finalizing..."}
+                    </span>
                   </div>
                 </motion.div>
               )}
