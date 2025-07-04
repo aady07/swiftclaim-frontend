@@ -16,11 +16,22 @@ function useQuery() {
 const Widget = () => {
   const query = useQuery();
   const key = query.get("key");
-  const client = CLIENTS[key];
+  const size = query.get("size") || "normal";
+  const client = CLIENTS[key];  
 
   if (!client) {
     return <div>Invalid or missing widget key.</div>;
   }
+
+  // Define sizes
+  const sizes = {
+    small: { width: "350px", height: "500px" },
+    normal: { width: "400px", height: "600px" },
+    large: { width: "500px", height: "700px" },
+    xlarge: { width: "600px", height: "800px" }
+  };
+
+  const currentSize = sizes[size] || sizes.normal;
 
   return (
     <div style={{ 
@@ -32,7 +43,8 @@ const Widget = () => {
       <Chatbot3D 
         widgetMode={true} 
         clientName={client.name} 
-        clientLogo={client.logo} 
+        clientLogo={client.logo}
+        widgetSize={currentSize}
       />
     </div>
   );
