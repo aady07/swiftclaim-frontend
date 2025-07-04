@@ -205,11 +205,15 @@ export const useChatLogic = (language) => {
     }
   };
 
-  const { startListening, stopListening } = useCustomSpeechRecognition(language, {
-    setInput,
-    handleSend,
-    setIsListening
-  });
+  const speechService = useSpeechService(language);
+
+  const startListeningWrapper = () => {
+    speechService.startListening(setIsListening);
+  };
+
+  const stopListeningWrapper = () => {
+    speechService.stopListening(setIsListening, handleSend);
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && input.trim()) {
@@ -275,8 +279,8 @@ export const useChatLogic = (language) => {
     messagesEndRef,
     handleSend,
     handleKeyPress,
-    startListening,
-    stopListening,
+    startListening: startListeningWrapper,
+    stopListening: stopListeningWrapper,
     handleCarDetails,
     handleImageSelect,
     toggleMute,
