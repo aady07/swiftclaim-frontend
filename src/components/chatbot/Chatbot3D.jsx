@@ -141,8 +141,11 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
           style={widgetMode && widgetSize ? {
             width: widgetSize.width,
             height: widgetSize.height,
-            maxWidth: widgetSize.width,
-            maxHeight: widgetSize.height
+            maxWidth: widgetSize.maxWidth,
+            maxHeight: widgetSize.maxHeight,
+            position: 'relative',
+            bottom: 'auto',
+            right: 'auto'
           } : {}}
         >
           {/* Header for widget mode */}
