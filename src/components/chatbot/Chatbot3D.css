@@ -687,6 +687,7 @@ body {
   display: flex;
   align-items: center;
   height: 20px;
+  margin-left: 10px;
   margin-right: 10px;
 }
 
@@ -707,10 +708,10 @@ body {
 .recording-wave span:nth-child(5) { animation-delay: 0.8s; }
 
 .recording-text {
-  flex-grow: 1;
   font-weight: 500;
   color: #ff3b30;
   font-size: 14px;
+  margin: 0 10px;
 }
 
 .stop-recording-btn {
@@ -758,21 +759,7 @@ body {
   animation: pulse 1.5s infinite;
 }
 
-.stop-recording-btn {
-  background-color: transparent;
-  border: none;
-  color: #ff3b30;
-  cursor: pointer;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-}
 
-.stop-recording-btn:hover {
-  transform: scale(1.1);
-}
 
 @keyframes pulse {
   0% {
