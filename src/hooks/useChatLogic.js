@@ -212,7 +212,7 @@ export const useChatLogic = (language) => {
   };
 
   const stopListeningWrapper = () => {
-    speechService.stopListening(setIsListening, handleSend);
+    speechService.stopListening(setIsListening, setInput);
   };
 
   const handleKeyPress = (e) => {

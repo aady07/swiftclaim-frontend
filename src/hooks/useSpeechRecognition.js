@@ -17,7 +17,6 @@ export const useCustomSpeechRecognition = ({ setInput, handleSend, setIsListenin
       if (!response.ok) throw new Error('STT API error');
       const text = await response.text();
       setInput(text);
-      handleSend(text);
       setIsListening(false);
       setIsProcessing(false);
       return text;

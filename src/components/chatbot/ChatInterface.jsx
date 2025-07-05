@@ -206,6 +206,12 @@ const ChatInterface = ({
       <div className="input-area">
         {isListening ? (
           <div className="recording-container">
+            <button onClick={stopListening} className="stop-recording-btn">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
+                <circle cx="12" cy="12" r="10" />
+                <rect x="9" y="9" width="6" height="6" />
+              </svg>
+            </button>
             <div className="recording-wave">
               <span></span>
               <span></span>
@@ -216,12 +222,6 @@ const ChatInterface = ({
             <div className="recording-text">
               {language === "en" ? "Listening..." : "सुन रहा हूँ..."}
             </div>
-            <button onClick={stopListening} className="stop-recording-btn">
-              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
-                <circle cx="12" cy="12" r="10" />
-                <rect x="9" y="9" width="6" height="6" />
-              </svg>
-            </button>
           </div>
         ) : (
           <>

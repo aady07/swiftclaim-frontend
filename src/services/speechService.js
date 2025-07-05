@@ -88,7 +88,7 @@ export const useSpeechService = (language) => {
       });
   };
 
-  const stopListening = (setIsListening, handleSend) => {
+  const stopListening = (setIsListening, setInput) => {
     if (!isProcessing || isSending) {
       return;
     }
@@ -112,18 +112,9 @@ export const useSpeechService = (language) => {
     const finalTranscript = finalTranscriptBuffer || transcript;
     
     if (finalTranscript && finalTranscript.trim()) {
-      isSending = true;
-      
-      // Wait for speech to end before sending
-      recognitionTimeout = setTimeout(() => {
-        handleSend(finalTranscript.trim());
-        recognitionTimeout = null;
-        // Reset sending flag after a delay
-        setTimeout(() => {
-          isSending = false;
-          finalTranscriptBuffer = ''; // Clear the buffer after sending
-        }, 1000);
-      }, SPEECH_END_DELAY);
+      // Set the input instead of directly sending
+      setInput(finalTranscript.trim());
+      finalTranscriptBuffer = ''; // Clear the buffer after setting input
     }
   };
 
