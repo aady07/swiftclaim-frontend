@@ -69,6 +69,7 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
     formData.append("file", selectedFile);
     formData.append("carMake", carMake);
     formData.append("carModel", carModel);
+    formData.append("userId", "aady123");
 
     try {
       const data = await claimService.uploadClaim(formData);

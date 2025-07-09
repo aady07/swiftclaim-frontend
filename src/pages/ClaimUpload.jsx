@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from "react-helmet";
+import { Link } from 'react-router-dom';
 import ClaimUploadForm from '../components/claims/ClaimUploadForm';
 import ClaimResults from '../components/claims/ClaimResults';
+import ClaimUploadStats from '../components/claims/ClaimUploadStats';
 import { useS3Upload } from '../hooks/useS3Upload';
 import { generateClaimReport } from '../utils/pdfGenerator';
 
@@ -12,7 +14,7 @@ const ClaimUpload = () => {
   const [confidenceScore, setConfidenceScore] = useState(null);
   
   // Use the S3 upload hook
-  const { uploadFileToS3, uploadStatus, uploadProgress, resetUpload } = useS3Upload();
+  const { uploadFileToS3, uploadStatus, uploadProgress, uploadStats, resetUpload, getUploadStats } = useS3Upload();
   const [fileFormat, setFileFormat] = useState(null);
   const [damageLabel, setDamageLabel] = useState(null);
   const [carMake, setCarMake] = useState("");
@@ -176,6 +178,12 @@ const ClaimUpload = () => {
     }
   };
 
+  const handleRefreshStats = () => {
+    // Force refresh of stats by calling getUploadStats
+    const stats = getUploadStats();
+    console.log('📊 [STATS REFRESH] Current upload statistics:', stats);
+  };
+
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
@@ -282,6 +290,23 @@ const ClaimUpload = () => {
           </motion.p>
           
           <motion.div
+            className="flex justify-center mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Link
+              to="/claims-dashboard"
+              className="inline-flex items-center px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 border border-gray-600"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              View All Claims
+            </Link>
+          </motion.div>
+          
+          <motion.div
             className="w-full max-w-4xl p-8 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
             style={{ boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)" }}
             initial={{ opacity: 0, y: 20 }}
@@ -369,7 +394,14 @@ const ClaimUpload = () => {
                   }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium">There was an error processing your claim. Please try again.</span>
+                  <div className="text-red-400">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-red-400 font-medium">
+                    Upload failed. Please try again.
+                  </span>
                   </div>
                 </motion.div>
               )}
@@ -451,6 +483,12 @@ const ClaimUpload = () => {
           </motion.div>
         </motion.div>
       </motion.div>
+
+      {/* Upload Statistics Component */}
+      <ClaimUploadStats 
+        uploadStats={uploadStats} 
+        onRefresh={handleRefreshStats}
+      />
     </div>
   );
 };

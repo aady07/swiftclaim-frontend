@@ -6,6 +6,7 @@ import AboutUs from "./pages/AboutUs";
 import Services from "./pages/Services";
 import Contacts from "./pages/Contacts";
 import ClaimUpload from "./pages/ClaimUpload";
+import ClaimsDashboard from "./pages/ClaimsDashboard";
 import ChatbotPage from "./pages/ChatbotPage";
 import ChatbotIframePage from "./pages/ChatbotIframePage";
 import Navbar from "./components/common/Navbar";
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/services" element={<Services />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/claimupload" element={<ClaimUpload />} />
+          <Route path="/claims-dashboard" element={<ClaimsDashboard />} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />
           <Route path="/chatbot-iframe" element={<ChatbotIframePage />} />
           <Route path="/apidocs" element={<APIDocumentation />} />
