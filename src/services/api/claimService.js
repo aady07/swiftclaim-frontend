@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://testing.aadybackend.site//api';
+const API_BASE_URL = 'http://localhost:8080//api';
 
 // Enhanced logging system for presigned URL operations
 const presignedUrlLogger = {

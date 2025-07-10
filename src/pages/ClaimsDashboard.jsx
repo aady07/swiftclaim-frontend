@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from "react-helmet";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authenticatedApiService } from '../services/api/authenticatedApiService';
+import { useCognitoAuth } from '../hooks/useCognitoAuth';
 
 const ClaimsDashboard = () => {
   const [claims, setClaims] = useState([]);
@@ -10,20 +12,36 @@ const ClaimsDashboard = () => {
   const [selectedClaim, setSelectedClaim] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [imageUrls, setImageUrls] = useState({});
+  const { signOut } = useCognitoAuth();
+  const navigate = useNavigate();
 
-  // Fetch all claims from the backend
+  // Fetch all claims from the backend using authenticated API
   const fetchClaims = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://testing.aadybackend.site/api/claims');
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to fetch claims`);
+      const data = await authenticatedApiService.claims.getAllClaims();
+      
+      // Handle empty or null response from backend
+      if (!data || !Array.isArray(data)) {
+        console.log('🔍 [CLAIMS] Backend returned empty or invalid data, setting empty array');
+        setClaims([]);
+        return;
       }
-      const data = await response.json();
+      
       setClaims(data);
+      console.log(`🔍 [CLAIMS] Successfully loaded ${data.length} claims`);
     } catch (err) {
       console.error('Error fetching claims:', err);
-      setError(err.message);
+      
+      // If it's a network error or backend is down, show empty state instead of error
+      if (err.message.includes('Failed to fetch') || err.message.includes('Network Error')) {
+        console.log('🔍 [CLAIMS] Backend unavailable, showing empty state');
+        setClaims([]);
+        setError(null); // Don't show error, just empty state
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -32,6 +50,28 @@ const ClaimsDashboard = () => {
   useEffect(() => {
     fetchClaims();
   }, []);
+
+  // Load image URLs when claims change
+  useEffect(() => {
+    const loadImageUrls = async () => {
+      const urls = {};
+      for (const claim of claims) {
+        try {
+          const url = await getAuthenticatedImageUrl(claim.id, 'original');
+          if (url) {
+            urls[claim.id] = url;
+          }
+        } catch (err) {
+          console.error(`Error loading image for claim ${claim.id}:`, err);
+        }
+      }
+      setImageUrls(urls);
+    };
+
+    if (claims.length > 0) {
+      loadImageUrls();
+    }
+  }, [claims]);
 
   // Calculate statistics
   const getTotalClaims = () => claims.length;
@@ -111,22 +151,26 @@ const ClaimsDashboard = () => {
 
   const logOriginalImageResponse = async (claimId) => {
     try {
-      const response = await fetch(`https://testing.aadybackend.site/api/claims/${claimId}/original-image`);
-      console.log('Status:', response.status);
-      console.log('Headers:', [...response.headers.entries()]);
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.startsWith('image/')) {
-        const blob = await response.blob();
-        console.log('Image Blob:', blob);
-        // Optionally, create a URL to preview the image in the console
-        const imageUrl = URL.createObjectURL(blob);
-        console.log('Image Preview URL:', imageUrl);
-      } else {
-        const text = await response.text();
-        console.log('Non-image response:', text);
-      }
+      const blob = await authenticatedApiService.claims.getOriginalImage(claimId);
+      console.log('Image Blob:', blob);
+      // Optionally, create a URL to preview the image in the console
+      const imageUrl = URL.createObjectURL(blob);
+      console.log('Image Preview URL:', imageUrl);
     } catch (err) {
       console.error('Error fetching original image:', err);
+    }
+  };
+
+  // Function to get authenticated image URL
+  const getAuthenticatedImageUrl = async (claimId, imageType = 'original') => {
+    try {
+      const blob = imageType === 'original' 
+        ? await authenticatedApiService.claims.getOriginalImage(claimId)
+        : await authenticatedApiService.claims.getProcessedImage(claimId);
+      return URL.createObjectURL(blob);
+    } catch (err) {
+      console.error(`Error getting ${imageType} image:`, err);
+      return null;
     }
   };
 
@@ -229,7 +273,7 @@ const ClaimsDashboard = () => {
             </div>
 
             <motion.div
-              className="mt-6 md:mt-0"
+              className="mt-6 md:mt-0 flex gap-4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -243,8 +287,57 @@ const ClaimsDashboard = () => {
                 </svg>
                 New Claim
               </Link>
+              
+              <button
+                onClick={fetchClaims}
+                disabled={loading}
+                className="inline-flex items-center px-6 py-3 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+              >
+                <svg className={`w-5 h-5 mr-2 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                {loading ? 'Refreshing...' : 'Refresh'}
+              </button>
+              
+              <button
+                onClick={async () => {
+                  await signOut();
+                  navigate('/login');
+                }}
+                className="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
             </motion.div>
           </div>
+
+          {/* Status Indicator */}
+          {claims.length === 0 && !loading && (
+            <motion.div 
+              className="mb-6 p-4 rounded-xl bg-blue-500/10 backdrop-blur-sm border border-blue-500/30"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span className="text-blue-400 text-sm font-medium">
+                  {error ? 'Backend temporarily unavailable' : 'No claims found - ready to start'}
+                </span>
+                {error && (
+                  <button
+                    onClick={fetchClaims}
+                    className="ml-auto text-blue-400 hover:text-blue-300 text-sm underline"
+                  >
+                    Retry
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
 
           {/* Statistics Cards */}
           <motion.div 
@@ -310,6 +403,8 @@ const ClaimsDashboard = () => {
             </div>
           </motion.div>
 
+
+
           {/* Filters and Search */}
           <motion.div 
             className="mb-8 p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
@@ -362,9 +457,42 @@ const ClaimsDashboard = () => {
 
             {filteredClaims.length === 0 ? (
               <div className="p-12 text-center">
-                <div className="text-gray-400 text-6xl mb-4">📋</div>
-                <h3 className="text-xl font-semibold text-white mb-2">No claims found</h3>
-                <p className="text-gray-400">Try adjusting your filters or search terms</p>
+                {claims.length === 0 ? (
+                  // No claims at all (empty database or backend issue)
+                  <>
+                    <div className="text-gray-400 text-6xl mb-4">🚀</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">Welcome to Your Claims Dashboard!</h3>
+                    <p className="text-gray-400 mb-6">You haven't submitted any claims yet. Start by uploading your first claim.</p>
+                    <Link
+                      to="/claimupload"
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Upload Your First Claim
+                    </Link>
+                  </>
+                ) : (
+                  // Claims exist but filtered out
+                  <>
+                    <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-white mb-2">No claims match your filters</h3>
+                    <p className="text-gray-400 mb-4">Try adjusting your search terms or status filter</p>
+                    <button
+                      onClick={() => {
+                        setFilterStatus('all');
+                        setSearchTerm('');
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-medium transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Clear Filters
+                    </button>
+                  </>
+                )}
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -386,20 +514,23 @@ const ClaimsDashboard = () => {
                         <td className="px-6 py-4 text-sm text-white">#{claim.id}</td>
                         <td className="px-6 py-4">
                           <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-600 bg-gray-700">
-                            <img 
-                              src={`https://testing.aadybackend.site/api/claims/${claim.id}/original-image`}
-                              alt="Claim image"
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.nextSibling.style.display = 'flex';
-                              }}
-                            />
-                            <div className="hidden w-full h-full items-center justify-center text-gray-400 text-xs">
-                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
+                            {imageUrls[claim.id] ? (
+                              <img 
+                                src={imageUrls[claim.id]}
+                                alt="Claim image"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                              </div>
+                            )}
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-300">{claim.userId}</td>
@@ -488,15 +619,21 @@ const ClaimsDashboard = () => {
 
                 <div>
                   <h4 className="text-sm font-medium text-gray-400 mb-2">Original Image</h4>
-                  <img 
-                    src={`https://testing.aadybackend.site/api/claims/${selectedClaim.id}/original-image`}
-                    alt="Original damage" 
-                    className="w-full rounded-lg border border-gray-600"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'block';
-                    }}
-                  />
+                  {imageUrls[selectedClaim.id] ? (
+                    <img 
+                      src={imageUrls[selectedClaim.id]}
+                      alt="Original damage" 
+                      className="w-full rounded-lg border border-gray-600"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'block';
+                      }}
+                    />
+                  ) : (
+                    <div className="p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
+                      <p className="text-gray-400">Loading original image...</p>
+                    </div>
+                  )}
                   <div className="hidden p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
                     <p className="text-gray-400">Original image not available</p>
                   </div>
@@ -504,16 +641,7 @@ const ClaimsDashboard = () => {
 
                 <div>
                   <h4 className="text-sm font-medium text-gray-400 mb-2">Processed Image</h4>
-                  <img 
-                    src={`https://testing.aadybackend.site/api/claims/${selectedClaim.id}/processed-image`}
-                    alt="Processed damage" 
-                    className="w-full rounded-lg border border-gray-600"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'block';
-                    }}
-                  />
-                  <div className="hidden p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
+                  <div className="p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
                     <p className="text-gray-400">Processed image not available</p>
                   </div>
                 </div>

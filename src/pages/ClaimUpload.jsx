@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from "react-helmet";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ClaimUploadForm from '../components/claims/ClaimUploadForm';
 import ClaimResults from '../components/claims/ClaimResults';
 import ClaimUploadStats from '../components/claims/ClaimUploadStats';
 import { useS3Upload } from '../hooks/useS3Upload';
 import { generateClaimReport } from '../utils/pdfGenerator';
+import { useCognitoAuth } from '../hooks/useCognitoAuth';
 
 const ClaimUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -24,6 +25,8 @@ const ClaimUpload = () => {
   const [damageImageUrl, setDamageImageUrl] = useState(null);
   const [partsImageUrl, setPartsImageUrl] = useState(null);
   const fileInputRef = useRef(null);
+  const { signOut } = useCognitoAuth();
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -290,7 +293,7 @@ const ClaimUpload = () => {
           </motion.p>
           
           <motion.div
-            className="flex justify-center mb-8"
+            className="flex justify-center gap-4 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -304,6 +307,19 @@ const ClaimUpload = () => {
               </svg>
               View All Claims
             </Link>
+            
+            <button
+              onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}
+              className="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </button>
           </motion.div>
           
           <motion.div

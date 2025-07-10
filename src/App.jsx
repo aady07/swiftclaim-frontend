@@ -18,6 +18,10 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ConfirmSignup from "./pages/ConfirmSignup";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -46,14 +50,17 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contacts" element={<Contacts />} />
-          <Route path="/claimupload" element={<ClaimUpload />} />
-          <Route path="/claims-dashboard" element={<ClaimsDashboard />} />
+          <Route path="/claimupload" element={<ProtectedRoute><ClaimUpload /></ProtectedRoute>} />
+          <Route path="/claims-dashboard" element={<ProtectedRoute><ClaimsDashboard /></ProtectedRoute>} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />
           <Route path="/chatbot-iframe" element={<ChatbotIframePage />} />
           <Route path="/apidocs" element={<APIDocumentation />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/widget" element={<Widget />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/confirm-signup" element={<ConfirmSignup />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

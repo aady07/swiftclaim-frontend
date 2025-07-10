@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom"; // Added useLocation hook
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Added useLocation hook
 import { motion, AnimatePresence } from "framer-motion";
 import { IoHome } from "react-icons/io5";
 import { BsFillPeopleFill } from "react-icons/bs";
@@ -8,6 +8,7 @@ import { MdMiscellaneousServices } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { FaAngleDown } from "react-icons/fa";
 import { HiMenuAlt4 } from "react-icons/hi";
+import { useCognitoAuth } from '../../../hooks/useCognitoAuth';
 
 const Navbar = () => {
   const location = useLocation(); // Get current location/path
@@ -18,6 +19,8 @@ const Navbar = () => {
   const servicesMobileRef = useRef(null);
   const previousScrollY = useRef(0);
   const scrollTimeout = useRef(null);
+  const { user, signOut } = useCognitoAuth();
+  const navigate = useNavigate();
 
   const handleNavbar = () => setNav(!nav);
   
@@ -122,6 +125,11 @@ const Navbar = () => {
     { id: 1, text: "Claim", href: "/claimupload" },
     { id: 2, text: "Chatbot", href: "/chatbotpage" }
   ];
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/login');
+  };
 
   // Function to get window width safely (for SSR compatibility)
   const getWindowWidth = () => {
@@ -414,6 +422,24 @@ const Navbar = () => {
                         <span>Contact Us</span>
                       </Link>
                     </li>
+                    {user ? (
+                      <li>
+                        <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-3 rounded-lg text-lg font-semibold bg-red-600 text-white">
+                          <BiSupport className="text-xl" />
+                          <span>Logout</span>
+                        </button>
+                      </li>
+                    ) : (
+                      <li>
+                        <Link
+                          to="/login"
+                          className="flex items-center gap-2 px-4 py-3 rounded-lg text-lg font-semibold bg-blue-600 text-white"
+                        >
+                          <BiSupport className="text-xl" />
+                          <span>Login</span>
+                        </Link>
+                      </li>
+                    )}
                   </ul>
                 </nav>
               </div>

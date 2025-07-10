@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { claimService } from '../services/api/claimService';
+import { authenticatedApiService } from '../services/api/authenticatedApiService';
 
 // Upload Process Logger
 const uploadProcessLogger = {
@@ -103,7 +103,7 @@ export const useS3Upload = () => {
       });
       
       console.log('🔗 [STEP 1] Getting pre-signed URL for file:', file.name);
-      const uploadUrlResponse = await claimService.getUploadUrl(
+      const uploadUrlResponse = await authenticatedApiService.claims.getUploadUrl(
         file.name,
         file.type
       );
@@ -131,7 +131,7 @@ export const useS3Upload = () => {
       
       console.log('📤 [STEP 2] Uploading file to S3 with fileKey:', backendFileKey);
       console.log('🔑 [UUID TRACKING] S3 upload using fileKey:', backendFileKey);
-      await claimService.uploadToS3(uploadUrlResponse.presignedUrl, file);
+      await authenticatedApiService.claims.uploadToS3(uploadUrlResponse.presignedUrl, file);
 
       // Step 3: Submit claim data with S3 image URL (80% progress)
       setUploadProgress(80);
@@ -158,7 +158,7 @@ export const useS3Upload = () => {
       console.log('🔑 [UUID TRACKING] Claim submission using fileKey:', claimData.fileKey);
       console.log('🔑 [UUID VERIFICATION] fileKey matches backend response:', claimData.fileKey === backendFileKey);
       
-      const data = await claimService.submitClaim(claimData);
+      const data = await authenticatedApiService.claims.submitClaim(claimData);
       
       // Step 4: Complete (100% progress)
       setUploadProgress(100);
@@ -174,7 +174,7 @@ export const useS3Upload = () => {
       uploadProcessLogger.logSuccess(session.sessionId, totalDuration, data);
       
       // Update upload statistics
-      setUploadStats(claimService.getLoggingStats());
+      setUploadStats(authenticatedApiService.claims.getLoggingStats());
       
       return data;
     } catch (error) {
