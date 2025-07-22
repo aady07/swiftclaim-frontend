@@ -374,6 +374,21 @@ export const claimService = {
     }
   },
 
+  // Fetches all AI model outputs and costings for a specific claim
+  getClaimResults: async (claimId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/claims/${claimId}/results`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching claim results:', error.response?.data || error.message);
+      throw new Error('Failed to fetch claim results');
+    }
+  },
+
   // Get comprehensive logging statistics
   getLoggingStats: () => {
     return {

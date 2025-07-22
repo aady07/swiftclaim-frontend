@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
 );
 
 // Base API URLs
-const CLAIMS_API_BASE_URL = 'https://testing.aadybackend.site/api';
+const CLAIMS_API_BASE_URL = 'http://localhost:8080/api';
 const CHAT_API_BASE_URL = 'https://aadybackend.site/api';
 
 export const authenticatedApiService = {
@@ -156,6 +156,32 @@ export const authenticatedApiService = {
       }
     },
 
+    // Get processed image for model 1
+    getModel1Image: async (claimId) => {
+      try {
+        const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims/${claimId}/model1-image`, {
+          responseType: 'blob'
+        });
+        return response.data;
+      } catch (error) {
+        console.error('❌ [CLAIMS API] Failed to get model1 image:', error);
+        throw new Error('Failed to get model1 image');
+      }
+    },
+
+    // Get processed image for model 2
+    getModel2Image: async (claimId) => {
+      try {
+        const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims/${claimId}/model2-image`, {
+          responseType: 'blob'
+        });
+        return response.data;
+      } catch (error) {
+        console.error('❌ [CLAIMS API] Failed to get model2 image:', error);
+        throw new Error('Failed to get model2 image');
+      }
+    },
+
     // Upload file directly to S3 using pre-signed URL
     uploadToS3: async (presignedUrl, file) => {
       try {
@@ -253,6 +279,17 @@ export const authenticatedApiService = {
           totalDataUploaded: '0.00MB'
         }
       };
+    },
+
+    // Get claim results (model outputs and costings)
+    getClaimResults: async (claimId) => {
+      try {
+        const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims/${claimId}/results`);
+        return response.data;
+      } catch (error) {
+        console.error('❌ [CLAIMS API] Failed to get claim results:', error);
+        throw new Error('Failed to fetch claim results');
+      }
     },
   },
 

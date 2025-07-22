@@ -12,7 +12,13 @@ const ClaimsDashboard = () => {
   const [selectedClaim, setSelectedClaim] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [imageUrls, setImageUrls] = useState({});
+  const [originalImageUrls, setOriginalImageUrls] = useState({});
+  const [model1ImageUrls, setModel1ImageUrls] = useState({});
+  const [model2ImageUrls, setModel2ImageUrls] = useState({});
+  const [claimResultsMap, setClaimResultsMap] = useState({}); // claimId -> results
+  const [resultsLoadingMap, setResultsLoadingMap] = useState({});
+  const [resultsErrorMap, setResultsErrorMap] = useState({});
+  const [sortOrder, setSortOrder] = useState('latest'); // 'latest' or 'oldest'
   const { signOut } = useCognitoAuth();
   const navigate = useNavigate();
 
@@ -54,23 +60,60 @@ const ClaimsDashboard = () => {
   // Load image URLs when claims change
   useEffect(() => {
     const loadImageUrls = async () => {
-      const urls = {};
+      const orig = {}, m1 = {}, m2 = {};
       for (const claim of claims) {
-        try {
-          const url = await getAuthenticatedImageUrl(claim.id, 'original');
-          if (url) {
-            urls[claim.id] = url;
+        let tries = 0;
+        let success = false;
+        while (tries < 3 && !success) {
+          try {
+            const [o, m1b, m2b] = await Promise.all([
+              authenticatedApiService.claims.getOriginalImage(claim.id),
+              authenticatedApiService.claims.getModel1Image(claim.id),
+              authenticatedApiService.claims.getModel2Image(claim.id)
+            ]);
+            orig[claim.id] = URL.createObjectURL(o);
+            m1[claim.id] = URL.createObjectURL(m1b);
+            m2[claim.id] = URL.createObjectURL(m2b);
+            success = true;
+          } catch (err) {
+            tries++;
+            if (tries >= 3) {
+              orig[claim.id] = null;
+              m1[claim.id] = null;
+              m2[claim.id] = null;
+            }
           }
-        } catch (err) {
-          console.error(`Error loading image for claim ${claim.id}:`, err);
         }
       }
-      setImageUrls(urls);
+      setOriginalImageUrls(orig);
+      setModel1ImageUrls(m1);
+      setModel2ImageUrls(m2);
     };
+    if (claims.length > 0) loadImageUrls();
+  }, [claims]);
 
-    if (claims.length > 0) {
-      loadImageUrls();
+  // Fetch claim results for a specific claim
+  const fetchClaimResults = async (claimId) => {
+    setResultsLoadingMap((prev) => ({ ...prev, [claimId]: true }));
+    setResultsErrorMap((prev) => ({ ...prev, [claimId]: null }));
+    try {
+      const results = await authenticatedApiService.claims.getClaimResults(claimId);
+      setClaimResultsMap((prev) => ({ ...prev, [claimId]: results }));
+    } catch (err) {
+      setResultsErrorMap((prev) => ({ ...prev, [claimId]: 'Failed to fetch claim results.' }));
+    } finally {
+      setResultsLoadingMap((prev) => ({ ...prev, [claimId]: false }));
     }
+  };
+
+  // Fetch results for all claims after loading claims
+  useEffect(() => {
+    if (claims.length > 0) {
+      claims.forEach((claim) => {
+        fetchClaimResults(claim.id);
+      });
+    }
+    // eslint-disable-next-line
   }, [claims]);
 
   // Calculate statistics
@@ -111,17 +154,22 @@ const ClaimsDashboard = () => {
     });
   };
 
-  // Filter claims based on status and search term
-  const filteredClaims = claims.filter(claim => {
-    const matchesStatus = filterStatus === 'all' || claim.status === filterStatus;
-    const matchesSearch = searchTerm === '' || 
-      claim.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      claim.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      claim.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      claim.id.toString().includes(searchTerm);
-    
-    return matchesStatus && matchesSearch;
-  });
+  // Filter and sort claims based on status, search term, and sort order
+  const filteredClaims = claims
+    .filter(claim => {
+      const matchesStatus = filterStatus === 'all' || claim.status === filterStatus;
+      const matchesSearch = searchTerm === '' || 
+        claim.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        claim.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        claim.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        claim.id.toString().includes(searchTerm);
+      return matchesStatus && matchesSearch;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
+    });
 
   const statusCount = getClaimsByStatus();
   const makeCount = getClaimsByMake();
@@ -427,6 +475,14 @@ const ClaimsDashboard = () => {
                   <option value="approved">Approved</option>
                   <option value="rejected">Rejected</option>
                 </select>
+                <select
+                  value={sortOrder}
+                  onChange={e => setSortOrder(e.target.value)}
+                  className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="latest">Sort: Latest</option>
+                  <option value="oldest">Sort: Oldest</option>
+                </select>
               </div>
 
               <div className="relative">
@@ -505,67 +561,82 @@ const ClaimsDashboard = () => {
                       <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Car</th>
                       <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Status</th>
                       <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Created</th>
+                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">AI Label</th>
+                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">AI Confidence</th>
                       <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-700">
-                    {filteredClaims.map((claim) => (
-                      <tr key={claim.id} className="hover:bg-gray-700/30 transition-colors">
-                        <td className="px-6 py-4 text-sm text-white">#{claim.id}</td>
-                        <td className="px-6 py-4">
-                          <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-600 bg-gray-700">
-                            {imageUrls[claim.id] ? (
-                              <img 
-                                src={imageUrls[claim.id]}
-                                alt="Claim image"
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                  e.target.nextSibling.style.display = 'flex';
-                                }}
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">{claim.userId}</td>
-                        <td className="px-6 py-4 text-sm text-gray-300">
-                          <div>
-                            <div className="font-medium text-white">{claim.make}</div>
-                            <div className="text-gray-400">{claim.model}</div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(claim.status)}`}>
-                            {claim.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-300">{formatDate(claim.createdAt)}</td>
-                        <td className="px-6 py-4">
-                          <button
-                            onClick={() => {
-                              setSelectedClaim(claim);
-                              logOriginalImageResponse(claim.id);
-                            }}
-                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors"
-                          >
-                            View Details
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {filteredClaims.map((claim) => {
+                      const results = claimResultsMap[claim.id];
+                      const loading = resultsLoadingMap[claim.id];
+                      const error = resultsErrorMap[claim.id];
+                      // Show first model output as summary
+                      const firstModel = results && results.modelOutputs && results.modelOutputs[0];
+                      return (
+                        <tr key={claim.id} className="hover:bg-gray-700/30 transition-colors">
+                          <td className="px-6 py-4 text-sm text-white">#{claim.id}</td>
+                          <td className="px-6 py-4">
+                            <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-600 bg-gray-700">
+                              {originalImageUrls[claim.id] ? (
+                                <img 
+                                  src={originalImageUrls[claim.id]}
+                                  alt="Claim image"
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'flex';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{claim.userId}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">
+                            <div>
+                              <div className="font-medium text-white">{claim.make}</div>
+                              <div className="text-gray-400">{claim.model}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(claim.status)}`}>
+                              {claim.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-300">{formatDate(claim.createdAt)}</td>
+                          <td className="px-6 py-4 text-sm text-gray-300">
+                            {loading ? 'Loading...' : error ? 'Error' : firstModel ? firstModel.label : '-'}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-300">
+                            {loading ? '...' : error ? '-' : firstModel && firstModel.confidence !== undefined ? `${(firstModel.confidence * 100).toFixed(2)}%` : '-'}
+                          </td>
+                          <td className="px-6 py-4">
+                            <button
+                              onClick={() => {
+                                setSelectedClaim(claim);
+                                // Optionally re-fetch results for modal
+                                fetchClaimResults(claim.id);
+                              }}
+                              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors"
+                            >
+                              View Details
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             )}
           </motion.div>
         </motion.div>
-
         {/* Claim Details Modal */}
         {selectedClaim && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -586,7 +657,6 @@ const ClaimsDashboard = () => {
                   </svg>
                 </button>
               </div>
-
               <div className="p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -617,42 +687,87 @@ const ClaimsDashboard = () => {
                   </div>
                 </div>
 
-                <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Original Image</h4>
-                  {imageUrls[selectedClaim.id] ? (
-                    <img 
-                      src={imageUrls[selectedClaim.id]}
-                      alt="Original damage" 
-                      className="w-full rounded-lg border border-gray-600"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'block';
-                      }}
-                    />
-                  ) : (
-                    <div className="p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
-                      <p className="text-gray-400">Loading original image...</p>
-                    </div>
-                  )}
-                  <div className="hidden p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
-                    <p className="text-gray-400">Original image not available</p>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-medium text-gray-400 mb-2">Processed Image</h4>
-                  <div className="p-4 bg-gray-700/50 rounded-lg border border-gray-600 text-center">
-                    <p className="text-gray-400">Processed image not available</p>
-                  </div>
-                </div>
-
-                {selectedClaim.errorMessage && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Error Message</h4>
-                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                      <p className="text-red-400 text-sm">{selectedClaim.errorMessage}</p>
-                    </div>
-                  </div>
+                {resultsLoadingMap[selectedClaim.id] ? (
+                  <div className="text-center py-8">Loading AI results...</div>
+                ) : resultsErrorMap[selectedClaim.id] ? (
+                  <div className="text-center py-8 text-red-400">{resultsErrorMap[selectedClaim.id]}</div>
+                ) : claimResultsMap[selectedClaim.id] ? (
+                  (() => {
+                    const modelOutputs = claimResultsMap[selectedClaim.id].modelOutputs || [];
+                    const costings = claimResultsMap[selectedClaim.id].costings || [];
+                    const model1 = modelOutputs.find(m => m.modelNumber === 1) || modelOutputs[0] || {};
+                    const model2 = modelOutputs.find(m => m.modelNumber === 2) || {};
+                    const formatConfidence = (conf) => conf !== undefined && conf !== null ? `${(parseFloat(conf) * 100).toFixed(2)}%` : 'N/A';
+                    const formatPartName = (part) => part ? part.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : '';
+                    const getLabelColor = (label) => label && label.toLowerCase().includes('dent') ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
+                    return (
+                      <>
+                        {/* Main tags at the top */}
+                        <div className="flex flex-col items-center gap-2 mb-6">
+                          <span className="inline-block px-5 py-2 rounded-full text-lg font-bold border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                            Confidence: {formatConfidence(model1.confidence)}
+                          </span>
+                          <span className={`inline-block px-4 py-1 rounded-full text-base font-bold border ${getLabelColor(model1.label)}`}>
+                            Damage Type: {model1.label || 'No Dent'}
+                          </span>
+                          {model2 && model2.label && (
+                            <span className="inline-block px-4 py-1 rounded-full text-base font-medium border bg-blue-500/20 text-blue-400 border-blue-500/30">
+                              Damage Part: {formatPartName(model2.label)}
+                            </span>
+                          )}
+                        </div>
+                        {/* Images section: processed images side by side, then original */}
+                        <div className="flex flex-col md:flex-row gap-4 mb-4">
+                          <div className="flex-1 flex flex-col items-center">
+                            <span className="text-sm text-gray-400 mb-1">Processed Image 1</span>
+                            {model1ImageUrls[selectedClaim.id] ? (
+                              <img src={model1ImageUrls[selectedClaim.id]} alt="Processed 1" className="w-full max-h-64 object-contain rounded border border-gray-600" />
+                            ) : (
+                              <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
+                            )}
+                          </div>
+                          <div className="flex-1 flex flex-col items-center">
+                            <span className="text-sm text-gray-400 mb-1">Processed Image 2</span>
+                            {model2ImageUrls[selectedClaim.id] ? (
+                              <img src={model2ImageUrls[selectedClaim.id]} alt="Processed 2" className="w-full max-h-64 object-contain rounded border border-gray-600" />
+                            ) : (
+                              <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-center mb-4">
+                          <span className="text-sm text-gray-400 mb-1">Original Image</span>
+                          {originalImageUrls[selectedClaim.id] ? (
+                            <img src={originalImageUrls[selectedClaim.id]} alt="Original" className="w-full max-h-64 object-contain rounded border border-gray-600" />
+                          ) : (
+                            <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
+                          )}
+                        </div>
+                        {/* Costings section */}
+                        <div className="mb-4">
+                          <span className="text-lg font-semibold text-gray-300 mb-2 block">Costings</span>
+                          {costings.length === 0 ? (
+                            <div className="text-gray-400">No costings available.</div>
+                          ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              {costings.map((cost, idx) => (
+                                <div key={cost.id || idx} className="bg-gray-800/30 p-4 rounded-lg border border-gray-700 flex flex-col gap-2">
+                                  <div className="flex flex-wrap gap-2 items-center mb-2">
+                                    <span className="inline-block px-3 py-1 rounded-full text-xs font-medium border bg-blue-500/20 text-blue-400 border-blue-500/30">{formatPartName(cost.part)}</span>
+                                    <span className="inline-block px-3 py-1 rounded-full text-xs font-medium border bg-green-500/20 text-green-400 border-green-500/30">₹{cost.price}</span>
+                                    <span className="inline-block px-3 py-1 rounded-full text-xs font-medium border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">{cost.confidence || 'N/A'}</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        {/* Costings and rest of modal ... */}
+                      </>
+                    );
+                  })()
+                ) : (
+                  <div className="text-center py-8 text-gray-400">No AI results available.</div>
                 )}
               </div>
             </motion.div>

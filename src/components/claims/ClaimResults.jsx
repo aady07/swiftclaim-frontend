@@ -3,28 +3,25 @@ import { motion } from 'framer-motion';
 import { FiCheckCircle, FiDownload } from 'react-icons/fi';
 
 const ClaimResults = ({
-  confidenceScore,
-  damageLabel,
-  damagedParts,
-  costEstimates,
-  damageImageUrl,
-  partsImageUrl,
+  claimResults,
+  originalImageUrl,
+  model1ImageUrl,
+  model2ImageUrl,
   handleDownloadPDF,
   handleNewUpload
 }) => {
-  const getAccuracyColor = (score) => {
-    if (score === null) return "#4b5563";
-    const numScore = parseFloat(score);
-    return numScore > 90 ? "#22c55e" :
-           numScore > 70 ? "#eab308" :
-           "#ef4444";
-  };
+  if (!claimResults) return null;
+  const { modelOutputs = [], costings = [], claimId } = claimResults;
 
-  const getDamageStatusColor = (label) => {
-    if (!label) return "#4b5563";
-    return label.toLowerCase() === "damage" ? "#ef4444" : "#22c55e";
-  };
+  // Find model 1 and model 2 outputs
+  const model1 = modelOutputs.find(m => m.modelNumber === 1) || modelOutputs[0] || {};
+  const model2 = modelOutputs.find(m => m.modelNumber === 2) || {};
 
+  // Helper to format confidence as percent
+  const formatConfidence = (conf) =>
+    conf !== undefined && conf !== null ? `${(parseFloat(conf) * 100).toFixed(2)}%` : 'N/A';
+
+  // Helper to format part name
   const formatPartName = (part) => {
     if (!part) return "";
     return part
@@ -32,6 +29,10 @@ const ClaimResults = ({
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
+
+  // Helper to get label tag color
+  const getLabelColor = (label) =>
+    label && label.toLowerCase().includes('dent') ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-green-500/20 text-green-400 border-green-500/30';
 
   return (
     <motion.div
@@ -41,159 +42,72 @@ const ClaimResults = ({
       transition={{ duration: 0.5 }}
     >
       <div className="p-4 border-b border-gray-700 bg-gray-800/50 flex items-center">
-        <FiCheckCircle className="text-green-400 text-xl mr-2" />
-        <h3 className="text-xl font-medium text-gray-200">AI Verification Results</h3>
+        <h3 className="text-xl font-medium text-gray-200">AI Claim Results for #{claimId}</h3>
       </div>
-      
       <div className="p-6 flex flex-col gap-6">
-        {/* Confidence and damage status */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Confidence score gauge */}
-          <div className="flex flex-col space-y-2 bg-gray-800/30 p-4 rounded-lg border border-gray-700">
-            <div className="flex justify-between">
-              <span className="text-gray-300 font-medium">Verification Confidence</span>
-              <span className="font-bold" style={{ color: getAccuracyColor(confidenceScore) }}>
-                {confidenceScore !== null ? `${confidenceScore}%` : "N/A"}
-              </span>
-            </div>
-            <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
-              {confidenceScore !== null && (
-                <div 
-                  className="h-full rounded-full"
-                  style={{ 
-                    backgroundColor: getAccuracyColor(confidenceScore),
-                    width: `${confidenceScore}%`,
-                    transition: "width 1s ease-in-out"
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          
-          {/* Damage assessment */}
-          <div className="flex flex-col space-y-2 bg-gray-800/30 p-4 rounded-lg border border-gray-700">
-            <div className="flex justify-between">
-              <span className="text-gray-300 font-medium">Assessment Result</span>
-              {damageLabel ? (
-                <span className="font-bold px-2 py-0.5 rounded-full text-sm" 
-                  style={{ 
-                    backgroundColor: getDamageStatusColor(damageLabel) + '33',
-                    color: getDamageStatusColor(damageLabel) 
-                  }}>
-                  {damageLabel.toUpperCase()}
-                </span>
-              ) : (
-                <span className="text-gray-400">Not Available</span>
-              )}
-            </div>
-            <div className="p-3 bg-gray-800/50 rounded-lg text-sm">
-              {damageLabel ? (
-                damageLabel.toLowerCase() === "damage" ? 
-                  "Damage detected in the uploaded document. Review recommended." :
-                  "No damage detected in the uploaded document."
-              ) : (
-                "Assessment data not available for this document."
-              )}
-            </div>
-          </div>
+        {/* Main tags at the top */}
+        <div className="flex flex-col items-center gap-2 mb-6">
+          <span className="inline-block px-5 py-2 rounded-full text-lg font-bold border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+            Confidence: {formatConfidence(model1.confidence)}
+          </span>
+          <span className={`inline-block px-4 py-1 rounded-full text-base font-bold border ${getLabelColor(model1.label)}`}>
+            Damage Type: {model1.label || 'No Dent'}
+          </span>
+          {model2 && model2.label && (
+            <span className="inline-block px-4 py-1 rounded-full text-base font-medium border bg-blue-500/20 text-blue-400 border-blue-500/30">
+              Damage Part: {formatPartName(model2.label)}
+            </span>
+          )}
         </div>
-        
-        {/* Images section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Damage detection image */}
-          <div className="flex flex-col">
-            <span className="text-sm text-gray-400 mb-2">Damage Detection</span>
-            <div className="rounded-lg overflow-hidden border border-gray-700 bg-gray-800/30 h-64 flex items-center justify-center">
-              {damageImageUrl ? (
-                <motion.img 
-                  src={damageImageUrl} 
-                  alt="Damage Detection" 
-                  className="max-h-full max-w-full object-contain" 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                />
-              ) : (
-                <span className="text-gray-500">No damage image available</span>
-              )}
-            </div>
-          </div>
-          
-          {/* Parts detection image */}
-          <div className="flex flex-col">
-            <span className="text-sm text-gray-400 mb-2">Parts Detection</span>
-            <div className="rounded-lg overflow-hidden border border-gray-700 bg-gray-800/30 h-64 flex items-center justify-center">
-              {partsImageUrl ? (
-                <motion.img 
-                  src={partsImageUrl} 
-                  alt="Parts Detection" 
-                  className="max-h-full max-w-full object-contain" 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                />
-              ) : (
-                <span className="text-gray-500">No parts image available</span>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        {/* Damaged parts and cost estimates */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Damaged parts list */}
-          <div className="flex flex-col bg-gray-800/30 p-4 rounded-lg border border-gray-700">
-            <span className="text-gray-300 font-medium mb-3">Damaged Parts</span>
-            {damagedParts && damagedParts.length > 0 ? (
-              <ul className="space-y-2">
-                {damagedParts.map((part, index) => (
-                  <li key={index} className="flex items-center gap-2 p-2 bg-gray-800/50 rounded-lg">
-                    <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                    <span>{formatPartName(part)}</span>
-                  </li>
-                ))}
-              </ul>
+        {/* Images section: processed images side by side, then original */}
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <div className="flex-1 flex flex-col items-center">
+            <span className="text-sm text-gray-400 mb-1">Processed Image 1</span>
+            {model1ImageUrl ? (
+              <img src={model1ImageUrl} alt="Processed 1" className="w-full max-h-64 object-contain rounded border border-gray-600" />
             ) : (
-              <div className="p-3 bg-gray-800/50 rounded-lg text-sm text-gray-400">
-                No damaged parts identified
-              </div>
+              <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
             )}
           </div>
-          
-          {/* Cost estimates */}
-          <div className="flex flex-col bg-gray-800/30 p-4 rounded-lg border border-gray-700">
-            <span className="text-gray-300 font-medium mb-3">Repair Cost Estimates</span>
-            {costEstimates && costEstimates.length > 0 ? (
-              <div className="space-y-3">
-                {costEstimates.map((cost, index) => (
-                  <div key={index} className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                    <span className="text-sm">
-                      {damagedParts && damagedParts[index] ? formatPartName(damagedParts[index]) : `Estimate ${index + 1}`}
-                    </span>
-                    <span className="font-medium text-green-400">₹{cost}</span>
+          <div className="flex-1 flex flex-col items-center">
+            <span className="text-sm text-gray-400 mb-1">Processed Image 2</span>
+            {model2ImageUrl ? (
+              <img src={model2ImageUrl} alt="Processed 2" className="w-full max-h-64 object-contain rounded border border-gray-600" />
+            ) : (
+              <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col items-center mb-4">
+          <span className="text-sm text-gray-400 mb-1">Original Image</span>
+          {originalImageUrl ? (
+            <img src={originalImageUrl} alt="Original" className="w-full max-h-64 object-contain rounded border border-gray-600" />
+          ) : (
+            <div className="w-full h-64 flex items-center justify-center text-gray-500 border border-gray-600 rounded">No image</div>
+          )}
+        </div>
+        {/* Costings */}
+        <div>
+          <span className="text-lg font-semibold text-gray-300 mb-2 block">Costings</span>
+          {costings.length === 0 ? (
+            <div className="text-gray-400">No costings available.</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {costings.map((cost, idx) => (
+                <div key={cost.id || idx} className="bg-gray-800/30 p-4 rounded-lg border border-gray-700 flex flex-col gap-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-200">{formatPartName(cost.part)}</span>
+                    <span className="text-sm text-gray-400">Confidence: {cost.confidence || 'N/A'}</span>
                   </div>
-                ))}
-                <div className="flex justify-between items-center p-3 mt-2 bg-gray-700/50 rounded-lg">
-                  <span className="font-medium">Total Estimated Cost</span>
-                  <span className="font-bold text-green-400">
-                    ₹{costEstimates.reduce((total, cost) => {
-                      const range = cost.split('-').map(val => parseInt(val.replace(/[^0-9]/g, '').trim()));
-                      return total + range[0];
-                    }, 0).toLocaleString()} - ₹{costEstimates.reduce((total, cost) => {
-                      const range = cost.split('-').map(val => parseInt(val.replace(/[^0-9]/g, '').trim()));
-                      return total + (range.length > 1 ? range[1] : range[0]);
-                    }, 0).toLocaleString()}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400 text-sm">Price:</span>
+                    <span className="font-bold text-green-400">₹{cost.price}</span>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="p-3 bg-gray-800/50 rounded-lg text-sm text-gray-400">
-                No cost estimates available
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
-        
         {/* Action buttons */}
         <div className="flex gap-4 mt-2">
           <motion.button
@@ -203,9 +117,8 @@ const ClaimResults = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Download Report <FiDownload />
+            Download Report
           </motion.button>
-          
           <motion.button
             type="button"
             onClick={handleNewUpload}

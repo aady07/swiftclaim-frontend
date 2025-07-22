@@ -8,6 +8,7 @@ import ClaimUploadStats from '../components/claims/ClaimUploadStats';
 import { useS3Upload } from '../hooks/useS3Upload';
 import { generateClaimReport } from '../utils/pdfGenerator';
 import { useCognitoAuth } from '../hooks/useCognitoAuth';
+import { authenticatedApiService } from '../services/api/authenticatedApiService';
 
 const ClaimUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -27,6 +28,12 @@ const ClaimUpload = () => {
   const fileInputRef = useRef(null);
   const { signOut } = useCognitoAuth();
   const navigate = useNavigate();
+  const [claimResults, setClaimResults] = useState(null);
+  const [resultsLoading, setResultsLoading] = useState(false);
+  const [resultsError, setResultsError] = useState(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState(null);
+  const [model1ImageUrl, setModel1ImageUrl] = useState(null);
+  const [model2ImageUrl, setModel2ImageUrl] = useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -40,19 +47,40 @@ const ClaimUpload = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!selectedFile || !carMake.trim() || !carModel.trim()) return;
-
-    // Prevent multiple submissions
     if (uploadStatus === 'uploading') {
       console.log('Upload already in progress, ignoring duplicate submission');
       return;
     }
-
     resetResults();
-
+    setClaimResults(null);
+    setResultsError(null);
+    setResultsLoading(false);
     try {
       console.log('Starting claim submission for file:', selectedFile.name);
       const data = await uploadFileToS3(selectedFile, carMake, carModel);
-      processClaimResponse(data);
+      // Expecting: { claimId, status, success }
+      if (data && data.claimId && data.success) {
+        setResultsLoading(true);
+        try {
+          const results = await authenticatedApiService.claims.getClaimResults(data.claimId);
+          setClaimResults(results);
+          // Fetch images using new endpoints
+          const [originalBlob, model1Blob, model2Blob] = await Promise.all([
+            authenticatedApiService.claims.getOriginalImage(data.claimId),
+            authenticatedApiService.claims.getModel1Image(data.claimId),
+            authenticatedApiService.claims.getModel2Image(data.claimId)
+          ]);
+          setOriginalImageUrl(URL.createObjectURL(originalBlob));
+          setModel1ImageUrl(URL.createObjectURL(model1Blob));
+          setModel2ImageUrl(URL.createObjectURL(model2Blob));
+        } catch (err) {
+          setResultsError('Failed to fetch claim results or images.');
+        } finally {
+          setResultsLoading(false);
+        }
+      } else {
+        setResultsError('Claim upload did not return a valid claim ID.');
+      }
     } catch (error) {
       console.error('Claim submission error:', error);
       setTimeout(() => {
@@ -120,6 +148,9 @@ const ClaimUpload = () => {
   };
 
   const resetResults = () => {
+    setClaimResults(null);
+    setResultsError(null);
+    setResultsLoading(false);
     setConfidenceScore(null);
     setFileFormat(null);
     setDamageLabel(null);
@@ -127,6 +158,9 @@ const ClaimUpload = () => {
     setCostEstimates([]);
     setDamageImageUrl(null);
     setPartsImageUrl(null);
+    setOriginalImageUrl(null);
+    setModel1ImageUrl(null);
+    setModel2ImageUrl(null);
   };
 
   const handleClearSelection = () => {
@@ -333,17 +367,26 @@ const ClaimUpload = () => {
             }}
           >
             {uploadStatus === "success" ? (
-              <ClaimResults
-                confidenceScore={confidenceScore}
-                damageLabel={damageLabel}
-                damagedParts={damagedParts}
-                costEstimates={costEstimates}
-                damageImageUrl={damageImageUrl}
-                partsImageUrl={partsImageUrl}
-                handleDownloadPDF={handleDownloadPDF}
-                handleNewUpload={handleNewUpload}
-                            />
-                          ) : (
+              resultsLoading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                  <p className="text-lg">Loading claim results...</p>
+                </div>
+              ) : resultsError ? (
+                <div className="text-center py-12 text-red-400">{resultsError}</div>
+              ) : claimResults ? (
+                <ClaimResults
+                  claimResults={claimResults}
+                  originalImageUrl={originalImageUrl}
+                  model1ImageUrl={model1ImageUrl}
+                  model2ImageUrl={model2ImageUrl}
+                  handleDownloadPDF={handleDownloadPDF}
+                  handleNewUpload={handleNewUpload}
+                />
+              ) : (
+                <div className="text-center py-12 text-gray-400">No results to display.</div>
+              )
+            ) : (
               <ClaimUploadForm
                 selectedFile={selectedFile}
                 previewUrl={previewUrl}
@@ -358,8 +401,8 @@ const ClaimUpload = () => {
                 uploadStatus={uploadStatus}
                 handleSubmit={handleSubmit}
                 handleClearSelection={handleClearSelection}
-                      />
-              )}
+              />
+            )}
               
               {/* Status message for uploading */}
               {uploadStatus === "uploading" && (
