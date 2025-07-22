@@ -10,12 +10,45 @@ import HumanoidAvatar from "./HumanoidAvatar";
 import LanguagePicker from "./LanguagePicker";
 import ChatInterface from "./ChatInterface";
 import { useChatLogic } from '../../hooks/useChatLogic';
+import LoginForm from '../common/LoginForm';
+import ClaimUploadForm from '../claims/ClaimUploadForm';
+import ClaimResults from '../claims/ClaimResults';
+import { useCognitoAuth } from '../../hooks/useCognitoAuth';
+import { useS3Upload } from '../../hooks/useS3Upload';
 
 const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '', widgetSize = null }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(isFullPage);
   const avatarInitialized = useRef(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showClaimFlow, setShowClaimFlow] = useState(false);
+  const [claimResults, setClaimResults] = useState(null);
+  const [claimLoading, setClaimLoading] = useState(false);
+  const [claimError, setClaimError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [carMake, setCarMake] = useState("");
+  const [carModel, setCarModel] = useState("");
+  const fileInputRef = useRef(null);
+  const [pendingClaim, setPendingClaim] = useState(false);
+  const { user, isAuthenticated, getUserId } = useCognitoAuth();
+
+  useEffect(() => {
+    window.__CHATBOT_ACTIVE__ = true;
+    return () => { window.__CHATBOT_ACTIVE__ = false; };
+  }, []);
+
+  // Claim intent handler for useChatLogic
+  const onClaimIntent = async () => {
+    if (!(await isAuthenticated())) {
+      setPendingClaim(true);
+      setIsOpen(false); // Close the chatbot
+      setShowLoginModal(true);
+      return;
+    }
+    setShowImageUpload(true); // Immediately start claim flow in chat
+  };
 
   const {
     messages,
@@ -28,13 +61,13 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     emotion,
     isTyping,
     showImageUpload,
-    selectedFile,
-    setSelectedFile,
+    selectedFile: chatbotSelectedFile,
+    setSelectedFile: setChatbotSelectedFile,
     showCarInput,
     carInput,
     setCarInput,
     uploadStatus,
-    fileInputRef,
+    fileInputRef: chatbotFileInputRef,
     messagesEndRef,
     handleSend,
     handleKeyPress,
@@ -44,8 +77,18 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     handleImageSelect,
     toggleMute,
     setShowCarInput,
-    setShowImageUpload
-  } = useChatLogic(language);
+    setShowImageUpload,
+  } = useChatLogic(language, { onClaimIntent, isAuthenticated });
+
+  const { uploadFileToS3, uploadStatus: s3UploadStatus, resetUpload } = useS3Upload();
+
+  // After login, if pendingClaim, reload the page
+  useEffect(() => {
+    if (!showLoginModal && pendingClaim && user) {
+      setPendingClaim(false);
+      window.location.reload();
+    }
+  }, [showLoginModal, pendingClaim, user]);
 
   // Reset avatar initialization when chatbot is closed
   useEffect(() => {
@@ -111,6 +154,53 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     setLanguageSelected(true);
   };
 
+  // Override claim intent logic
+  const handleClaimIntent = async () => {
+    if (!(await isAuthenticated())) {
+      setShowLoginModal(true);
+      return;
+    }
+    setShowClaimFlow(true);
+  };
+
+  // After login success
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false);
+    setShowClaimFlow(true);
+  };
+
+  // Claim upload logic (reused from ClaimUpload)
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleClaimSubmit = async (event) => {
+    event.preventDefault();
+    if (!selectedFile || !carMake.trim() || !carModel.trim()) return;
+    if (uploadStatus === 'uploading') return;
+    setClaimResults(null);
+    setClaimError(null);
+    setClaimLoading(true);
+    try {
+      const userId = await getUserId();
+      const data = await uploadFileToS3(selectedFile, carMake, carModel, userId);
+      if (data && data.claimId && data.success) {
+        // Fetch results logic here (can be simplified for chatbot)
+        setClaimResults(data); // Or fetch details if needed
+      } else {
+        setClaimError('Claim upload did not return a valid claim ID.');
+      }
+    } catch (error) {
+      setClaimError('Claim submission error.');
+    } finally {
+      setClaimLoading(false);
+    }
+  };
+
   // Dynamic button styling for widget mode
   const buttonStyle = widgetMode && clientLogo ? {
     '--button-logo': `url(${clientLogo})`
@@ -118,6 +208,18 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
 
   return (
     <>
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-gray-900 rounded-xl shadow-2xl p-6 relative">
+            <button className="absolute top-2 right-2 text-gray-400 hover:text-white" onClick={() => setShowLoginModal(false)}>
+              ×
+            </button>
+            <LoginForm onLoginSuccess={() => setShowLoginModal(false)} />
+          </div>
+        </div>
+      )}
+      
       {/* Floating chat button - show if not fullscreen and (not in iframe OR in widgetMode) */}
       {!isFullPage && (!isInIframe || widgetMode) && (
         <>
@@ -133,7 +235,6 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
           </div>
         </>
       )}
-      
       {/* Chat window */}
       {isOpen && (
         <div 
@@ -235,9 +336,9 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
                 toggleMute={toggleMute}
                 language={language}
                 showImageUpload={showImageUpload}
-                selectedFile={selectedFile}
-                setSelectedFile={setSelectedFile}
-                fileInputRef={fileInputRef}
+                selectedFile={chatbotSelectedFile}
+                setSelectedFile={setChatbotSelectedFile}
+                fileInputRef={chatbotFileInputRef}
                 handleImageSelect={handleImageSelect}
                 showCarInput={showCarInput}
                 carInput={carInput}
@@ -250,6 +351,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
                 widgetMode={widgetMode}
                 clientName={clientName}
                 clientLogo={clientLogo}
+                // handleClaimIntent={handleClaimIntent} // Removed as per edit hint
               />
             </>
           )}

@@ -28,7 +28,8 @@ const ChatInterface = ({
   messagesEndRef,
   widgetMode = false,
   clientName = '',
-  clientLogo = ''
+  clientLogo = '',
+  handleClaimIntent
 }) => {
   const uiText = {
     chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
@@ -97,6 +98,7 @@ const ChatInterface = ({
             {!selectedFile ? (
               <div className="flex gap-2 justify-center">
                 <button
+                  type="button"
                   onClick={() => {
                     if (fileInputRef.current) {
                       fileInputRef.current.removeAttribute('capture');
@@ -112,6 +114,7 @@ const ChatInterface = ({
                   {language === "en" ? "Gallery" : "गैलरी"}
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     if (fileInputRef.current) {
                       fileInputRef.current.setAttribute('capture', 'environment');
@@ -139,6 +142,7 @@ const ChatInterface = ({
                     style={{ objectFit: 'cover' }}
                   />
                   <button
+                    type="button"
                     onClick={() => {
                       setSelectedFile(null);
                       setShowCarInput(false);
@@ -185,6 +189,7 @@ const ChatInterface = ({
                   className="w-full px-3 py-2 bg-gray-700/30 text-gray-200 text-sm rounded-md border border-gray-600/30 focus:outline-none focus:border-gray-500/50"
                 />
                 <button
+                  type="button"
                   onClick={handleCarDetails}
                   disabled={!carInput.includes(',') || uploadStatus === "uploading"}
                   className={`w-full px-3 py-2 rounded-md transition-colors text-sm ${

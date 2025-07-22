@@ -31,15 +31,16 @@ apiClient.interceptors.request.use(
 
 // Response interceptor to handle authentication errors
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      console.error('🔐 [AUTH] Unauthorized request - token may be expired');
-      // You could implement token refresh logic here
-      // For now, redirect to login
-      window.location.href = '/login';
+      // Only redirect to /login if chatbot is NOT active
+      if (!window.__CHATBOT_ACTIVE__) {
+        window.location.href = '/login';
+      } else {
+        // In chatbot, just reject and let the UI handle re-auth
+        console.error('🔐 [AUTH] Unauthorized in chatbot context, not redirecting.');
+      }
     }
     return Promise.reject(error);
   }

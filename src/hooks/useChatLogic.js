@@ -6,7 +6,7 @@ import { useEmotionService } from '../services/emotionService';
 import { useMessageService } from '../services/messageService';
 import { useUIStateService } from '../services/uiStateService';
 
-export const useChatLogic = (language) => {
+export const useChatLogic = (language, { onClaimIntent, isAuthenticated } = {}) => {
   const {
     messages,
     setMessages,
@@ -89,6 +89,13 @@ export const useChatLogic = (language) => {
 
     // Handle claim-related queries
     if (isClaimRelatedQuery(messageToSend)) {
+      if (isAuthenticated && !(await isAuthenticated())) {
+        if (onClaimIntent) {
+          onClaimIntent(); // show login modal
+          return;
+        }
+      }
+      // proceed with chat-based claim flow as before
       const uploadMessage = language === "en"
         ? "I understand you want to file a claim for your vehicle. I'll help you with that. Please upload a clear photo of the damage using one of the buttons below."
         : "मैं समझता हूं कि आप अपने वाहन के लिए दावा दर्ज करना चाहते हैं। मैं आपकी मदद करूंगा। कृपया नीचे दिए गए बटनों में से किसी एक का उपयोग करके क्षति की एक स्पष्ट तस्वीर अपलोड करें।";
