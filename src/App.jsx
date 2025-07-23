@@ -29,11 +29,11 @@ const App = () => {
         <ScrollToTop />
         <Routes>
           {/* Auto-redirect root: if logged in, go to claimupload, else login */}
-          <Route path="/" element={user ? <Navigate to="/claimupload" replace /> : <Navigate to="/login" replace />} />
+          <Route path="/" element={user ? <Navigate to="/imageupload" replace /> : <Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/claimupload" element={<ProtectedRoute><ClaimUpload /></ProtectedRoute>} />
-          <Route path="/claims-dashboard" element={<ProtectedRoute><ClaimsDashboard /></ProtectedRoute>} />
+          <Route path="/imageupload" element={<ProtectedRoute><ClaimUpload /></ProtectedRoute>} />
+          <Route path="/assessments-dashboard" element={<ProtectedRoute><ClaimsDashboard /></ProtectedRoute>} />
           <Route path="/contacts" element={<Contacts />} />
           {/* Fallback: redirect all other routes to root */}
           <Route path="*" element={<Navigate to="/" replace />} />

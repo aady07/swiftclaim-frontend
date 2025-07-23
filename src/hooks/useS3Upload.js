@@ -93,7 +93,7 @@ export const useS3Upload = () => {
 
       // Step 3: Submit claim data with S3 image URL (80% progress)
       setUploadProgress(80);
-      uploadProcessLogger.logStep(session.sessionId, 'SUBMIT_CLAIM', 80, {
+      uploadProcessLogger.logStep(session.sessionId, 'PROCESSING', 80, {
         carMake,
         carModel,
         fileKey: backendFileKey

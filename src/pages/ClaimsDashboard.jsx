@@ -327,7 +327,7 @@ const ClaimsDashboard = () => {
               transition={{ delay: 0.2 }}
             >
               <Link
-                to="/claimupload"
+                to="/imageupload"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -520,7 +520,7 @@ const ClaimsDashboard = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">Welcome to Your Assessment Dashboard!</h3>
                     <p className="text-gray-400 mb-6">You haven't submitted any car images yet. Start by uploading your first car image.</p>
                     <Link
-                      to="/claimupload"
+                      to="/imageupload"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
                     >
                       <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

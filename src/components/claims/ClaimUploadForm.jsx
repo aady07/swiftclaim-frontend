@@ -57,7 +57,7 @@ const ClaimUploadForm = ({
               Drag and drop your file here
             </span>
             <span className="text-sm text-gray-400">
-              Supports JPG, PNG, and PDF documents
+              Supports JPG and PNG images
             </span>
             <motion.span
               className="mt-4 rounded-full bg-gray-800/50 backdrop-blur-sm px-5 py-2 text-sm inline-flex items-center gap-2"
@@ -74,7 +74,7 @@ const ClaimUploadForm = ({
           type="file"
           className="hidden"
           onChange={handleFileChange}
-          accept="image/*,.pdf"
+          accept="image/jpeg,image/png"
         />
       </div>
       
