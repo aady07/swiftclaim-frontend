@@ -45,8 +45,8 @@ const ClaimUploadForm = ({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
             </motion.div>
-            <span className="text-lg text-gray-200 font-medium">Ready to verify</span>
-            <span className="text-sm text-gray-400 mt-1">Click "Verify Claim" below to process</span>
+            <span className="text-lg text-gray-200 font-medium">Ready to submit</span>
+            <span className="text-sm text-gray-400 mt-1">Click "Submit Image" below to continue</span>
           </div>
         ) : (
           <>
@@ -125,7 +125,7 @@ const ClaimUploadForm = ({
           whileTap={{ scale: 0.95 }}
           disabled={!selectedFile || !carMake.trim() || !carModel.trim() || uploadStatus === "uploading"}
         >
-          {uploadStatus === "uploading" ? "Uploading & Processing..." : "Verify Claim"}
+          {uploadStatus === "uploading" ? "Uploading & Processing..." : "Submit Image"}
         </motion.button>
       </div>
     </motion.div>
