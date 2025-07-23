@@ -254,8 +254,8 @@ const ClaimsDashboard = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Claims Dashboard | Miraista</title>
-        <meta name="description" content="View and manage all your insurance claims in one comprehensive dashboard." />
+        <title>Assessment Dashboard | Miraista</title>
+        <meta name="description" content="View and manage all your car damage assessments in one comprehensive dashboard." />
       </Helmet>
 
       <motion.div
@@ -304,19 +304,19 @@ const ClaimsDashboard = () => {
               <motion.span 
                 className="mb-1.5 inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500/10 to-blue-600/10 rounded-full backdrop-blur-sm border border-green-200/20"
               >
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 text-sm font-medium">CLAIMS DASHBOARD</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 text-sm font-medium">ASSESSMENT DASHBOARD</span>
               </motion.span>
               
               <motion.h1 
                 className="text-4xl font-bold leading-tight text-white sm:text-5xl"
               >
-                Your Claims Overview
+                Assessment Overview
               </motion.h1>
               
               <motion.p 
                 className="mt-4 text-lg text-gray-300"
               >
-                Track and manage all your insurance claims in one place
+                Track and manage all your car damage assessments in one place
               </motion.p>
             </div>
 
@@ -333,7 +333,7 @@ const ClaimsDashboard = () => {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                New Claim
+                Upload Car Image
               </Link>
               
               <button
@@ -373,7 +373,7 @@ const ClaimsDashboard = () => {
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
                 <span className="text-blue-400 text-sm font-medium">
-                  {error ? 'Backend temporarily unavailable' : 'No claims found - ready to start'}
+                  {error ? 'Backend temporarily unavailable' : 'No assessments found – ready to start'}
                 </span>
                 {error && (
                   <button
@@ -397,7 +397,7 @@ const ClaimsDashboard = () => {
             <div className="p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm">Total Claims</p>
+                  <p className="text-gray-400 text-sm">Total Assessments</p>
                   <p className="text-3xl font-bold text-white">{getTotalClaims()}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
@@ -411,7 +411,7 @@ const ClaimsDashboard = () => {
             <div className="p-6 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm">Processed</p>
+                  <p className="text-gray-400 text-sm">Completed</p>
                   <p className="text-3xl font-bold text-green-400">{statusCount.processed}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
@@ -488,7 +488,7 @@ const ClaimsDashboard = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search claims..."
+                  placeholder="Search reports..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
@@ -508,7 +508,7 @@ const ClaimsDashboard = () => {
             transition={{ delay: 0.5 }}
           >
             <div className="p-6 border-b border-gray-700">
-              <h2 className="text-2xl font-bold text-white">All Claims ({filteredClaims.length})</h2>
+              <h2 className="text-2xl font-bold text-white">All Assessments ({filteredClaims.length})</h2>
             </div>
 
             {filteredClaims.length === 0 ? (
@@ -517,8 +517,8 @@ const ClaimsDashboard = () => {
                   // No claims at all (empty database or backend issue)
                   <>
                     <div className="text-gray-400 text-6xl mb-4">🚀</div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Welcome to Your Claims Dashboard!</h3>
-                    <p className="text-gray-400 mb-6">You haven't submitted any claims yet. Start by uploading your first claim.</p>
+                    <h3 className="text-xl font-semibold text-white mb-2">Welcome to Your Assessment Dashboard!</h3>
+                    <p className="text-gray-400 mb-6">You haven't submitted any car images yet. Start by uploading your first car image.</p>
                     <Link
                       to="/claimupload"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 rounded-lg font-medium transition-all duration-300 transform hover:scale-105"
@@ -526,14 +526,14 @@ const ClaimsDashboard = () => {
                       <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
-                      Upload Your First Claim
+                      Upload Your First Car Image
                     </Link>
                   </>
                 ) : (
                   // Claims exist but filtered out
                   <>
                     <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                    <h3 className="text-xl font-semibold text-white mb-2">No claims match your filters</h3>
+                    <h3 className="text-xl font-semibold text-white mb-2">No assessments match your filters</h3>
                     <p className="text-gray-400 mb-4">Try adjusting your search terms or status filter</p>
                     <button
                       onClick={() => {
@@ -647,7 +647,7 @@ const ClaimsDashboard = () => {
               exit={{ opacity: 0, scale: 0.9 }}
             >
               <div className="p-6 border-b border-gray-700 flex items-center justify-between">
-                <h3 className="text-xl font-bold text-white">Claim Details #{selectedClaim.id}</h3>
+                <h3 className="text-xl font-bold text-white">Assessment Details #{selectedClaim.id}</h3>
                 <button
                   onClick={() => setSelectedClaim(null)}
                   className="text-gray-400 hover:text-white transition-colors"

@@ -304,20 +304,15 @@ const ClaimUpload = () => {
           <motion.h1 
             className="max-w-3xl text-center text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
           >
-            Upload & Verify Your Claim
+            Got a dent? Get a diagnosis.
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mt-2 hover:scale-105 transition-transform duration-300">
-              Powered by AI
+              Upload your car photos for an AI-powered check-up
             </span>
           </motion.h1>
           
-          <motion.p 
-            className="my-6 max-w-xl text-center text-lg leading-relaxed md:text-xl text-gray-300"
-          >
-            Upload an image of your damaged vehicle and our AI will analyze it in seconds, providing verification with high accuracy.
-          </motion.p>
           
           <motion.div
-            className="flex justify-center gap-4 mb-8"
+            className="flex flex-wrap justify-center items-center gap-4 mb-8 mt-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -329,7 +324,7 @@ const ClaimUpload = () => {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              View All Claims
+              View All Reports
             </Link>
             
             <button

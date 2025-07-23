@@ -116,8 +116,8 @@ const Navbar = () => {
 
   // Only show allowed nav items
   const navItems = [
-    { id: 1, text: "Claim Upload", href: "/claimupload" },
-    { id: 2, text: "Claims Dashboard", href: "/claims-dashboard" },
+    { id: 1, text: "Upload & Diagnose", href: "/claimupload" },
+    { id: 2, text: "Assessment Dashboard", href: "/claims-dashboard" },
   ];
 
   // Remove serviceOptions and dropdown logic
