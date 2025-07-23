@@ -12,16 +12,6 @@ const uploadProcessLogger = {
     uploadProcessLogger.sessionCount++;
     uploadProcessLogger.sessionStartTime = performance.now();
     
-    console.log(`🚀 [UPLOAD SESSION START #${uploadProcessLogger.sessionCount}]`, {
-      fileName: file.name,
-      fileSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
-      fileType: file.type,
-      carMake,
-      carModel,
-      timestamp: new Date().toISOString(),
-      totalSessions: uploadProcessLogger.totalSessions
-    });
-    
     return {
       sessionId: uploadProcessLogger.sessionCount,
       startTime: uploadProcessLogger.sessionStartTime
@@ -30,32 +20,12 @@ const uploadProcessLogger = {
   
   logStep: (sessionId, step, progress, details = {}) => {
     const elapsed = performance.now() - uploadProcessLogger.sessionStartTime;
-    
-    console.log(`📊 [UPLOAD STEP #${sessionId}]`, {
-      step,
-      progress: `${progress}%`,
-      elapsed: `${elapsed.toFixed(2)}ms`,
-      ...details
-    });
   },
   
   logSuccess: (sessionId, totalDuration, finalData) => {
-    console.log(`🎉 [UPLOAD SESSION SUCCESS #${sessionId}]`, {
-      totalDuration: `${totalDuration.toFixed(2)}ms`,
-      hasModel1Output: !!finalData?.model1_output,
-      hasModel2Output: !!finalData?.model2_output,
-      hasCosting: !!finalData?.costing,
-      responseSize: JSON.stringify(finalData).length
-    });
   },
   
   logError: (sessionId, error, step, duration) => {
-    console.log(`💥 [UPLOAD SESSION ERROR #${sessionId}]`, {
-      step,
-      error: error.message || error,
-      duration: `${duration.toFixed(2)}ms`,
-      totalSessions: uploadProcessLogger.totalSessions
-    });
   }
 };
 
@@ -74,13 +44,11 @@ export const useS3Upload = () => {
     
     // Prevent multiple simultaneous uploads with ref
     if (uploadRef.current) {
-      console.log('⚠️ [DUPLICATE UPLOAD] Upload already in progress, ignoring duplicate call');
       return;
     }
 
     // Prevent duplicate requests with same request ID
     if (requestIdRef.current === requestId) {
-      console.log('⚠️ [DUPLICATE REQUEST] Duplicate request ID detected, ignoring');
       return;
     }
 
@@ -102,17 +70,10 @@ export const useS3Upload = () => {
         contentType: file.type
       });
       
-      console.log('🔗 [STEP 1] Getting pre-signed URL for file:', file.name);
       const uploadUrlResponse = await authenticatedApiService.claims.getUploadUrl(
         file.name,
         file.type
       );
-
-      console.log('🔗 [STEP 1 COMPLETE] Pre-signed URL response received:', {
-        fileKey: uploadUrlResponse.fileKey,
-        s3Url: uploadUrlResponse.s3Url.substring(0, 100) + '...',
-        hasPresignedUrl: !!uploadUrlResponse.presignedUrl
-      });
 
       if (!uploadUrlResponse.presignedUrl || !uploadUrlResponse.s3Url) {
         throw new Error('Invalid upload URL response from server');
@@ -120,7 +81,6 @@ export const useS3Upload = () => {
 
       // Store the fileKey from backend response - this is the UUID we must use
       const backendFileKey = uploadUrlResponse.fileKey;
-      console.log('🔑 [UUID TRACKING] Backend provided fileKey:', backendFileKey);
 
       // Step 2: Upload file directly to S3 (60% progress)
       setUploadProgress(60);
@@ -129,8 +89,6 @@ export const useS3Upload = () => {
         fileSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`
       });
       
-      console.log('📤 [STEP 2] Uploading file to S3 with fileKey:', backendFileKey);
-      console.log('🔑 [UUID TRACKING] S3 upload using fileKey:', backendFileKey);
       await authenticatedApiService.claims.uploadToS3(uploadUrlResponse.presignedUrl, file);
 
       // Step 3: Submit claim data with S3 image URL (80% progress)
@@ -148,15 +106,6 @@ export const useS3Upload = () => {
         fileKey: backendFileKey, // Use the SAME fileKey from backend response
         userId: "aady123"
       };
-
-      console.log('📋 [STEP 3] Submitting claim with data:', {
-        carMake: claimData.carMake,
-        carModel: claimData.carModel,
-        fileKey: claimData.fileKey,
-        imageUrl: claimData.imageUrl.substring(0, 100) + '...'
-      });
-      console.log('🔑 [UUID TRACKING] Claim submission using fileKey:', claimData.fileKey);
-      console.log('🔑 [UUID VERIFICATION] fileKey matches backend response:', claimData.fileKey === backendFileKey);
       
       const data = await authenticatedApiService.claims.submitClaim(claimData);
       
@@ -178,7 +127,6 @@ export const useS3Upload = () => {
       
       return data;
     } catch (error) {
-      console.error('💥 [UPLOAD ERROR] S3 upload error:', error);
       
       // Determine which step failed
       let failedStep = 'UNKNOWN';

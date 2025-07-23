@@ -94,7 +94,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Navigation Links */}
+          {/* Only Contact Us navigation */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -105,72 +105,17 @@ const Footer = () => {
           >
             <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Navigation</h5>
             <ul className="space-y-3 w-full list-none">
-              {navItems.map((item) => (
-                <li key={item.id} className="w-full">
-                  <Link to={item.href} className="block" aria-label={`Navigate to ${item.text}`}>
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-300"
-                    >
-                      {item.icon}
-                      <span className="text-sm md:text-base">{item.text}</span>
-                    </motion.div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Resources */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            transition={{ delay: 0.15 }}
-            className="flex flex-col items-center md:items-start md:pl-8"
-          >
-            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Resources</h5>
-            <ul className="space-y-3 w-full list-none">
               <li className="w-full">
-                <motion.a 
-                  href="/apidocs" 
-                  whileHover={{ x: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="block text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
-                  aria-label="View API Documentation"
-                >
-                  API Documentation
-                </motion.a>
+                <Link to="/contacts" className="block" aria-label="Navigate to Contact Us">
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-300"
+                  >
+                    <span className="text-sm md:text-base">Contact Us</span>
+                  </motion.div>
+                </Link>
               </li>
-            </ul>
-          </motion.div>
-
-          {/* Service Options */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="flex flex-col items-center md:items-start md:pl-8"
-          >
-            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Service Options</h5>
-            <ul className="space-y-3 w-full list-none">
-              {serviceOptions.map((option) => (
-                <li key={option.id} className="w-full">
-                  <Link to={option.href} className="block" aria-label={`Learn more about ${option.text}`}>
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
-                    >
-                      {option.text}
-                    </motion.div>
-                  </Link>
-                </li>
-              ))}
             </ul>
           </motion.div>
         </div>

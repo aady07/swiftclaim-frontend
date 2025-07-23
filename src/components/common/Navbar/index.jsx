@@ -33,7 +33,7 @@ const Navbar = () => {
     // Special case for services dropdown
     if (path === "#") {
       // Check if any service option path is active
-      return serviceOptions.some(option => location.pathname === option.href);
+      return false; // No service options anymore
     }
     
     return location.pathname.startsWith(path);
@@ -114,17 +114,14 @@ const Navbar = () => {
     setNav(false);
   }, [location.pathname]); // Changed from window.location.pathname to use location hook
 
+  // Only show allowed nav items
   const navItems = [
-    { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
-    { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 3, text: "Services", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
-    { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
+    { id: 1, text: "Claim Upload", href: "/claimupload" },
+    { id: 2, text: "Claims Dashboard", href: "/claims-dashboard" },
   ];
 
-  const serviceOptions = [
-    { id: 1, text: "Claim", href: "/claimupload" },
-    { id: 2, text: "Chatbot", href: "/chatbotpage" }
-  ];
+  // Remove serviceOptions and dropdown logic
+  // Remove isServicePage and any reference to serviceOptions
 
   const handleLogout = async () => {
     await signOut();
@@ -137,7 +134,7 @@ const Navbar = () => {
   };
 
   // Check if current path is a service page
-  const isServicePage = serviceOptions.some(option => location.pathname === option.href);
+  const isServicePage = false; // No service options anymore
 
   return (
     <motion.div 
@@ -264,21 +261,7 @@ const Navbar = () => {
                           className="absolute right-0 mt-2 w-48 bg-gray-800/95 backdrop-blur-md shadow-lg rounded-lg overflow-hidden z-50 border border-gray-700/50"
                           role="menu"
                         >
-                          {serviceOptions.map((option) => (
-                            <Link
-                              key={option.id}
-                              to={option.href}
-                              className={`block px-4 py-3 text-sm ${
-                                isActive(option.href)
-                                  ? "text-blue-400 bg-blue-900/30"
-                                  : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
-                              } transition-colors duration-200`}
-                              role="menuitem"
-                              onClick={handleServiceOptionClick}
-                            >
-                              {option.text}
-                            </Link>
-                          ))}
+                          {/* No service options anymore */}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -391,20 +374,7 @@ const Navbar = () => {
                                   transition={{ duration: 0.2 }}
                                   className="mt-2 ml-4 space-y-2"
                                 >
-                                  {serviceOptions.map((option) => (
-                                    <Link
-                                      key={option.id}
-                                      to={option.href}
-                                      className={`block px-4 py-2 rounded-lg text-base ${
-                                        isActive(option.href)
-                                          ? "text-blue-400 bg-blue-900/30"
-                                          : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
-                                      } transition-colors duration-200`}
-                                      onClick={handleServiceOptionClick}
-                                    >
-                                      {option.text}
-                                    </Link>
-                                  ))}
+                                  {/* No service options anymore */}
                                 </motion.div>
                               )}
                             </AnimatePresence>

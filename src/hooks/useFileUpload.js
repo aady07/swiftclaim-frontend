@@ -125,7 +125,7 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
         throw new Error('Claim upload did not return a valid claim ID.');
       }
     } catch (error) {
-      console.error('Error processing claim:', error);
+      // Logging removed
       const errorMessage = language === "en"
         ? "I'm having trouble analyzing your claim at the moment. This sometimes happens, but don't worry! Could you try uploading the image again?"
         : "मुझे इस समय आपके दावे का विश्लेषण करने में परेशानी हो रही है। ऐसा कभी-कभी होता है, लेकिन चिंता न करें! क्या आप छवि को फिर से अपलोड करने का प्रयास कर सकते हैं?";

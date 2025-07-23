@@ -14,17 +14,17 @@ apiClient.interceptors.request.use(
       const accessToken = await cognitoService.getAccessToken();
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
-        console.log('🔐 [AUTH] JWT token added to request:', config.url);
+        // Logging removed
       }
     } catch (error) {
-      console.error('🔐 [AUTH] Failed to get JWT token:', error);
+      // Logging removed
       // Don't throw error here, let the request proceed without token
       // The backend will handle unauthorized requests
     }
     return config;
   },
   (error) => {
-    console.error('🔐 [AUTH] Request interceptor error:', error);
+    // Logging removed
     return Promise.reject(error);
   }
 );
@@ -38,8 +38,7 @@ apiClient.interceptors.response.use(
       if (!window.__CHATBOT_ACTIVE__) {
         window.location.href = '/login';
       } else {
-        // In chatbot, just reject and let the UI handle re-auth
-        console.error('🔐 [AUTH] Unauthorized in chatbot context, not redirecting.');
+        // Logging removed
       }
     }
     return Promise.reject(error);
@@ -59,7 +58,7 @@ export const authenticatedApiService = {
         const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims`);
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get claims:', error);
+        // Logging removed
         throw new Error('Failed to fetch claims');
       }
     },
@@ -70,7 +69,7 @@ export const authenticatedApiService = {
         const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims/${claimId}`);
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get claim:', error);
+        // Logging removed
         throw new Error('Failed to fetch claim');
       }
     },
@@ -89,7 +88,7 @@ export const authenticatedApiService = {
         );
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get upload URL:', error);
+        // Logging removed
         throw new Error('Failed to get upload URL');
       }
     },
@@ -106,7 +105,7 @@ export const authenticatedApiService = {
           userId: userId
         };
 
-        console.log('🔐 [CLAIMS API] Submitting claim with user ID:', userId);
+        // Logging removed
         
         const response = await apiClient.post(`${CLAIMS_API_BASE_URL}/s3upload`, claimWithUserId, {
           headers: {
@@ -120,13 +119,13 @@ export const authenticatedApiService = {
           try {
             responseData = JSON.parse(responseData.body);
           } catch (parseError) {
-            console.error('❌ [CLAIMS API] Failed to parse response body:', parseError);
+            // Logging removed
           }
         }
 
         return responseData;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to submit claim:', error);
+        // Logging removed
         throw new Error('Failed to submit claim');
       }
     },
@@ -139,7 +138,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get original image:', error);
+        // Logging removed
         throw new Error('Failed to get original image');
       }
     },
@@ -152,7 +151,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get processed image:', error);
+        // Logging removed
         throw new Error('Failed to get processed image');
       }
     },
@@ -165,7 +164,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get model1 image:', error);
+        // Logging removed
         throw new Error('Failed to get model1 image');
       }
     },
@@ -178,7 +177,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get model2 image:', error);
+        // Logging removed
         throw new Error('Failed to get model2 image');
       }
     },
@@ -186,7 +185,7 @@ export const authenticatedApiService = {
     // Upload file directly to S3 using pre-signed URL
     uploadToS3: async (presignedUrl, file) => {
       try {
-        console.log(`📤 [S3 UPLOAD] Starting upload to: ${presignedUrl.substring(0, 100)}...`);
+        // Logging removed
         
         const response = await fetch(presignedUrl, {
           method: 'PUT',
@@ -200,15 +199,10 @@ export const authenticatedApiService = {
           throw new Error(`S3 upload failed: ${response.status} ${response.statusText}`);
         }
         
-        console.log(`✅ [S3 UPLOAD SUCCESS] File uploaded successfully`);
+        // Logging removed
         return true;
       } catch (error) {
-        console.error('❌ [S3 UPLOAD ERROR]', {
-          error: error.message,
-          presignedUrl: presignedUrl.substring(0, 100) + '...',
-          fileName: file.name,
-          fileSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`
-        });
+        // Logging removed
         
         throw new Error('Failed to upload file to S3');
       }
@@ -228,13 +222,13 @@ export const authenticatedApiService = {
           try {
             responseData = JSON.parse(responseData.body);
           } catch (parseError) {
-            console.error('❌ [CLAIMS API] Failed to parse response body:', parseError);
+            // Logging removed
           }
         }
 
         return responseData;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to upload claim:', error);
+        // Logging removed
         throw new Error('Failed to upload claim');
       }
     },
@@ -249,13 +243,13 @@ export const authenticatedApiService = {
           try {
             responseData = JSON.parse(responseData.body);
           } catch (parseError) {
-            console.error('❌ [CLAIMS API] Failed to parse response body:', parseError);
+            // Logging removed
           }
         }
 
         return responseData;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to process claim:', error);
+        // Logging removed
         throw new Error('Failed to process claim');
       }
     },
@@ -288,7 +282,7 @@ export const authenticatedApiService = {
         const response = await apiClient.get(`${CLAIMS_API_BASE_URL}/claims/${claimId}/results`);
         return response.data;
       } catch (error) {
-        console.error('❌ [CLAIMS API] Failed to get claim results:', error);
+        // Logging removed
         throw new Error('Failed to fetch claim results');
       }
     },
@@ -306,7 +300,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [CHAT API] Failed to send message:', error);
+        // Logging removed
         throw new Error('Failed to send message');
       }
     },
@@ -334,7 +328,7 @@ export const authenticatedApiService = {
         });
         return response.data;
       } catch (error) {
-        console.error('❌ [SPEECH API] Failed to convert speech to text:', error);
+        // Logging removed
         throw new Error('Failed to convert speech to text');
       }
     },
