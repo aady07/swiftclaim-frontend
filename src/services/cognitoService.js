@@ -61,6 +61,34 @@ export const cognitoService = {
     });
   },
 
+  forgotPassword: (email) => {
+    return new Promise((resolve, reject) => {
+      const user = new CognitoUser({ Username: email, Pool: userPool });
+      user.forgotPassword({
+        onSuccess: (result) => {
+          resolve(result);
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
+    });
+  },
+
+  confirmForgotPassword: (email, code, newPassword) => {
+    return new Promise((resolve, reject) => {
+      const user = new CognitoUser({ Username: email, Pool: userPool });
+      user.confirmPassword(code, newPassword, {
+        onSuccess: (result) => {
+          resolve(result);
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
+    });
+  },
+
   signOut: () => {
     const user = userPool.getCurrentUser();
     if (user) {

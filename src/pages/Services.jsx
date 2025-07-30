@@ -452,7 +452,7 @@ const Services = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/claimupload")}
+                onClick={() => navigate("/imageupload")}
                 className="px-10 py-4 bg-white text-slate-700 rounded-lg shadow-xl font-bold text-lg"
               >
                 Get Started

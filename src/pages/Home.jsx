@@ -197,7 +197,7 @@ const HomePage = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
   const handleTryItNow = () => {
-    navigate("/claimupload");
+    navigate("/imageupload");
   };
 
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -378,7 +378,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 <motion.button
                   whileHover={{ scale: 1.05, rotateX: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(currentTextIndex === 0 ? "/chatbotpage" : "/claimupload")}
+                  onClick={() => navigate(currentTextIndex === 0 ? "/chatbotpage" : "/imageupload")}
                   className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 relative overflow-hidden group transform-gpu"
                 >
                   <span className="relative z-10">{currentTextIndex === 0 ? "Meet Your Agent" : "Try It Now"}</span>
@@ -1061,7 +1061,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/claimupload")}
+              onClick={() => navigate("/imageupload")}
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg shadow-xl font-bold text-lg"
             >
               Try Auto Claim Processing

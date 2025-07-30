@@ -19,7 +19,7 @@ const Footer = () => {
   ];
 
   const serviceOptions = [
-    { id: 1, text: "Claim", href: "/claimupload" },
+    { id: 1, text: "Claim", href: "/imageupload" },
     { id: 2, text: "Chatbot", href: "/chatbotpage" }
   ];
 

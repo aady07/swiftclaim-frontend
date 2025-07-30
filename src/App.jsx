@@ -6,6 +6,9 @@ import Footer from "./components/common/Footer";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ConfirmSignup from "./pages/ConfirmSignup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import ClaimUpload from "./pages/ClaimUpload";
 import ClaimsDashboard from "./pages/ClaimsDashboard";
 import Contacts from "./pages/Contacts";
@@ -22,6 +25,7 @@ const ScrollToTop = () => {
 
 const App = () => {
   const { user } = useCognitoAuth();
+  console.log('🔐 [APP] Current user state:', user ? 'Logged in' : 'Not logged in');
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -32,6 +36,9 @@ const App = () => {
           <Route path="/" element={user ? <Navigate to="/imageupload" replace /> : <Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/confirm-signup" element={<ConfirmSignup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/imageupload" element={<ProtectedRoute><ClaimUpload /></ProtectedRoute>} />
           <Route path="/assessments-dashboard" element={<ProtectedRoute><ClaimsDashboard /></ProtectedRoute>} />
           <Route path="/contacts" element={<Contacts />} />
