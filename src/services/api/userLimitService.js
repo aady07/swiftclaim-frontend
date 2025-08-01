@@ -35,7 +35,7 @@ export const userLimitService = {
   // Check if user can upload
   checkUploadLimit: async () => {
     try {
-      const response = await apiClient.get('http://localhost:8080/api/user/upload-limit');
+      const response = await apiClient.get('https://testing.aadybackend.site/api/user/upload-limit');
       return response.data;
     } catch (error) {
       console.error('Error checking upload limit:', error);
@@ -50,7 +50,7 @@ export const userLimitService = {
   // Get upload statistics
   getUploadStats: async () => {
     try {
-      const response = await apiClient.get('http://localhost:8080/api/user/upload-stats');
+      const response = await apiClient.get('https://testing.aadybackend.site/api/user/upload-stats');
       return response.data;
     } catch (error) {
       console.error('Error fetching upload stats:', error);
@@ -72,7 +72,7 @@ export const userLimitService = {
   // Upgrade user tier
   upgradeTier: async (tier = 'PREMIUM') => {
     try {
-      const response = await apiClient.post('http://localhost:8080/api/user/upgrade-tier', {
+      const response = await apiClient.post('https://testing.aadybackend.site/api/user/upgrade-tier', {
         tier
       });
       return response.data;
