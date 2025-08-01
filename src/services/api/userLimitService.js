@@ -5,7 +5,7 @@ export const userLimitService = {
   getLimitInfo: async () => {
     try {
       console.log('🔍 [API] Calling getLimitInfo...');
-      const response = await apiClient.get('/user/limit-info');
+      const response = await apiClient.get('https://testing.aadybackend.site/api/user/limit-info');
       console.log('🔍 [API] Response:', response);
       console.log('🔍 [API] Response data:', response.data);
       return response.data;
