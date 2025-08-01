@@ -4,17 +4,12 @@ export const userLimitService = {
   // Get user limit information
   getLimitInfo: async () => {
     try {
-      console.log('🔍 [API] Calling getLimitInfo...');
       const response = await apiClient.get('https://testing.aadybackend.site/api/user/limit-info');
-      console.log('🔍 [API] Response:', response);
-      console.log('🔍 [API] Response data:', response.data);
       return response.data;
     } catch (error) {
-      console.error('🔍 [API] Error fetching user limit info:', error);
-      console.log('🔍 [API] Error response status:', error.response?.status);
-      console.log('🔍 [API] Returning mock data due to error');
+      console.error('Error fetching user limit info:', error);
       // Return mock data for any error (network, 404, etc.)
-      const mockData = {
+      return {
         canUpload: true,
         stats: {
           userTier: "FREE",
@@ -31,8 +26,6 @@ export const userLimitService = {
           upgradeMessage: "Upgrade to Premium for unlimited uploads"
         }
       };
-      console.log('🔍 [API] Mock data:', mockData);
-      return mockData;
     }
   },
 

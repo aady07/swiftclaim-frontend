@@ -15,13 +15,7 @@ const UserTierInfo = ({ onLimitReached, onUpgradeSuccess, refreshTrigger }) => {
   const fetchLimitInfo = async () => {
     try {
       setLoading(true);
-      console.log('🔍 [TIER] Fetching limit info...');
       const data = await userLimitService.getLimitInfo();
-      console.log('🔍 [TIER] API Response:', data);
-      console.log('🔍 [TIER] Data type:', typeof data);
-      console.log('🔍 [TIER] Has stats:', !!data?.stats);
-      console.log('🔍 [TIER] Stats object:', data?.stats);
-      
       setLimitInfo(data);
       setError(null);
       
@@ -30,7 +24,7 @@ const UserTierInfo = ({ onLimitReached, onUpgradeSuccess, refreshTrigger }) => {
         onLimitReached(data);
       }
     } catch (err) {
-      console.error('🔍 [TIER] Error fetching limit info:', err);
+      console.error('Error fetching limit info:', err);
       setError('Failed to load tier information');
     } finally {
       setLoading(false);
@@ -74,12 +68,7 @@ const UserTierInfo = ({ onLimitReached, onUpgradeSuccess, refreshTrigger }) => {
     );
   }
 
-  console.log('🔍 [TIER] Render - limitInfo:', limitInfo);
-  console.log('🔍 [TIER] Render - has limitInfo:', !!limitInfo);
-  console.log('🔍 [TIER] Render - has stats:', !!limitInfo?.stats);
-  
   if (!limitInfo || !limitInfo.stats) {
-    console.log('🔍 [TIER] Render - Showing error state, limitInfo:', limitInfo);
     return (
       <motion.div 
         className="w-full p-4 rounded-lg bg-gray-800/50 border border-gray-700"
@@ -94,10 +83,6 @@ const UserTierInfo = ({ onLimitReached, onUpgradeSuccess, refreshTrigger }) => {
   }
 
   const { stats, tierInfo } = limitInfo;
-  console.log('🔍 [TIER] Render - stats object:', stats);
-  console.log('🔍 [TIER] Render - stats.isUnlimited:', stats?.isUnlimited);
-  console.log('🔍 [TIER] Render - stats.uploadLimit:', stats?.uploadLimit);
-  
   const isUnlimited = stats?.isUnlimited || false;
   const hasReachedLimit = stats?.hasReachedLimit || false;
 
