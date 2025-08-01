@@ -4,7 +4,7 @@ export const userLimitService = {
   // Get user limit information
   getLimitInfo: async () => {
     try {
-      const response = await apiClient.get('http://localhost:8080/api/user/limit-info');
+      const response = await apiClient.get('/user/limit-info');
       return response.data;
     } catch (error) {
       console.error('Error fetching user limit info:', error);
