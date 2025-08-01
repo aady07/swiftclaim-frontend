@@ -15,7 +15,8 @@ const ClaimUploadForm = ({
   setCarModel,
   uploadStatus,
   handleSubmit,
-  handleClearSelection
+  handleClearSelection,
+  canUpload = true
 }) => {
   return (
     <motion.div
@@ -120,12 +121,17 @@ const ClaimUploadForm = ({
         <motion.button
           type="submit"
           onClick={handleSubmit}
-          className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-800/50 px-6 py-3 text-gray-50 transition-colors hover:bg-gray-800/80 disabled:opacity-50 disabled:cursor-not-allowed"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          disabled={!selectedFile || !carMake.trim() || !carModel.trim() || uploadStatus === "uploading"}
+          className={`flex-1 flex items-center justify-center gap-2 rounded-lg px-6 py-3 transition-colors ${
+            canUpload 
+              ? 'bg-gray-800/50 text-gray-50 hover:bg-gray-800/80' 
+              : 'bg-red-600/50 text-red-200 cursor-not-allowed'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
+          whileHover={canUpload ? { scale: 1.05 } : {}}
+          whileTap={canUpload ? { scale: 0.95 } : {}}
+          disabled={!selectedFile || !carMake.trim() || !carModel.trim() || uploadStatus === "uploading" || !canUpload}
         >
-          {uploadStatus === "uploading" ? "Uploading & Processing..." : "Submit Image"}
+          {uploadStatus === "uploading" ? "Uploading & Processing..." : 
+           !canUpload ? "Upload Limit Reached" : "Submit Image"}
         </motion.button>
       </div>
     </motion.div>

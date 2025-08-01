@@ -29,7 +29,7 @@ const uploadProcessLogger = {
   }
 };
 
-export const useS3Upload = () => {
+export const useS3Upload = (onUploadSuccess) => {
   const [uploadStatus, setUploadStatus] = useState('idle');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -125,6 +125,11 @@ export const useS3Upload = () => {
       // Update upload statistics
       setUploadStats(authenticatedApiService.claims.getLoggingStats());
       
+      // Call success callback if provided
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
+      
       return data;
     } catch (error) {
       
@@ -156,7 +161,7 @@ export const useS3Upload = () => {
   };
 
   const getUploadStats = () => {
-    return claimService.getLoggingStats();
+    return authenticatedApiService.claims.getLoggingStats();
   };
 
   return {

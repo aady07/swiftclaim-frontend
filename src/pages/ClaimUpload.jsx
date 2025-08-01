@@ -5,18 +5,32 @@ import { Link, useNavigate } from 'react-router-dom';
 import ClaimUploadForm from '../components/claims/ClaimUploadForm';
 import ClaimResults from '../components/claims/ClaimResults';
 import ClaimUploadStats from '../components/claims/ClaimUploadStats';
+import UserTierInfo from '../components/claims/UserTierInfo';
+import LimitReachedModal from '../components/claims/LimitReachedModal';
 import { useS3Upload } from '../hooks/useS3Upload';
 import { generateClaimReport } from '../utils/pdfGenerator';
 import { useCognitoAuth } from '../hooks/useCognitoAuth';
 import { authenticatedApiService } from '../services/api/authenticatedApiService';
+import { userLimitService } from '../services/api/userLimitService';
 
 const ClaimUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [confidenceScore, setConfidenceScore] = useState(null);
   
+  // Tier system state
+  const [limitReachedModalOpen, setLimitReachedModalOpen] = useState(false);
+  const [limitReachedData, setLimitReachedData] = useState(null);
+  const [canUpload, setCanUpload] = useState(true);
+  const [tierRefreshTrigger, setTierRefreshTrigger] = useState(0);
+
+  // Define refreshTierInfo before using it in the hook
+  const refreshTierInfo = () => {
+    setTierRefreshTrigger(prev => prev + 1);
+  };
+
   // Use the S3 upload hook
-  const { uploadFileToS3, uploadStatus, uploadProgress, uploadStats, resetUpload, getUploadStats } = useS3Upload();
+  const { uploadFileToS3, uploadStatus, uploadProgress, uploadStats, resetUpload, getUploadStats } = useS3Upload(refreshTierInfo);
   const [fileFormat, setFileFormat] = useState(null);
   const [damageLabel, setDamageLabel] = useState(null);
   const [carMake, setCarMake] = useState("");
@@ -50,6 +64,14 @@ const ClaimUpload = () => {
     if (uploadStatus === 'uploading') {
       return;
     }
+    
+    // Check upload limit before proceeding
+    const canProceed = await checkUploadLimit();
+    if (!canProceed) {
+      handleLimitReached({ stats: { uploadLimit: 15, totalUploads: 15, hasReachedLimit: true } });
+      return;
+    }
+    
     resetResults();
     setClaimResults(null);
     setResultsError(null);
@@ -76,13 +98,20 @@ const ClaimUpload = () => {
         } finally {
           setResultsLoading(false);
         }
+        // Refresh tier info after successful upload
+        refreshTierInfo();
       } else {
         setResultsError('Processing error, try again.');
       }
     } catch (error) {
-      setTimeout(() => {
-        resetUpload();
-      }, 3000);
+      // Check if it's a limit exceeded error
+      if (error.response?.status === 403 && error.response?.data?.error === 'upload_limit_exceeded') {
+        handleLimitReached(error.response.data);
+      } else {
+        setTimeout(() => {
+          resetUpload();
+        }, 3000);
+      }
     }
   };
 
@@ -209,6 +238,31 @@ const ClaimUpload = () => {
   const handleRefreshStats = () => {
     // Force refresh of stats by calling getUploadStats
     const stats = getUploadStats();
+  };
+
+  // Tier system handlers
+  const handleLimitReached = (data) => {
+    setLimitReachedData(data);
+    setLimitReachedModalOpen(true);
+    setCanUpload(false);
+  };
+
+  const handleUpgradeSuccess = () => {
+    setCanUpload(true);
+    setLimitReachedModalOpen(false);
+    setLimitReachedData(null);
+    refreshTierInfo(); // Refresh tier info after upgrade
+  };
+
+  const checkUploadLimit = async () => {
+    try {
+      const limitData = await userLimitService.checkUploadLimit();
+      setCanUpload(limitData.canUpload);
+      return limitData.canUpload;
+    } catch (error) {
+      console.error('Error checking upload limit:', error);
+      return true; // Allow upload if check fails
+    }
   };
 
   return (
@@ -341,6 +395,13 @@ const ClaimUpload = () => {
             </button>
           </motion.div>
           
+          {/* User Tier Information */}
+          <UserTierInfo 
+            onLimitReached={handleLimitReached}
+            onUpgradeSuccess={handleUpgradeSuccess}
+            refreshTrigger={tierRefreshTrigger}
+          />
+          
           <motion.div
             className="w-full max-w-4xl p-8 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700"
             style={{ boxShadow: "0 4px 30px rgba(0, 0, 0, 0.5)" }}
@@ -386,6 +447,7 @@ const ClaimUpload = () => {
                 uploadStatus={uploadStatus}
                 handleSubmit={handleSubmit}
                 handleClearSelection={handleClearSelection}
+                canUpload={canUpload}
               />
             )}
               
@@ -532,6 +594,14 @@ const ClaimUpload = () => {
       <ClaimUploadStats 
         uploadStats={uploadStats} 
         onRefresh={handleRefreshStats}
+      />
+      
+      {/* Limit Reached Modal */}
+      <LimitReachedModal
+        isOpen={limitReachedModalOpen}
+        onClose={() => setLimitReachedModalOpen(false)}
+        limitData={limitReachedData}
+        onUpgradeSuccess={handleUpgradeSuccess}
       />
     </div>
   );

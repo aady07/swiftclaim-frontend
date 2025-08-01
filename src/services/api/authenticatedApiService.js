@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
 );
 
 // Base API URLs
-const CLAIMS_API_BASE_URL = 'https://testing.aadybackend.site/api';
+const CLAIMS_API_BASE_URL = 'http://localhost:8080/api';
 const CHAT_API_BASE_URL = 'https://aadybackend.site/api';
 
 export const authenticatedApiService = {
