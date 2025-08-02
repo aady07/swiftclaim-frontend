@@ -203,7 +203,7 @@ const Contacts = () => {
                 "@type": "ContactPoint",
                 "telephone": "+91 9601185083",
                 "contactType": "customer service",
-                "email": "customersupport@miraista.com",
+                "email": "info@miraista.com",
                 "availableLanguage": ["English"]
               },
               "address": {
@@ -359,7 +359,7 @@ const Contacts = () => {
                   </div>
                   <div>
                     <h3 className="text-gray-400 text-sm mb-1">Email</h3>
-                    <p className="text-white font-medium">customersupport@miraista.com</p>
+                    <p className="text-white font-medium">info@miraista.com</p>
                   </div>
                 </div>
                 
@@ -404,7 +404,7 @@ const Contacts = () => {
                   <FiTwitter className="text-white" size={18} />
                 </motion.a>
                 <motion.a 
-                  href="mailto:customersupport@miraista.com"
+                  href="mailto:info@miraista.com"
                   className="bg-gray-700/50 p-3 rounded-lg hover:bg-blue-800/50 transition-colors"
                   whileHover={{ y: -5 }}
                 >
@@ -534,7 +534,7 @@ const Contacts = () => {
                 },
                 {
                   question: "How can I request technical support?",
-                  answer: "Existing customers can contact our support team through this form or by emailing customersupport@miraista.com."
+                  answer: "Existing customers can contact our support team through this form or by emailing info@miraista.com."
                 }
               ].map((faq, index) => (
                 <motion.div
