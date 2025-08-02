@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { cognitoService } from '../cognitoService';
+import { API_CONFIG, API_ENDPOINTS } from '../../config/api';
 
 // Create axios instance with base configuration
 const apiClient = axios.create({
@@ -46,8 +47,8 @@ apiClient.interceptors.response.use(
 );
 
 // Base API URLs
-const CLAIMS_API_BASE_URL = 'https://testing.aadybackend.site/api';
-const CHAT_API_BASE_URL = 'https://aadybackend.site/api';
+const CLAIMS_API_BASE_URL = API_CONFIG.getClaimsApiUrl();
+const CHAT_API_BASE_URL = API_CONFIG.getChatApiUrl();
 
 export const authenticatedApiService = {
   // Claims API methods
