@@ -73,7 +73,7 @@ const Footer = () => {
                     { icon: <FaLinkedin />, href: "https://www.linkedin.com/company/miraista", label: "LinkedIn" },
                     { icon: <FaTwitter />, href: "#", label: "Twitter" },
                     { icon: <FaGithub />, href: "#", label: "GitHub" },
-                    { icon: <FaEnvelope />, href: "mailto:customersupport@miraista.com", label: "Email" }
+                    { icon: <FaEnvelope />, href: "mailto:info@miraista.com", label: "Email" }
                   ].map((social, index) => (
                     <li key={index}>
                       <motion.a
