@@ -352,11 +352,11 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   </div>
                 </div>
                 {/* Right: Thumbnail */}
-                <div className="relative hidden md:block">
+                <div className="relative block h-40 md:h-auto">
                   <img
                     src="/award1.JPG"
                     alt="Miraista felicitation"
-                    className="h-full w-full object-cover"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-l from-gray-900/50 to-transparent" />
                 </div>
