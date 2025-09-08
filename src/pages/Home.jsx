@@ -357,6 +357,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                     src="/award1.JPG"
                     alt="Miraista felicitation"
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-l from-gray-900/50 to-transparent" />
                 </div>
@@ -564,6 +565,8 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                     loop
                     muted
                     playsInline
+                    preload="metadata"
+                    poster="/og-image.png"
                     className="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl"
                     ref={(el) => {
                       if (el) {
