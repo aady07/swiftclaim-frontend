@@ -46,7 +46,6 @@ const HomePage = () => {
   const { scrollYProgress } = useScroll();
 
   const navigate = useNavigate();
-  const [showSpotlight, setShowSpotlight] = useState(false);
   
   // Hero section text carousel data with variations
   const heroTexts = [
@@ -235,42 +234,6 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
   const [activeFaq, setActiveFaq] = useState(null);
   
-  // Spotlight modal: first-visit only, 1.5s delay (30-min TTL on dismiss)
-  useEffect(() => {
-    try {
-      const DISMISS_KEY = 'miraista_spotlight_dismissed';
-      const DISMISS_TTL_MS = 30 * 60 * 1000; // 30 minutes
-      const raw = localStorage.getItem(DISMISS_KEY);
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw);
-          const dismissedAt = parsed?.dismissedAt;
-          if (typeof dismissedAt === 'number') {
-            const elapsed = Date.now() - dismissedAt;
-            if (elapsed < DISMISS_TTL_MS) {
-              return; // still within TTL, do not show
-            }
-          } else {
-            // Backward compatibility: if it was 'true' string before
-            if (raw === 'true') return;
-          }
-        } catch {
-          if (raw === 'true') return;
-        }
-      }
-      const timer = setTimeout(() => setShowSpotlight(true), 1500);
-      return () => clearTimeout(timer);
-    } catch (_) {}
-  }, []);
-  
-  const dismissSpotlight = () => {
-    try {
-      const DISMISS_KEY = 'miraista_spotlight_dismissed';
-      localStorage.setItem(DISMISS_KEY, JSON.stringify({ dismissedAt: Date.now() }));
-    } catch (_) {}
-    setShowSpotlight(false);
-  };
-  
   // Add FAQ items data
   const faqItems = [
     {
@@ -297,81 +260,6 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
-      {/* Spotlight Modal */}
-      <AnimatePresence>
-        {showSpotlight && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center px-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-black/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={dismissSpotlight}
-            />
-            {/* Modal Card */}
-            <motion.div
-              className="relative z-[61] w-full max-w-3xl rounded-2xl border border-blue-500/20 bg-gray-900/80 backdrop-blur-xl shadow-2xl overflow-hidden"
-              initial={{ y: 20, opacity: 0, scale: 0.98 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 20, opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.25 }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Government Recognition"
-            >
-              {/* Gradient borders/glow */}
-              <div className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-r from-green-500/10 via-blue-500/10 to-green-500/10" />
-              <div className="relative grid grid-cols-1 md:grid-cols-2">
-                {/* Left: Text */}
-                <div className="p-6 md:p-8 flex flex-col gap-3">
-                  <div className="inline-flex items-center gap-2 text-xs text-blue-300/80">
-                    <span className="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    Special moment for Miraista
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Government Recognition</h3>
-                  <p className="text-gray-300">Felicitated at Start-up Launchpad by Shri Sunil Kumar Sharma.</p>
-                  <div className="mt-2 flex gap-3">
-                    <button
-                      onClick={() => { setShowSpotlight(false); navigate('/recognitions/miraista-up-award'); }}
-                      className="px-5 py-2 rounded-lg text-white bg-gradient-to-r from-green-500 to-blue-600 shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition"
-                    >
-                      View highlights
-                    </button>
-                    <button
-                      onClick={dismissSpotlight}
-                      className="px-5 py-2 rounded-lg border border-gray-600 text-gray-200 hover:bg-gray-800/60 transition"
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-                {/* Right: Thumbnail */}
-                <div className="relative block h-40 md:h-auto">
-                  <img
-                    src="/award1.JPG"
-                    alt="Miraista felicitation"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-l from-gray-900/50 to-transparent" />
-                </div>
-              </div>
-              {/* Confetti pulse */}
-              <motion.div
-                className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-r from-green-400/20 to-blue-400/20 blur-2xl"
-                animate={{ scale: [1, 1.05, 1], opacity: [0.6, 0.8, 0.6] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
       <Helmet>
         <title>Miraista - AI-Powered Business Solutions & Innovation</title>
         <meta name="description" content="Transform your business with Miraista's cutting-edge AI solutions. We deliver advanced machine learning, data analytics, and AI innovation services to drive growth and efficiency." />
@@ -565,8 +453,6 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                     loop
                     muted
                     playsInline
-                    preload="metadata"
-                    poster="/og-image.png"
                     className="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl"
                     ref={(el) => {
                       if (el) {
