@@ -4,7 +4,6 @@ import Home from "../../../pages/Home";
 import ClaimUpload from "../../../pages/ClaimUpload";
 import AboutUs from "../../../pages/AboutUs";
 import Contacts from "../../../pages/Contacts";
-import RecognitionUPAward from "../../../pages/RecognitionUPAward";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AnimatedRoutes = () => {
@@ -18,7 +17,6 @@ const AnimatedRoutes = () => {
         <Route path="/claim-upload" element={<ClaimUpload />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contacts" element={<Contacts />} />
-        <Route path="/recognitions/miraista-up-award" element={<RecognitionUPAward />} />
       </Routes>
     </AnimatePresence>
   );

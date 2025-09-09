@@ -17,7 +17,6 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
-import RecognitionUPAward from "./pages/RecognitionUPAward";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -53,7 +52,6 @@ const App = () => {
           <Route path="/careers" element={<Careers />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/widget" element={<Widget />} />
-          <Route path="/recognitions/miraista-up-award" element={<RecognitionUPAward />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
