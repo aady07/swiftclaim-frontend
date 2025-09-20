@@ -579,55 +579,55 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               >
                 <div className={`bg-gradient-to-br ${
                   item.industry === "Insurance" 
-                    ? "from-green-50/50 to-blue-50/50" 
+                    ? "from-green-50 to-blue-50" 
                     : item.industry === "Banking"
-                    ? "from-green-50/50 to-teal-50/50"
-                    : "from-green-50/50 to-teal-50/50"
+                    ? "from-green-50 to-teal-50"
+                    : "from-green-50 to-teal-50"
                 } rounded-3xl overflow-hidden shadow-xl border ${
                   item.industry === "Insurance" 
-                    ? "border-green-100" 
+                    ? "border-green-200" 
                     : item.industry === "Banking"
-                    ? "border-green-100"
-                    : "border-teal-100"
+                    ? "border-green-200"
+                    : "border-teal-200"
                 }`}>
                   <div className="grid lg:grid-cols-2 gap-8 p-8">
                     {/* Left Content */}
                     <div className="space-y-6">
                       <div className={`inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r ${
                         item.industry === "Insurance" 
-                          ? "from-green-100 to-blue-100" 
+                          ? "from-green-200 to-blue-200" 
                           : item.industry === "Banking"
-                          ? "from-green-100 to-teal-100"
-                          : "from-green-100 to-teal-100"
+                          ? "from-green-200 to-teal-200"
+                          : "from-green-200 to-teal-200"
                       }`}>
-                        <span className="text-sm font-medium text-gray-600">{item.industry}</span>
+                        <span className="text-sm font-medium text-gray-800">{item.industry}</span>
                       </div>
                       
                       <h3 className="text-2xl font-bold text-gray-900">{item.title}</h3>
                       
-                      <p className="text-gray-600">{item.description}</p>
+                      <p className="text-gray-700">{item.description}</p>
                       
                       <div className="space-y-3">
                         {item.features.map((feature, i) => (
                           <div key={i} className="flex items-center gap-3">
                             <div className={`w-5 h-5 rounded-full ${
                               item.industry === "Insurance" 
-                                ? "bg-green-100" 
+                                ? "bg-green-200" 
                                 : item.industry === "Banking"
-                                ? "bg-green-100"
-                                : "bg-teal-100"
+                                ? "bg-green-200"
+                                : "bg-teal-200"
                             } flex items-center justify-center`}>
                               <svg className={`w-3 h-3 ${
                                 item.industry === "Insurance" 
-                                  ? "text-green-600" 
+                                  ? "text-green-700" 
                                   : item.industry === "Banking"
-                                  ? "text-teal-600"
-                                  : "text-teal-600"
+                                  ? "text-teal-700"
+                                  : "text-teal-700"
                               }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                               </svg>
                             </div>
-                            <span className="text-gray-600">{feature}</span>
+                            <span className="text-gray-700">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -1367,7 +1367,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 <div className="p-6 flex flex-col flex-grow">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-3xl">{industry.icon}</span>
-                    <h3 className="text-xl font-semibold text-gray-900">{industry.name}</h3>
+                    <h3 className="text-xl font-semibold text-white">{industry.name}</h3>
                   </div>
                   <p className="text-gray-300 mb-6 text-sm flex-grow">{industry.description}</p>
                   <motion.button
