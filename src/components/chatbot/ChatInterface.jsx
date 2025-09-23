@@ -56,7 +56,7 @@ const ChatInterface = ({
             )}
             <div className="message-content">
               {msg.fromBot && <div className="bot-name">{widgetMode && clientName ? clientName : "Miraista"}</div>}
-              <div className="message-bubble">
+              <div className={`message-bubble ${msg.intro ? 'intro-pop' : ''}`}>
                 {msg.text}
                 {msg.image && (
                   <div className="mt-2">
