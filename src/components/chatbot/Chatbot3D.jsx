@@ -11,7 +11,7 @@ import LanguagePicker from "./LanguagePicker";
 import ChatInterface from "./ChatInterface";
 import { useChatLogic } from '../../hooks/useChatLogic';
 
-const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '', widgetSize = null }) => {
+const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clientLogo = '', widgetSize = null, clientTheme = null }) => {
   const [language, setLanguage] = useState("en");
   const [languageSelected, setLanguageSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(isFullPage);
@@ -116,6 +116,29 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     '--button-logo': `url(${clientLogo})`
   } : {};
 
+  // Theme variables for widget/client mode only
+  const themeStyle = widgetMode && clientTheme ? {
+    '--primary-color': clientTheme.primaryColor || '#22c55e',
+    '--secondary-color': clientTheme.secondaryColor || '#2563eb',
+    '--primary-color-shadow': clientTheme.primaryShadow || 'rgba(34, 197, 94, 0.1)'
+  } : {};
+
+  // Light theme surface variables for VKai widget
+  const lightSurfaceStyle = widgetMode && clientTheme ? {
+    '--bg-main': '#f6fbfb',
+    '--bg-panel': '#ffffff',
+    '--avatar-bg': '#eef7f7',
+    '--text-color': '#1a1a1a',
+    '--muted-text': 'rgba(0,0,0,0.55)',
+    '--bot-bubble-bg': '#f0f6ff',
+    '--input-bg': '#ffffff',
+    '--button-bg-start': clientTheme.primaryColor || '#56ccc3',
+    '--button-bg-end': clientTheme.secondaryColor || '#353a96',
+    '--button-border': 'rgba(0, 0, 0, 0.06)',
+    '--container-border': 'rgba(0, 0, 0, 0.2)',
+    '--container-border-width': '2px'
+  } : {};
+
   return (
     <>
       {/* Floating chat button - show if not fullscreen and (not in iframe OR in widgetMode) */}
@@ -124,7 +147,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
           <div className="assistant-popup">
             {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
           </div>
-          <div className="chatbot-button" onClick={toggleChatbot} style={buttonStyle}>
+          <div className="chatbot-button" onClick={toggleChatbot} style={{...buttonStyle, ...lightSurfaceStyle}}>
             {isOpen ? (
               <span className="close-icon">×</span>
             ) : (
@@ -145,8 +168,10 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
             maxHeight: widgetSize.maxHeight,
             position: 'relative',
             bottom: 'auto',
-            right: 'auto'
-          } : {}}
+            right: 'auto',
+            ...themeStyle,
+            ...lightSurfaceStyle
+          } : { ...themeStyle, ...lightSurfaceStyle }}
         >
           {/* Header for widget mode */}
           {widgetMode ? (
