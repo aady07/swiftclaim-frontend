@@ -6,6 +6,11 @@ const CLIENTS = {
   VKAIKEY: {
     name: "VKai",
     logo: "/2.png",
+    theme: {
+      primaryColor: "#56ccc3",
+      secondaryColor: "#353a96",
+      primaryShadow: "rgba(86, 204, 195, 0.15)"
+    }
   },
 };
 
@@ -85,6 +90,7 @@ const Widget = () => {
           widgetMode={true} 
           clientName={client.name} 
           clientLogo={client.logo}
+          clientTheme={client.theme}
           widgetSize={currentSize}
         />
       </div>
