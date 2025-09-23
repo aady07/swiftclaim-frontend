@@ -360,6 +360,17 @@ body {
   margin-bottom: 2px;
 }
 
+/* Pop-in animation for the initial intro messages only */
+.intro-pop {
+  animation: introPop 280ms ease-out both;
+}
+
+@keyframes introPop {
+  0% { opacity: 0; transform: scale(0.96); }
+  60% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 .user-msg .message-bubble {
   background: linear-gradient(to right, var(--primary-color, #22c55e), var(--secondary-color, #2563eb));
   color: white;

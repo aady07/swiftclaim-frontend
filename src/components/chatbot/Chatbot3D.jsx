@@ -16,6 +16,8 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   const [languageSelected, setLanguageSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(isFullPage);
   const avatarInitialized = useRef(false);
+  const introTimeoutRef = useRef(null);
+  const isVKai = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
 
   const {
     messages,
@@ -45,7 +47,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     toggleMute,
     setShowCarInput,
     setShowImageUpload
-  } = useChatLogic(language);
+  } = useChatLogic(language, { disableClaims: Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai')) });
 
   // Reset avatar initialization when chatbot is closed
   useEffect(() => {
@@ -95,16 +97,34 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     return () => window.removeEventListener('message', handleMessage);
   }, [iframeId]);
 
-  // Initialize welcome message based on selected language
+  // Initialize welcome messages after language is selected
+  // Show a two-part, non-typing introduction depending on client (Miraista vs VKai)
   useEffect(() => {
-    if (languageSelected) {
-      const welcomeMessage = language === "en" 
-        ? "Hello! I'm your virtual assistant. How can I help you today?" 
-        : "नमस्ते! मैं आपका वर्चुअल असिस्टेंट हूँ। आज मैं आपकी कैसे मदद कर सकता हूँ?";
-      
-      setMessages([{ text: welcomeMessage, fromBot: true }]);
-    }
-  }, [languageSelected, language]);
+    if (!languageSelected) return;
+    if (messages && messages.length > 0) return;
+
+    const isVKai = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
+
+    const miraistaIntro = "Miraista delivers AI solutions in computer vision and analytics, from vehicle damage assessment to industry-wide innovation.";
+    const vkaiIntro = "VKai is a social enterprise dedicated to the empowerment of marginalized communities. VKai integrates grassroots action, strategic advisory, and market driven solutions to build an equitable, self-reliant, and inclusive society.";
+
+    const introMessage = isVKai ? vkaiIntro : miraistaIntro;
+    const helpMessage = "How may I help you today.";
+
+    // Show first message immediately
+    setMessages([{ text: introMessage, fromBot: true, intro: true }]);
+    // Stagger second message by 500ms
+    introTimeoutRef.current = setTimeout(() => {
+      setMessages(prev => [...prev, { text: helpMessage, fromBot: true, intro: true }]);
+    }, 500);
+
+    return () => {
+      if (introTimeoutRef.current) {
+        clearTimeout(introTimeoutRef.current);
+        introTimeoutRef.current = null;
+      }
+    };
+  }, [languageSelected, widgetMode, clientName]);
 
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
@@ -142,7 +162,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   return (
     <>
       {/* Floating chat button - show if not fullscreen and (not in iframe OR in widgetMode) */}
-      {!isFullPage && (!isInIframe || widgetMode) && (
+      {!isFullPage && (!isInIframe || widgetMode) && !(isVKai && isOpen) && (
         <>
           <div className="assistant-popup">
             {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
@@ -178,6 +198,11 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
             <div className="chatbot-header widget-header" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 32, width: 32, borderRadius: 6 }} />}
               <h3 style={{ margin: 0 }}>{clientName}</h3>
+              {isVKai && (
+                <div className="header-controls" style={{ marginLeft: 'auto' }}>
+                  <button className="close-btn" onClick={toggleChatbot} style={{ fontSize: 34, width: 40, height: 40 }}>×</button>
+                </div>
+              )}
             </div>
           ) : !isFullPage && (
             <div className="chatbot-header">
