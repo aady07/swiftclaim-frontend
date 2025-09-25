@@ -52,7 +52,8 @@ export const useChatLogic = (language, options = {}) => {
     setIsTyping, 
     setIsTalking, 
     isMuted,
-    setShowImageUpload 
+    setShowImageUpload,
+    setShowCarInput
   });
 
   const handleSend = async (messageToSend = input) => {
