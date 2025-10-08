@@ -25,7 +25,7 @@ export const claimService = {
       return responseData;
     } catch (error) {
       console.error('Upload Claim Error:', error.response?.data || error.message);
-      // Silently handle the error without logging
+      // Silently handle the error without loggingimage.png
       throw new Error('Failed to upload claim');
     }
   },

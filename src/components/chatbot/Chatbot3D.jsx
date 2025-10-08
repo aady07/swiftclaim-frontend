@@ -177,7 +177,8 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   return (
     <>
       {/* Floating chat button - show if not fullscreen and (not in iframe OR in widgetMode) */}
-      {!isFullPage && (!isInIframe || widgetMode) && !(isVKai && isOpen) && (
+      {/* Hide floating button when widget is open (for all widgets), or when in iframe without widgetMode */}
+      {!isFullPage && (!isInIframe || widgetMode) && !(widgetMode && isOpen) && (
         <>
           <div className="assistant-popup">
             {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
@@ -211,13 +212,11 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
           {/* Header for widget mode */}
           {widgetMode ? (
             <div className="chatbot-header widget-header" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 40, width: 40, borderRadius: 8 }} />}
+              {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 48, width: 48, borderRadius: 10 }} />}
               <h3 style={{ margin: 0 }}>{clientName}</h3>
-              {isVKai && (
-                <div className="header-controls" style={{ marginLeft: 'auto' }}>
-                  <button className="close-btn" onClick={toggleChatbot} style={{ fontSize: 34, width: 40, height: 40 }}>×</button>
-                </div>
-              )}
+              <div className="header-controls" style={{ marginLeft: 'auto' }}>
+                <button className="close-btn" onClick={toggleChatbot} style={{ fontSize: 28, width: 40, height: 40, color: '#e5e7eb', background: '#1f2937', borderRadius: 8, border: '1px solid #374151' }}>×</button>
+              </div>
             </div>
           ) : !isFullPage && (
             <div className="chatbot-header">
