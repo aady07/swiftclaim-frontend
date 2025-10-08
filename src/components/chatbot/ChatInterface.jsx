@@ -305,7 +305,7 @@ const ChatInterface = ({
     setTripDuration(val);
     pushUser(label, true); // Mark as from dropdown
     const url = getBookingUrl();
-    const botMsg1 = 'Thanks for the information. This is the rule for booking:';
+    const botMsg1 = 'Thanks for the information.';
     const botMsg2 = 'Open this link to view the package and proceed:';
     await streamBotMessage(botMsg1);
     setTimeout(async () => {
