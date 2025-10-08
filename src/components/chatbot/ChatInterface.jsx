@@ -422,7 +422,7 @@ const ChatInterface = ({
           <div key={index} className={msg.fromBot ? "bot-msg" : "user-msg"}>
             {msg.fromBot && (
               <div className="bot-avatar">
-                <img src={widgetMode && clientLogo ? clientLogo : "/dodgelogo.png"} alt={widgetMode && clientName ? clientName : "Miraista"} />
+                <img src={widgetMode && clientLogo ? clientLogo : "/dodgelogo.png"} alt={widgetMode && clientName ? clientName : "Miraista"} style={{ width: 40, height: 40 }} />
               </div>
             )}
             <div className="message-content">
@@ -692,7 +692,7 @@ const ChatInterface = ({
                     <line x1="8" y1="22" x2="16" y2="22"></line>
                   </svg>
                 ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#9aa3af" stroke="#9aa3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                     <line x1="12" y1="19" x2="12" y2="22"></line>
@@ -703,12 +703,13 @@ const ChatInterface = ({
             ) : (
               <button 
                 onClick={() => handleSend()} 
-                disabled={!input.trim() || isTyping || isTripMall}
+                disabled={!input.trim() || isTyping}
                 className={!input.trim() || isTyping ? "disabled-btn" : ""}
+                style={{ background: '#1f2937', border: '1px solid #374151' }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#e5e7eb" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 2L11 13" stroke="#e5e7eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#e5e7eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
             )}
