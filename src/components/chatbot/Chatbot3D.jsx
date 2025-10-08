@@ -18,6 +18,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   const avatarInitialized = useRef(false);
   const introTimeoutRef = useRef(null);
   const isVKai = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
+  const isTripMall = Boolean(widgetMode && (clientName || '').toLowerCase().includes('tripmall'));
 
   const {
     messages,
@@ -47,7 +48,10 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     toggleMute,
     setShowCarInput,
     setShowImageUpload
-  } = useChatLogic(language, { disableClaims: Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai')) });
+  } = useChatLogic(language, { 
+    disableClaims: Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai')),
+    isTripMall: Boolean(widgetMode && (clientName || '').toLowerCase().includes('tripmall'))
+  });
 
   // Reset avatar initialization when chatbot is closed
   useEffect(() => {
@@ -98,22 +102,25 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   }, [iframeId]);
 
   // Initialize welcome messages after language is selected
-  // Show a two-part, non-typing introduction depending on client (Miraista vs VKai)
+  // Show a two-part, non-typing introduction depending on client (Miraista vs VKai vs TripMall)
   useEffect(() => {
     if (!languageSelected) return;
     if (messages && messages.length > 0) return;
 
-    const isVKai = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
+    const isVKaiLocal = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
+
+    if (isTripMall) {
+      // TripMall waits for user to say "hi" first - no automatic messages
+      return;
+    }
 
     const miraistaIntro = "Miraista delivers AI solutions in computer vision and analytics, from vehicle damage assessment to industry-wide innovation.";
     const vkaiIntro = "VKai is a social enterprise dedicated to the empowerment of marginalized communities. VKai integrates grassroots action, strategic advisory, and market driven solutions to build an equitable, self-reliant, and inclusive society.";
 
-    const introMessage = isVKai ? vkaiIntro : miraistaIntro;
+    const introMessage = isVKaiLocal ? vkaiIntro : miraistaIntro;
     const helpMessage = "How may I help you today.";
 
-    // Show first message immediately
     setMessages([{ text: introMessage, fromBot: true, intro: true }]);
-    // Stagger second message by 500ms
     introTimeoutRef.current = setTimeout(() => {
       setMessages(prev => [...prev, { text: helpMessage, fromBot: true, intro: true }]);
     }, 500);
@@ -124,7 +131,15 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
         introTimeoutRef.current = null;
       }
     };
-  }, [languageSelected, widgetMode, clientName]);
+  }, [languageSelected, widgetMode, clientName, isTripMall]);
+
+  // Auto-select language and skip picker for TripMall
+  useEffect(() => {
+    if (isTripMall) {
+      setLanguage('en');
+      setLanguageSelected(true);
+    }
+  }, [isTripMall]);
 
   const selectLanguage = (langCode) => {
     setLanguage(langCode);
@@ -196,7 +211,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
           {/* Header for widget mode */}
           {widgetMode ? (
             <div className="chatbot-header widget-header" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 32, width: 32, borderRadius: 6 }} />}
+              {clientLogo && <img src={clientLogo} alt={clientName} style={{ height: 40, width: 40, borderRadius: 8 }} />}
               <h3 style={{ margin: 0 }}>{clientName}</h3>
               {isVKai && (
                 <div className="header-controls" style={{ marginLeft: 'auto' }}>
@@ -273,6 +288,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
               )}
               <ChatInterface
                 messages={messages}
+                setMessages={setMessages}
                 input={input}
                 setInput={setInput}
                 handleSend={handleSend}
