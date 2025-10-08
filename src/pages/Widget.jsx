@@ -12,6 +12,19 @@ const CLIENTS = {
       primaryShadow: "rgba(86, 204, 195, 0.15)"
     }
   },
+  TRIPMALLKEY: {
+    name: "TripMall",
+    logo: "/tripmall.svg",
+    theme: {
+      // Black and white theme
+      primaryColor: "#ffffff",
+      secondaryColor: "#ffffff",
+      primaryShadow: "rgba(255, 255, 255, 0.08)",
+      bgMain: "#0a0a0a",
+      bgPanel: "#111111",
+      textColor: "#ffffff"
+    }
+  },
 };
 
 function useQuery() {

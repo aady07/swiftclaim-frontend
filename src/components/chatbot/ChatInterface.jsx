@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 const ChatInterface = ({
   messages,
+  setMessages,
   input,
   setInput,
   handleSend,
@@ -30,11 +31,353 @@ const ChatInterface = ({
   clientName = '',
   clientLogo = ''
 }) => {
+  const isTripMall = widgetMode && (clientName || '').toLowerCase().includes('tripmall');
+
   const uiText = {
     chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
     placeholder: language === "en" ? "Type your message..." : "अपना संदेश टाइप करें...",
     chooseLanguage: language === "en" ? "Choose Language" : "भाषा चुनें",
     typingIndicator: language === "en" ? "Typing..." : "टाइप कर रहा है...",
+  };
+
+  // Voice mapping for TripMall dropdowns
+  const voiceMapping = {
+    // Scope options
+    'india': 'india',
+    'international': 'international',
+    'indian': 'india',
+    'domestic': 'india',
+    'abroad': 'international',
+    'overseas': 'international',
+    
+    // India destinations
+    'assam': 'assam-meghalaya',
+    'meghalaya': 'assam-meghalaya',
+    'assam and meghalaya': 'assam-meghalaya',
+    'himachal': 'himachal',
+    'himachal pradesh': 'himachal',
+    'jammu': 'jammu-kashmir',
+    'kashmir': 'jammu-kashmir',
+    'jammu and kashmir': 'jammu-kashmir',
+    'ladakh': 'leh-ladakh',
+    'leh': 'leh-ladakh',
+    'leh ladakh': 'leh-ladakh',
+    'uttarakhand': 'uttarakhand',
+    'uttar pradesh': 'uttarpradesh',
+    'sikkim': 'sikkim-darjeeling',
+    'darjeeling': 'sikkim-darjeeling',
+    'sikkim and darjeeling': 'sikkim-darjeeling',
+    'madhya pradesh': 'madhya-pradesh',
+    'odisha': 'odisha',
+    'orissa': 'odisha',
+    'karnataka': 'karnataka',
+    'kerala': 'kerala',
+    'tamil nadu': 'tamil-nadu',
+    'andaman': 'andaman',
+    'rajasthan': 'rajasthan',
+    
+    // International destinations
+    'bali': 'bali',
+    'thailand': 'thailand',
+    'dubai': 'dubai',
+    'singapore': 'singapore',
+    
+    // Duration options
+    '5 days': '5',
+    'five days': '5',
+    '6 days': '6',
+    'six days': '6',
+    '7 days': '7',
+    'seven days': '7',
+    '8 days': '8-9',
+    'eight days': '8-9',
+    '9 days': '8-9',
+    'nine days': '8-9',
+    '8 and 9 days': '8-9',
+    '8 & 9 days': '8-9'
+  };
+
+  // TTS service for user messages - DISABLED for TripMall
+  const speakUserMessage = async (text) => {
+    // TripMall doesn't speak user messages back
+    return;
+  };
+
+  // TTS service for bot messages with background pre-loading
+  const preloadTTS = async (text) => {
+    if (isTripMall && !isMuted) {
+      try {
+        const formData = new FormData();
+        formData.append('text', text);
+        const response = await fetch('https://aadybackend.site/api/speech/tts', {
+          method: 'POST',
+          body: formData
+        });
+        if (response.ok) {
+          const audioBlob = await response.blob();
+          const audioUrl = URL.createObjectURL(audioBlob);
+          return audioUrl;
+        }
+      } catch (err) {
+        console.error('TTS error:', err);
+      }
+    }
+    return null;
+  };
+
+  const speakBotMessage = async (audioUrl) => {
+    if (audioUrl) {
+      const audio = new window.Audio(audioUrl);
+      return new Promise((resolve) => {
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          resolve();
+        };
+        audio.play();
+      });
+    }
+  };
+
+  // Render message text with clickable links
+  const renderTextWithLinks = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    return (
+      <>
+        {parts.map((part, idx) => (
+          urlRegex.test(part) ? (
+            <a key={idx} href={part} target="_blank" rel="noopener noreferrer" style={{ color: '#60a5fa', textDecoration: 'underline' }}>{part}</a>
+          ) : (
+            <span key={idx}>{part}</span>
+          )
+        ))}
+      </>
+    );
+  };
+
+  // TripMall guided flow state (kept ephemeral in component)
+  const [tripScope, setTripScope] = React.useState(""); // 'india' | 'international'
+  const [tripDestination, setTripDestination] = React.useState("");
+  const [tripDuration, setTripDuration] = React.useState("");
+
+  const INDIA_OPTIONS = [
+    { value: 'assam-meghalaya', label: 'Assam & Meghalaya' },
+    { value: 'himachal', label: 'Himachal' },
+    { value: 'jammu-kashmir', label: 'Jammu & Kashmir' },
+    { value: 'leh-ladakh', label: 'Leh Ladakh' },
+    { value: 'uttarakhand', label: 'Uttarakhand' },
+    { value: 'uttarpradesh', label: 'Uttarpradesh' },
+    { value: 'sikkim-darjeeling', label: 'Sikkim Darjeeling' },
+    { value: 'madhya-pradesh', label: 'Madhya Pradesh' },
+    { value: 'odisha', label: 'Odisha' },
+    { value: 'karnataka', label: 'Karnataka' },
+    { value: 'kerala', label: 'Kerala' },
+    { value: 'tamil-nadu', label: 'Tamil Nadu' },
+    { value: 'andaman', label: 'Andaman' },
+    { value: 'rajasthan', label: 'Rajasthan' }
+  ];
+
+  const INTL_OPTIONS = [
+    { value: 'bali', label: 'Bali' },
+    { value: 'thailand', label: 'Thailand' },
+    { value: 'dubai', label: 'Dubai' },
+    { value: 'singapore', label: 'Singapore' }
+  ];
+
+  const DURATION_OPTIONS = [
+    { value: '5', label: '5 Days' },
+    { value: '6', label: '6 Days' },
+    { value: '7', label: '7 Days' },
+    { value: '8-9', label: '8 & 9 Days' }
+  ];
+
+  const getBookingUrl = () => {
+    if (tripScope !== 'india') return 'https://www.tripmall.in/'; // placeholder for international
+    if (tripDestination === 'assam-meghalaya') {
+      return 'https://www.tripmall.in/tour/6-days-assam-tour-kaziranga-shillong-guwahati';
+    }
+    if (tripDestination === 'himachal') {
+      return 'https://www.tripmall.in/tour/7-days-himachal-tour-shimla-manali-chandigarh';
+    }
+    return 'https://www.tripmall.in/';
+  };
+
+  const pushBot = (text) => setMessages(prev => ([...prev, { text, fromBot: true }]));
+  const pushUser = (text, fromDropdown = false) => setMessages(prev => ([...prev, { text, fromBot: false, fromDropdown }]));
+
+  // Stream bot message with typing effect and TTS for TripMall
+  const streamBotMessage = async (text) => {
+    if (!isTripMall) {
+      pushBot(text);
+      return;
+    }
+
+    // Pre-load TTS in background
+    const audioUrl = await preloadTTS(text);
+
+    // Add empty message for streaming
+    setMessages(prev => [...prev, { text: "", fromBot: true }]);
+    let displayedText = "";
+    let i = 0;
+    let ttsStarted = false;
+
+    // Clear any existing interval
+    if (window.tripMallStreamInterval) {
+      clearInterval(window.tripMallStreamInterval);
+      window.tripMallStreamInterval = null;
+    }
+
+    // Create streaming interval
+    window.tripMallStreamInterval = setInterval(() => {
+      if (i < text.length) {
+        displayedText += text[i];
+        setMessages(prevMessages => {
+          const newMessages = [...prevMessages];
+          newMessages[newMessages.length - 1] = { text: displayedText, fromBot: true };
+          return newMessages;
+        });
+        
+        // Start TTS after typing a few characters (realistic timing)
+        if (!ttsStarted && i > 3 && audioUrl) {
+          ttsStarted = true;
+          speakBotMessage(audioUrl);
+        }
+        
+        i++;
+      } else {
+        // Streaming complete
+        clearInterval(window.tripMallStreamInterval);
+        window.tripMallStreamInterval = null;
+        
+        // Final update to ensure complete message is displayed
+        setMessages(prevMessages => {
+          const newMessages = [...prevMessages];
+          newMessages[newMessages.length - 1] = { text: text, fromBot: true };
+          return newMessages;
+        });
+
+        // If TTS hasn't started yet, start it now
+        if (!ttsStarted && audioUrl) {
+          speakBotMessage(audioUrl);
+        }
+      }
+    }, 30);
+  };
+
+  const resetTrip = () => {
+    setTripScope("");
+    setTripDestination("");
+    setTripDuration("");
+  };
+
+  const handleTripStart = async (scope) => {
+    setTripScope(scope);
+    const userText = scope === 'india' ? 'India' : 'International';
+    pushUser(userText, true); // Mark as from dropdown
+    
+    if (scope === 'india') {
+      const botMsg1 = 'Awesome! From snow to desert, India has it all.';
+      const botMsg2 = 'Choose a destination:';
+      await streamBotMessage(botMsg1);
+      // Wait for first message to finish speaking before showing next
+      setTimeout(async () => {
+        await streamBotMessage(botMsg2);
+      }, 4000);
+    } else {
+      const botMsg1 = 'Great choice! Explore top international getaways.';
+      const botMsg2 = 'Choose a destination:';
+      await streamBotMessage(botMsg1);
+      // Wait for first message to finish speaking before showing next
+      setTimeout(async () => {
+        await streamBotMessage(botMsg2);
+      }, 4000);
+    }
+  };
+
+  const handleDestination = async (val, label) => {
+    setTripDestination(val);
+    pushUser(label, true); // Mark as from dropdown
+    const botMsg = 'Select trip duration:';
+    await streamBotMessage(botMsg);
+  };
+
+  const handleDuration = async (val, label) => {
+    setTripDuration(val);
+    pushUser(label, true); // Mark as from dropdown
+    const url = getBookingUrl();
+    const botMsg1 = 'Thanks for the information. This is the rule for booking:';
+    const botMsg2 = 'Open this link to view the package and proceed:';
+    await streamBotMessage(botMsg1);
+    setTimeout(async () => {
+      await streamBotMessage(botMsg2);
+      // Add URL as clickable link without speaking it
+      setTimeout(() => {
+        pushBot(url);
+        // Reset for next flow
+        setTimeout(() => {
+          resetTrip();
+        }, 2000);
+      }, 2000);
+    }, 4000);
+  };
+
+  // Handle voice input for TripMall
+  const handleVoiceInput = (voiceText) => {
+    if (!isTripMall) return;
+    
+    const normalizedText = voiceText.toLowerCase().trim();
+    
+    // Check if user said "hi" to start the workflow
+    if (normalizedText === 'hi' || normalizedText === 'hello' || normalizedText === 'hey') {
+      const welcomeMessages = [
+        "Hi\nWelcome to TripMall!",
+        "Discover curated trips with easy booking, expert support, and great prices.\nExplore trending destinations for Indian travelers and plan journeys to 30+ locations worldwide.\nWe're just a call or chat away for any help.",
+        "Choose your destination from the options below:"
+      ];
+      
+      // Show first message immediately
+      pushUser(normalizedText);
+      streamBotMessage(welcomeMessages[0]);
+      
+      // Stream subsequent messages with delays
+      setTimeout(() => {
+        streamBotMessage(welcomeMessages[1]);
+      }, 3000);
+      
+      setTimeout(() => {
+        streamBotMessage(welcomeMessages[2]);
+      }, 6000);
+      
+      return;
+    }
+    
+    const mappedValue = voiceMapping[normalizedText];
+    
+    if (mappedValue) {
+      if (!tripScope) {
+        // Handle scope selection
+        if (mappedValue === 'india' || mappedValue === 'international') {
+          handleTripStart(mappedValue);
+        }
+      } else if (!tripDestination) {
+        // Handle destination selection
+        const options = tripScope === 'india' ? INDIA_OPTIONS : INTL_OPTIONS;
+        const option = options.find(opt => opt.value === mappedValue);
+        if (option) {
+          handleDestination(option.value, option.label);
+        }
+      } else if (!tripDuration) {
+        // Handle duration selection
+        const option = DURATION_OPTIONS.find(opt => opt.value === mappedValue);
+        if (option) {
+          handleDuration(option.value, option.label);
+        }
+      }
+    } else {
+      // Voice input didn't match any dropdown option
+      const botMsg = 'Sorry, I didn\'t understand that. Please use the dropdown or try saying "India", "International", or a destination name.';
+      streamBotMessage(botMsg);
+    }
   };
 
   // Auto scroll to bottom when messages change
@@ -43,6 +386,34 @@ const ChatInterface = ({
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isTyping]);
+
+  // Handle all input for TripMall - only when user presses Enter or sends
+  // Don't auto-process while typing
+
+  // Handle text input for TripMall when user sends any message
+  useEffect(() => {
+    if (isTripMall && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (!lastMessage.fromBot && !lastMessage.fromDropdown) {
+        // User sent a message (not from dropdown), process it
+        setTimeout(() => {
+          handleVoiceInput(lastMessage.text.toLowerCase().trim());
+        }, 500);
+      }
+    }
+  }, [messages, isTripMall]);
+
+  // Handle text input for TripMall (when user types "hi")
+  const handleTripMallTextInput = (text) => {
+    if (!isTripMall) return false;
+    
+    const normalizedText = text.toLowerCase().trim();
+    if (normalizedText === 'hi' || normalizedText === 'hello' || normalizedText === 'hey') {
+      handleVoiceInput(normalizedText);
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className="chat-interface">
@@ -57,7 +428,7 @@ const ChatInterface = ({
             <div className="message-content">
               {msg.fromBot && <div className="bot-name">{widgetMode && clientName ? clientName : "Miraista"}</div>}
               <div className={`message-bubble ${msg.intro ? 'intro-pop' : ''}`}>
-                {msg.text}
+                {renderTextWithLinks(msg.text)}
                 {msg.image && (
                   <div className="mt-2">
                     <img 
@@ -203,6 +574,63 @@ const ChatInterface = ({
         </div>
       )}
 
+      {/* TripMall guided options - modern card design */}
+      {isTripMall && (
+        <div className="mb-4">
+          {!tripScope && (
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-4 border border-gray-700 shadow-xl">
+              <div className="text-sm text-gray-300 mb-3 font-medium">🌍 Choose your travel destination</div>
+              <div className="grid grid-cols-2 gap-3">
+                <button 
+                  onClick={() => handleTripStart('india')}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  🇮🇳 India
+                </button>
+                <button 
+                  onClick={() => handleTripStart('international')}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  🌍 International
+                </button>
+              </div>
+            </div>
+          )}
+          {tripScope && !tripDestination && (
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-4 border border-gray-700 shadow-xl">
+              <div className="text-sm text-gray-300 mb-3 font-medium">📍 Choose your destination</div>
+              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                {(tripScope==='india'?INDIA_OPTIONS:INTL_OPTIONS).map(o=> (
+                  <button 
+                    key={o.value}
+                    onClick={() => handleDestination(o.value, o.label)}
+                    className="bg-gray-700 hover:bg-gray-600 text-white text-sm py-2 px-3 rounded-lg transition-all duration-200 hover:shadow-md"
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {tripDestination && !tripDuration && (
+            <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-4 border border-gray-700 shadow-xl">
+              <div className="text-sm text-gray-300 mb-3 font-medium">⏰ Choose trip duration</div>
+              <div className="grid grid-cols-2 gap-3">
+                {DURATION_OPTIONS.map(o=> (
+                  <button 
+                    key={o.value}
+                    onClick={() => handleDuration(o.value, o.label)}
+                    className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="input-area">
         {isListening ? (
           <div className="recording-container">
@@ -231,9 +659,16 @@ const ChatInterface = ({
             <input
               type="text"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                if (isTripMall) {
+                  // Allow all text input for TripMall - user can type anything
+                  setInput(e.target.value);
+                  return;
+                }
+                setInput(e.target.value);
+              }}
               onKeyPress={handleKeyPress}
-              placeholder={uiText.placeholder}
+              placeholder={isTripMall ? "Type your message or use dropdowns..." : uiText.placeholder}
               disabled={isTyping}
             />
             {!input.trim() ? (
@@ -268,7 +703,7 @@ const ChatInterface = ({
             ) : (
               <button 
                 onClick={() => handleSend()} 
-                disabled={!input.trim() || isTyping}
+                disabled={!input.trim() || isTyping || isTripMall}
                 className={!input.trim() || isTyping ? "disabled-btn" : ""}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -84,6 +84,14 @@ export const useChatLogic = (language, options = {}) => {
     setSelectedFile(null);
     setCarInput("");
 
+    // Handle TripMall - allow all text input
+    if (options.isTripMall) {
+      addMessage(messageToSend, false);
+      clearInput();
+      // The TripMall workflow will be handled in ChatInterface component
+      return;
+    }
+
     // Add user message
     addMessage(messageToSend, false);
     clearInput();
@@ -213,12 +221,25 @@ export const useChatLogic = (language, options = {}) => {
   };
 
   const stopListeningWrapper = () => {
-    speechService.stopListening(setIsListening, setInput);
+    speechService.stopListening(setIsListening, (transcript) => {
+      if (options.isTripMall) {
+        // For TripMall, handle voice input through dropdown logic
+        // This will be handled in ChatInterface component
+        setInput(transcript);
+      } else {
+        setInput(transcript);
+      }
+    });
   };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && input.trim()) {
-      handleSend();
+      if (options.isTripMall) {
+        // For TripMall, process the input directly
+        handleSend();
+      } else {
+        handleSend();
+      }
     }
   };
 
