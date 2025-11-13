@@ -1,6 +1,40 @@
 import axios from 'axios';
+import { getLanguageLocale } from '../utils/languageUtils';
 
 export const useMessageService = (language) => {
+  const getSystemPrompt = () => {
+    switch (language) {
+      case "hi":
+        return "आप एक बड़ी प्रौद्योगिकी कंपनी के लिए एक पेशेवर, सहायक सहायक हैं। हिंदी में जवाब दें।";
+      case "te":
+        return "మీరు ఒక పెద్ద టెక్నాలజీ కంపెనీకి వృత్తిపరమైన, సహాయక సహాయకులు. తెలుగు లో సమాధానం ఇవ్వండి.";
+      default:
+        return "You are a professional, helpful assistant for a large technology company. Respond in English.";
+    }
+  };
+
+  const getFallbackResponse = () => {
+    switch (language) {
+      case "hi":
+        return "मुझे जवाब देना नहीं आता।";
+      case "te":
+        return "నేను ఎలా ప్రతిస్పందించాలో తెలియడం లేదు.";
+      default:
+        return "I'm not sure how to respond.";
+    }
+  };
+
+  const getErrorResponse = () => {
+    switch (language) {
+      case "hi":
+        return "क्षमा करें, मैं आपके अनुरोध को संसाधित नहीं कर सका। कृपया पुनः प्रयास करें।";
+      case "te":
+        return "క్షమించండి, నేను ఆ వినతిని ప్రాసెస్ చేయలేకపోయాను. దయచేసి మళ్లీ ప్రయత్నించండి.";
+      default:
+        return "Sorry, I couldn't process that request. Please try again.";
+    }
+  };
+
   const isClaimRelatedQuery = (text) => {
     const claimKeywords = [
       'claim', 'accident', 'damage', 'car damage', 'vehicle damage',
@@ -14,16 +48,13 @@ export const useMessageService = (language) => {
     try {
       console.log('Sending message to backend:', { messages, messageToSend });
       
-      const systemPrompt = language === "en"
-        ? "You are a professional, helpful assistant for a large technology company. Respond in English."
-        : "आप एक बड़ी प्रौद्योगिकी कंपनी के लिए एक पेशेवर, सहायक सहायक हैं। हिंदी में जवाब दें।";
-
       const response = await axios.post(
-        "https://aadybackend.site/api/chat",  
+        "http://localhost:8080/api/chat",  
         {
-          systemPrompt: systemPrompt,
+          systemPrompt: getSystemPrompt(),
           messages: messages, 
-          messageToSend: messageToSend
+          messageToSend: messageToSend,
+          language: getLanguageLocale(language)
         },
         {
           headers: {
@@ -48,11 +79,11 @@ export const useMessageService = (language) => {
           console.log('Extracted bot message:', botMessage);
         } else {
           console.log('Could not parse response string, using default message');
-          botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+          botMessage = getFallbackResponse();
         }
       } else {
         console.log('No response data or response field found');
-        botMessage = language === "en" ? "I'm not sure how to respond." : "मुझे जवाब देना नहीं आता।";
+        botMessage = getFallbackResponse();
       }
 
       return botMessage;
@@ -63,9 +94,7 @@ export const useMessageService = (language) => {
         response: error.response?.data,
         status: error.response?.status
       });
-      return language === "en"
-        ? "Sorry, I couldn't process that request. Please try again."
-        : "क्षमा करें, मैं आपके अनुरोध को संसाधित नहीं कर सका। कृपया पुनः प्रयास करें।";
+      return getErrorResponse();
     }
   };
 

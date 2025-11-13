@@ -33,6 +33,12 @@ export const useChatLogic = (language, options = {}) => {
     toggleMute
   } = useUIStateService();
 
+  const t = (englishText, hindiText, teluguText = englishText) => {
+    if (language === "hi") return hindiText;
+    if (language === "te") return teluguText;
+    return englishText;
+  };
+
   const { speak } = useSpeechService(language);
   const { detectEmotion } = useEmotionService(language);
   const { isClaimRelatedQuery, sendMessage } = useMessageService(language);
@@ -98,9 +104,11 @@ export const useChatLogic = (language, options = {}) => {
 
     // Handle claim-related queries
     if (isClaimRelatedQuery(messageToSend) && !options.disableClaims) {
-      const uploadMessage = language === "en"
-        ? "I understand you want to file a claim for your vehicle. I'll help you with that. Please upload a clear photo of the damage using one of the buttons below."
-        : "मैं समझता हूं कि आप अपने वाहन के लिए दावा दर्ज करना चाहते हैं। मैं आपकी मदद करूंगा। कृपया नीचे दिए गए बटनों में से किसी एक का उपयोग करके क्षति की एक स्पष्ट तस्वीर अपलोड करें।";
+      const uploadMessage = t(
+        "I understand you want to file a claim for your vehicle. I'll help you with that. Please upload a clear photo of the damage using one of the buttons below.",
+        "मैं समझता हूं कि आप अपने वाहन के लिए दावा दर्ज करना चाहते हैं। मैं आपकी मदद करूंगा। कृपया नीचे दिए गए बटनों में से किसी एक का उपयोग करके क्षति की एक स्पष्ट तस्वीर अपलोड करें।",
+        "మీరు మీ వాహనానికి క్లైమ్ చేయాలని కోరుకుంటున్నారని అర్థం చేసుకున్నాను. నేను మీకు సహాయం చేస్తాను. కింద ఉన్న బటన్లలో ఏదో ఒకదాన్ని ఉపయోగించి దెబ్బతిన్న భాగాల క్లియర్ ఫోటోను అప్‌లోడ్ చేయండి."
+      );
       
       setIsTyping(true);
       setIsTalking(false);
@@ -205,9 +213,11 @@ export const useChatLogic = (language, options = {}) => {
       setIsTyping(false);
       setIsTalking(false);
       
-      const errorMessage = language === "en"
-        ? "I apologize, but I'm having trouble processing your request right now. Please try again."
-        : "मैं क्षमा चाहता हूं, लेकिन मुझे आपके अनुरोध को संसाधित करने में परेशानी हो रही है। कृपया पुनः प्रयास करें।";
+      const errorMessage = t(
+        "I apologize, but I'm having trouble processing your request right now. Please try again.",
+        "मैं क्षमा चाहता हूं, लेकिन मुझे आपके अनुरोध को संसाधित करने में परेशानी हो रही है। कृपया पुनः प्रयास करें।",
+        "క్షమించండి, నేను ఇప్పుడు మీ అభ్యర్థనను ప్రాసెస్ చేయడంలో ఇబ్బంది పడుతున్నాను. దయచేసి మరోసారి ప్రయత్నించండి."
+      );
       
       addMessage(errorMessage, true);
       speak(errorMessage, isMuted);
@@ -217,11 +227,14 @@ export const useChatLogic = (language, options = {}) => {
   const speechService = useSpeechService(language);
 
   const startListeningWrapper = () => {
+    console.log('[Voice] startListeningWrapper invoked', { currentLanguage: language });
     speechService.startListening(setIsListening);
   };
 
   const stopListeningWrapper = () => {
+    console.log('[Voice] stopListeningWrapper invoked', { currentLanguage: language });
     speechService.stopListening(setIsListening, (transcript) => {
+      console.log('[Voice] stopListeningWrapper received transcript', { transcript });
       if (options.isTripMall) {
         // For TripMall, handle voice input through dropdown logic
         // This will be handled in ChatInterface component
@@ -245,9 +258,11 @@ export const useChatLogic = (language, options = {}) => {
 
   const handleImageSelect = (file) => {
     setSelectedFile(file);
-    const carDetailsMessage = language === "en"
-      ? "Please provide your car's make and model separated by a comma. For example: Maruti,Swift"
-      : "कृपया अपनी कार का मेक और मॉडल कॉमा से अलग करके प्रदान करें। उदाहरण के लिए: Maruti,Swift";
+    const carDetailsMessage = t(
+      "Please provide your car's make and model separated by a comma. For example: Maruti,Swift",
+      "कृपया अपनी कार का मेक और मॉडल कॉमा से अलग करके प्रदान करें। उदाहरण के लिए: Maruti,Swift",
+      "దయచేసి మీ కార్ యొక్క మేక్ మరియు మోడల్‌ను కామాతో వేరు చేసి ఇవ్వండి. ఉదాహరణ: Maruti, Swift"
+    );
 
     setIsTyping(true);
     setIsTalking(false);

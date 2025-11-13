@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { getLanguageLocale } from '../utils/languageUtils';
 
-export const useCustomSpeechRecognition = ({ setInput, handleSend, setIsListening }) => {
+export const useCustomSpeechRecognition = ({ language, setInput, handleSend, setIsListening }) => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Accepts an audio blob, sends to backend STT API, and returns text
@@ -10,7 +11,8 @@ export const useCustomSpeechRecognition = ({ setInput, handleSend, setIsListenin
     try {
       const formData = new FormData();
       formData.append('file', audioBlob, 'audio.wav');
-      const response = await fetch('https://aadybackend.site/api/speech/stt', {
+      formData.append('language', getLanguageLocale(language));
+      const response = await fetch('http://localhost:8080/api/speech/stt', {
         method: 'POST',
         body: formData
       });

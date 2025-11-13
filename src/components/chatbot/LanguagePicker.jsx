@@ -1,11 +1,12 @@
 import React from 'react';
+import { SUPPORTED_LANGUAGES } from '../../utils/languageUtils';
 
 const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
-  const languages = [
-    { code: "en", name: "English" },
-    { code: "hi", name: "हिन्दी (Hindi)" }
-  ];
-  
+  const languages = Object.entries(SUPPORTED_LANGUAGES).map(([code, config]) => ({
+    code,
+    name: config.label,
+  }));
+
   return (
     <div className="language-picker">
       <div className="language-buttons">
@@ -23,4 +24,4 @@ const LanguagePicker = ({ selectedLanguage, onSelectLanguage }) => {
   );
 };
 
-export default LanguagePicker; 
+export default LanguagePicker;
