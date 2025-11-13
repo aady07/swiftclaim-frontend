@@ -49,7 +49,7 @@ export const useMessageService = (language) => {
       console.log('Sending message to backend:', { messages, messageToSend });
       
       const response = await axios.post(
-        "http://localhost:8080/api/chat",  
+        "https://aadybackend.site/api/chat",  
         {
           systemPrompt: getSystemPrompt(),
           messages: messages, 

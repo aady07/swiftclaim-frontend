@@ -118,13 +118,13 @@ const ChatInterface = ({
         formData.append('text', text);
         formData.append('language', getLanguageLocale(language));
         console.log('[TTS] Sending preload request to /speech/tts', {
-          url: 'http://localhost:8080/api/speech/tts',
+          url: 'https://aadybackend.site/api/speech/tts',
           payload: {
             text,
             language: getLanguageLocale(language)
           }
         });
-        const response = await fetch('http://localhost:8080/api/speech/tts', {
+        const response = await fetch('https://aadybackend.site/api/speech/tts', {
           method: 'POST',
           body: formData
         });
