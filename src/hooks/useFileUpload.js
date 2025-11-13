@@ -7,6 +7,12 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
   const [uploadStatus, setUploadStatus] = useState("idle");
   const fileInputRef = useRef(null);
 
+  const t = (englishText, hindiText, teluguText = englishText) => {
+    if (language === "hi") return hindiText;
+    if (language === "te") return teluguText;
+    return englishText;
+  };
+
   const handleCarDetails = async () => {
     // Ensure any pending streaming interval from the prompt is cleared
     if (window.currentResponseInterval) {
@@ -14,9 +20,11 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
       window.currentResponseInterval = null;
     }
     if (!carInput.includes(',')) {
-      const errorMessage = language === "en"
-        ? "Please provide car make and model separated by comma (e.g., Maruti,Swift)"
-        : "कृपया कार का मेक और मॉडल कॉमा से अलग करके दें (जैसे, Maruti,Swift)";
+      const errorMessage = t(
+        "Please provide car make and model separated by comma (e.g., Maruti,Swift)",
+        "कृपया कार का मेक और मॉडल कॉमा से अलग करके दें (जैसे, Maruti,Swift)",
+        "దయచేసి కార్ మేక్ మరియు మోడల్‌ను కామాతో వేరు చేసి ఇవ్వండి (ఉదా., Maruti, Swift)"
+      );
       
       setUploadStatus("idle");
       
@@ -36,9 +44,11 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
     const [carMake, carModel] = carInput.split(',').map(item => item.trim());
     
     if (!carMake || !carModel) {
-      const errorMessage = language === "en"
-        ? "Please provide both car make and model"
-        : "कृपया कार का मेक और मॉडल दोनों प्रदान करें";
+      const errorMessage = t(
+        "Please provide both car make and model",
+        "कृपया कार का मेक और मॉडल दोनों प्रदान करें",
+        "దయచేసి కార్ మేక్ మరియు మోడల్ రెండింటినీ ఇవ్వండి"
+      );
       
       setIsTyping(true);
       setIsTalking(false);
@@ -59,9 +69,11 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
     if (setShowCarInput) {
       setShowCarInput(false);
     }
-    const processingMessage = language === "en"
-      ? "I'm analyzing your vehicle damage. This will take just a moment..."
-      : "मैं आपके वाहन की क्षति का विश्लेषण कर रहा हूं। इसमें कुछ समय लगेगा...";
+    const processingMessage = t(
+      "I'm analyzing your vehicle damage. This will take just a moment...",
+      "मैं आपके वाहन की क्षति का विश्लेषण कर रहा हूं। इसमें कुछ समय लगेगा...",
+      "నేను మీ వాహన నష్టాన్ని విశ్లేషిస్తున్నాను. ఇది కేవలం కొద్దిసేపు పడుతుంది..."
+    );
     
     setIsTyping(true);
     setIsTalking(false);
@@ -159,38 +171,46 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
         }
         
         // Build detailed message
-        let detailedMessage = language === "en" 
-          ? `Based on my analysis:\n\n🔍 Damage Status: ${damageStatus}\n`
-          : `मेरे विश्लेषण के अनुसार:\n\n🔍 क्षति स्थिति: ${damageStatus}\n`;
+        let detailedMessage = t(
+          `Based on my analysis:\n\n🔍 Damage Status: ${damageStatus}\n`,
+          `मेरे विश्लेषण के अनुसार:\n\n🔍 क्षति स्थिति: ${damageStatus}\n`,
+          `నా విశ్లేషణ ఆధారంగా:\n\n🔍 నష్టం స్థితి: ${damageStatus}\n`
+        );
 
         // Add confidence score if available
         if (confidenceScore) {
-          detailedMessage += language === "en"
-            ? `📊 Confidence: ${confidenceScore}%\n\n`
-            : `📊 विश्वास: ${confidenceScore}%\n\n`;
+          detailedMessage += t(
+            `📊 Confidence: ${confidenceScore}%\n\n`,
+            `📊 विश्वास: ${confidenceScore}%\n\n`,
+            `📊 నమ్మకం: ${confidenceScore}%\n\n`
+          );
         } else {
           detailedMessage += "\n";
         }
 
         // Add damaged parts and cost estimates
         if (damagedParts.length > 0) {
-          detailedMessage += language === "en" ? "🚗 Damaged Parts:\n" : "🚗 क्षतिग्रस्त भाग:\n";
+          detailedMessage += t(
+            "🚗 Damaged Parts:\n",
+            "🚗 क्षतिग्रस्त भाग:\n",
+            "🚗 దెబ్బతిన్న భాగాలు:\n"
+          );
           
           damagedParts.forEach((part, index) => {
             const formattedPart = part.split('-').map(word => 
               word.charAt(0).toUpperCase() + word.slice(1)
             ).join(' ');
-            const priceRange = costEstimates[index] || "Price not available";
+            const priceRange = costEstimates[index] || t("Price not available", "मूल्य उपलब्ध नहीं", "ధర అందుబాటులో లేదు");
             
-            detailedMessage += language === "en"
-              ? `• ${formattedPart}: ₹${priceRange}\n`
-              : `• ${formattedPart}: ₹${priceRange}\n`;
+            detailedMessage += `• ${formattedPart}: ₹${priceRange}\n`;
           });
         }
 
-        detailedMessage += language === "en"
-          ? "\nWould you like to know anything else about your claim?"
-          : "\nक्या आप अपने दावे के बारे में कुछ और जानना चाहेंगे?";
+        detailedMessage += t(
+          "\nWould you like to know anything else about your claim?",
+          "\nक्या आप अपने दावे के बारे में कुछ और जानना चाहेंगे?",
+          "\nమీ క్లెయిమ్ గురించి మరేదైనా తెలుసుకోవాలనుకుంటున్నారా?"
+        );
 
         setIsTyping(false);
         setIsTalking(true);
@@ -201,9 +221,11 @@ export const useFileUpload = (language, { addMessage, speak, setIsTyping, setIsT
       }
     } catch (error) {
       console.error('Error processing claim:', error);
-      const errorMessage = language === "en"
-        ? "I'm having trouble analyzing your claim right now. You can tap Submit again to retry."
-        : "मुझे अभी आपके दावे का विश्लेषण करने में समस्या हो रही है। आप फिर से प्रयास करने के लिए सबमिट दबा सकते हैं।";
+      const errorMessage = t(
+        "I'm having trouble analyzing your claim right now. You can tap Submit again to retry.",
+        "मुझे अभी आपके दावे का विश्लेषण करने में समस्या हो रही है। आप फिर से प्रयास करने के लिए सबमिट दबा सकते हैं।",
+        "ప్రస్తుతం మీ క్లెయిమ్‌ను విశ్లేషించడంలో ఇబ్బంది ఎదుర్కొంటున్నాను. మళ్లీ ప్రయత్నించడానికి Submit పై ట్యాప్ చేయండి."
+      );
 
       // Don't clear selections or re-open upload UI; allow quick retry with same inputs
       setUploadStatus("idle");

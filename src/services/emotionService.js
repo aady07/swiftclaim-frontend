@@ -12,6 +12,12 @@ export const useEmotionService = (language) => {
       if (lowerText.includes("दुखी") || lowerText.includes("बुरा") || lowerText.includes("उदास")) return "sad";
       if (lowerText.includes("गुस्सा") || lowerText.includes("नाराज") || lowerText.includes("क्रोधित")) return "angry";
       if (lowerText.includes("आश्चर्य") || lowerText.includes("वाह") || lowerText.includes("अद्भुत")) return "surprised";
+    } else if (language === "te") {
+      const lowerText = text.toLowerCase();
+      if (lowerText.includes("సంతోష") || lowerText.includes("చాలా బాగుంది") || lowerText.includes("హ్యాపీ")) return "happy";
+      if (lowerText.includes("విషాద") || lowerText.includes("బాధ") || lowerText.includes("దుఃఖం")) return "sad";
+      if (lowerText.includes("కోపం") || lowerText.includes("ఆగ్రహం")) return "angry";
+      if (lowerText.includes("ఆశ్చర్య") || lowerText.includes("వావ్") || lowerText.includes("అద్భుత")) return "surprised";
     }
     return "neutral";
   };

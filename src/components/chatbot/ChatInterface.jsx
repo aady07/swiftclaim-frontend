@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getLanguageLocale } from '../../utils/languageUtils';
 
 const ChatInterface = ({
   messages,
@@ -33,11 +34,17 @@ const ChatInterface = ({
 }) => {
   const isTripMall = widgetMode && (clientName || '').toLowerCase().includes('tripmall');
 
+  const t = (englishText, hindiText, teluguText = englishText) => {
+    if (language === "hi") return hindiText;
+    if (language === "te") return teluguText;
+    return englishText;
+  };
+
   const uiText = {
-    chatbotTitle: language === "en" ? "Enterprise Assistant" : "उद्यम सहायक",
-    placeholder: language === "en" ? "Type your message..." : "अपना संदेश टाइप करें...",
-    chooseLanguage: language === "en" ? "Choose Language" : "भाषा चुनें",
-    typingIndicator: language === "en" ? "Typing..." : "टाइप कर रहा है...",
+    chatbotTitle: t("Enterprise Assistant", "उद्यम सहायक", "ఎంటర్ప్రైజ్ సహాయకుడు"),
+    placeholder: t("Type your message...", "अपना संदेश टाइप करें...", "మీ సందేశాన్ని టైప్ చేయండి..."),
+    chooseLanguage: t("Choose Language", "भाषा चुनें", "భాషను ఎంచుకోండి"),
+    typingIndicator: t("Typing...", "टाइप कर रहा है...", "టైప్ అవుతోంది..."),
   };
 
   // Voice mapping for TripMall dropdowns
@@ -109,7 +116,15 @@ const ChatInterface = ({
       try {
         const formData = new FormData();
         formData.append('text', text);
-        const response = await fetch('https://aadybackend.site/api/speech/tts', {
+        formData.append('language', getLanguageLocale(language));
+        console.log('[TTS] Sending preload request to /speech/tts', {
+          url: 'http://localhost:8080/api/speech/tts',
+          payload: {
+            text,
+            language: getLanguageLocale(language)
+          }
+        });
+        const response = await fetch('http://localhost:8080/api/speech/tts', {
           method: 'POST',
           body: formData
         });
@@ -480,7 +495,7 @@ const ChatInterface = ({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  {language === "en" ? "Gallery" : "गैलरी"}
+                  {t("Gallery", "गैलरी", "గ్యాలరీ")}
                 </button>
                 <button
                   onClick={() => {
@@ -497,7 +512,7 @@ const ChatInterface = ({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
                           d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  {language === "en" ? "Camera" : "कैमरा"}
+                  {t("Camera", "कैमरा", "కెమెరా")}
                 </button>
               </div>
             ) : (
@@ -534,10 +549,11 @@ const ChatInterface = ({
                 const file = e.target.files?.[0];
                 if (file) {
                   if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                    const errorMessage = language === "en"
-                      ? "Image size should be less than 5MB"
-                      : "छवि का आकार 5MB से कम होना चाहिए";
-                    alert(errorMessage);
+                    alert(t(
+                      "Image size should be less than 5MB",
+                      "छवि का आकार 5MB से कम होना चाहिए",
+                      "చిత్ర పరిమాణం 5MB కంటే తక్కువగా ఉండాలి"
+                    ));
                     return;
                   }
                   setSelectedFile(file);
@@ -552,7 +568,11 @@ const ChatInterface = ({
                   type="text"
                   value={carInput}
                   onChange={(e) => setCarInput(e.target.value)}
-                  placeholder={language === "en" ? "Car Make,Car Model (e.g., Maruti,Swift)" : "कार मेक,कार मॉडल (जैसे, Maruti,Swift)"}
+                  placeholder={t(
+                    "Car Make,Car Model (e.g., Maruti,Swift)",
+                    "कार मेक,कार मॉडल (जैसे, Maruti,Swift)",
+                    "కారు మేక్, కారు మోడల్ (ఉదా., Maruti, Swift)"
+                  )}
                   className="w-full px-3 py-2 bg-gray-700/30 text-gray-200 text-sm rounded-md border border-gray-600/30 focus:outline-none focus:border-gray-500/50"
                 />
                 <button
@@ -565,8 +585,8 @@ const ChatInterface = ({
                   }`}
                 >
                   {uploadStatus === "uploading"
-                    ? (language === "en" ? "Processing..." : "प्रसंस्करण...")
-                    : (language === "en" ? "Submit" : "जमा करें")}
+                    ? t("Processing...", "प्रसंस्करण...", "ప్రాసెస్ అవుతోంది...")
+                    : t("Submit", "जमा करें", "సమర్పించండి")}
                 </button>
               </div>
             )}
@@ -648,7 +668,7 @@ const ChatInterface = ({
               <span></span>
             </div>
             <div className="recording-text">
-              {language === "en" ? "Listening..." : "सुन रहा हूँ..."}
+              {t("Listening...", "सुन रहा हूँ...", "వింటోంది...")}
             </div>
           </div>
         ) : (
@@ -682,7 +702,7 @@ const ChatInterface = ({
                 }} 
                 disabled={isTyping}
                 className={`voice-button input-control-btn ${isListening ? 'active' : ''}`}
-                title={language === "en" ? "Voice input" : "वॉइस इनपुट"}
+                title={t("Voice input", "वॉइस इनपुट", "వాయిస్ ఇన్‌పుట్")}
               >
                 {isListening ? (
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -20,6 +20,12 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
   const isVKai = Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai'));
   const isTripMall = Boolean(widgetMode && (clientName || '').toLowerCase().includes('tripmall'));
 
+  const t = (englishText, hindiText, teluguText = englishText) => {
+    if (language === "hi") return hindiText;
+    if (language === "te") return teluguText;
+    return englishText;
+  };
+
   const {
     messages,
     setMessages,
@@ -114,11 +120,23 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
       return;
     }
 
-    const miraistaIntro = "Miraista delivers AI solutions in computer vision and analytics, from vehicle damage assessment to industry-wide innovation.";
-    const vkaiIntro = "VKai is a social enterprise dedicated to the empowerment of marginalized communities. VKai integrates grassroots action, strategic advisory, and market driven solutions to build an equitable, self-reliant, and inclusive society.";
+    const miraistaIntro = t(
+      "Miraista delivers AI solutions in computer vision and analytics, from vehicle damage assessment to industry-wide innovation.",
+      "मिराइस्ता कंप्यूटर विज़न और एनालिटिक्स में एआई समाधान प्रदान करती है, वाहन क्षति आकलन से लेकर व्यापक उद्योग नवाचार तक।",
+      "మిరైస్టా కంప్యూటర్ విజన్ మరియు అనలిటిక్స్‌లో ఏఐ పరిష్కారాలను అందిస్తోంది, వాహన నష్టం అంచనా నుంచి పరిశ్రమవ్యాప్త ఆవిష్కరణల వరకు."
+    );
+    const vkaiIntro = t(
+      "VKai is a social enterprise dedicated to the empowerment of marginalized communities. VKai integrates grassroots action, strategic advisory, and market driven solutions to build an equitable, self-reliant, and inclusive society.",
+      "वीकाई एक सामाजिक उद्यम है जो वंचित समुदायों के सशक्तिकरण के लिए समर्पित है। वीकाई जमीनी कार्रवाई, रणनीतिक सलाह और बाज़ार-प्रधान समाधानों को जोड़कर एक न्यायसंगत, आत्मनिर्भर और समावेशी समाज का निर्माण करती है।",
+      "వీకై అణచివేయబడ్డ సమూహాల సాధికారతకు కట్టుబడి ఉన్న సామాజిక సంస్థ. వీకై పునాది స్థాయి చర్యలను, వ్యూహాత్మక సలహాలను, మార్కెట్ ఆధారిత పరిష్కారాలను ఏకీకృతం చేసి సమానత్వం, స్వావలంబన, సమగ్రత కలిగిన సమాజాన్ని నిర్మిస్తుంది."
+    );
 
     const introMessage = isVKaiLocal ? vkaiIntro : miraistaIntro;
-    const helpMessage = "How may I help you today.";
+    const helpMessage = t(
+      "How may I help you today.",
+      "मैं आज आपकी कैसे सहायता कर सकता हूँ?",
+      "ఈ రోజు నేను మీకు ఎలా సహాయం చేయగలను?"
+    );
 
     setMessages([{ text: introMessage, fromBot: true, intro: true }]);
     introTimeoutRef.current = setTimeout(() => {
@@ -181,7 +199,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
       {!isFullPage && (!isInIframe || widgetMode) && !(widgetMode && isOpen) && (
         <>
           <div className="assistant-popup">
-            {language === "en" ? "I'm your assistant! How can I help?" : "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?"}
+            {t("I'm your assistant! How can I help?", "मैं आपका सहायक हूँ! मैं कैसे मदद कर सकता हूँ?", "నేను మీ సహాయకుడిని! నేను ఎలా సహాయం చేయగలను?")}
           </div>
           <div className="chatbot-button" onClick={toggleChatbot} style={{...buttonStyle, ...lightSurfaceStyle}}>
             {isOpen ? (
@@ -220,7 +238,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
             </div>
           ) : !isFullPage && (
             <div className="chatbot-header">
-              <h3>{language === "en" ? "Enterprise Assistant" : "उद्यम सहायक"}</h3>
+              <h3>{t("Enterprise Assistant", "उद्यम सहायक", "ఎంటర్ప్రైజ్ సహాయకుడు")}</h3>
               <div className="header-controls">
                 <button className="close-btn" onClick={toggleChatbot}>×</button>
               </div>

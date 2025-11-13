@@ -10,6 +10,12 @@ const ClaimUploadUI = ({ onUploadComplete, language }) => {
     }
   };
 
+  const t = (englishText, hindiText, teluguText = englishText) => {
+    if (language === "hi") return hindiText;
+    if (language === "te") return teluguText;
+    return englishText;
+  };
+
   return (
     <div className="w-full">
       <motion.div
@@ -22,10 +28,10 @@ const ClaimUploadUI = ({ onUploadComplete, language }) => {
           <FiUpload className="text-5xl text-gray-200" />
         </div>
         <span className="text-xl text-gray-200 font-medium mb-2">
-          {language === "en" ? "Upload your claim document" : "अपना क्लेम दस्तावेज़ अपलोड करें"}
+          {t("Upload your claim document", "अपना क्लेम दस्तावेज़ अपलोड करें", "మీ క్లెయిమ్ పత్రాన్ని అప్‌లోడ్ చేయండి")}
         </span>
         <span className="text-sm text-gray-400 mb-4">
-          {language === "en" ? "Supports JPG, PNG, and PDF documents" : "JPG, PNG और PDF दस्तावेज़ों का समर्थन करता है"}
+          {t("Supports JPG, PNG, and PDF documents", "JPG, PNG और PDF दस्तावेज़ों का समर्थन करता है", "JPG, PNG, PDF పత్రాలను మద్దతు ఇస్తుంది")}
         </span>
         <motion.div
           className="flex gap-4"
@@ -41,7 +47,7 @@ const ClaimUploadUI = ({ onUploadComplete, language }) => {
             />
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors">
               <FiCamera className="text-xl" />
-              <span>{language === "en" ? "Upload Image" : "छवि अपलोड करें"}</span>
+              <span>{t("Upload Image", "छवि अपलोड करें", "చిత్రాన్ని అప్‌లోడ్ చేయండి")}</span>
             </div>
           </label>
           <label className="cursor-pointer">
@@ -53,7 +59,7 @@ const ClaimUploadUI = ({ onUploadComplete, language }) => {
             />
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors">
               <FiFileText className="text-xl" />
-              <span>{language === "en" ? "Upload PDF" : "PDF अपलोड करें"}</span>
+              <span>{t("Upload PDF", "PDF अपलोड करें", "PDF అప్‌లోడ్ చేయండి")}</span>
             </div>
           </label>
         </motion.div>
