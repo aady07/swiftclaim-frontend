@@ -8,6 +8,7 @@ export const useUIStateService = () => {
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [showCarInput, setShowCarInput] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("idle");
+  const [isVoiceProcessing, setIsVoiceProcessing] = useState(false);
 
   const toggleMute = () => setIsMuted(!isMuted);
 
@@ -26,6 +27,8 @@ export const useUIStateService = () => {
     setShowCarInput,
     uploadStatus,
     setUploadStatus,
+    isVoiceProcessing,
+    setIsVoiceProcessing,
     toggleMute
   };
 }; 

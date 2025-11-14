@@ -30,7 +30,9 @@ export const useChatLogic = (language, options = {}) => {
     setShowImageUpload,
     showCarInput,
     setShowCarInput,
-    toggleMute
+    toggleMute,
+    isVoiceProcessing,
+    setIsVoiceProcessing
   } = useUIStateService();
 
   const t = (englishText, hindiText, teluguText = englishText) => {
@@ -228,6 +230,7 @@ export const useChatLogic = (language, options = {}) => {
 
   const startListeningWrapper = () => {
     console.log('[Voice] startListeningWrapper invoked', { currentLanguage: language });
+    setIsVoiceProcessing(false);
     speechService.startListening(setIsListening);
   };
 
@@ -242,7 +245,7 @@ export const useChatLogic = (language, options = {}) => {
       } else {
         setInput(transcript);
       }
-    });
+    }, setIsVoiceProcessing);
   };
 
   const handleKeyPress = (e) => {
@@ -321,6 +324,7 @@ export const useChatLogic = (language, options = {}) => {
     handleCarDetails,
     handleImageSelect,
     toggleMute,
+    isVoiceProcessing,
     setShowCarInput,
     setShowImageUpload
   };

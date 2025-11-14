@@ -15,6 +15,7 @@ const ChatInterface = ({
   isMuted,
   toggleMute,
   language,
+  isVoiceProcessing,
   showImageUpload,
   selectedFile,
   setSelectedFile,
@@ -669,6 +670,19 @@ const ChatInterface = ({
             </div>
             <div className="recording-text">
               {t("Listening...", "सुन रहा हूँ...", "వింటోంది...")}
+            </div>
+          </div>
+        ) : (language === "te" && isVoiceProcessing) ? (
+          <div className="recording-container processing-state">
+            <div className="recording-wave">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div className="recording-text">
+              {t("Processing audio...", "ऑडियो संसाधित हो रहा है...", "ఆడియో ప్రాసెస్ అవుతోంది...")}
             </div>
           </div>
         ) : (

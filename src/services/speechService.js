@@ -71,30 +71,66 @@ export const useSpeechService = (language) => {
     return preferredTypes.find(type => window.MediaRecorder.isTypeSupported(type)) || null;
   };
 
-  const audioBufferToWav = (audioBuffer) => {
-    const numChannels = audioBuffer.numberOfChannels;
-    const sampleRate = audioBuffer.sampleRate;
+  const getExtensionFromMime = (mimeType = '') => {
+    if (!mimeType) return 'webm';
+    const cleaned = mimeType.split(';')[0];
+    const parts = cleaned.split('/');
+    return parts[1] || 'webm';
+  };
+
+  const mixToMono = (audioBuffer) => {
+    if (audioBuffer.numberOfChannels === 1) {
+      return audioBuffer.getChannelData(0);
+    }
+    const length = audioBuffer.length;
+    const result = new Float32Array(length);
+    for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+      const channelData = audioBuffer.getChannelData(channel);
+      for (let i = 0; i < length; i++) {
+        result[i] += channelData[i] / audioBuffer.numberOfChannels;
+      }
+    }
+    return result;
+  };
+
+  const resampleToTargetRate = (samples, originalRate, targetRate) => {
+    if (originalRate === targetRate) {
+      return samples;
+    }
+    const sampleRateRatio = originalRate / targetRate;
+    const newLength = Math.round(samples.length / sampleRateRatio);
+    const resampledSamples = new Float32Array(newLength);
+    for (let i = 0; i < newLength; i++) {
+      const sampleIndex = i * sampleRateRatio;
+      const before = Math.floor(sampleIndex);
+      const after = Math.min(Math.ceil(sampleIndex), samples.length - 1);
+      const atPoint = sampleIndex - before;
+      const sample =
+        samples[before] + (samples[after] - samples[before]) * atPoint;
+      resampledSamples[i] = sample;
+    }
+    return resampledSamples;
+  };
+
+  const encodeWavFromSamples = (samples, sampleRate) => {
     const bytesPerSample = 2;
-    const blockAlign = numChannels * bytesPerSample;
+    const blockAlign = bytesPerSample;
     const byteRate = sampleRate * blockAlign;
-    const dataLength = audioBuffer.length * blockAlign;
+    const dataLength = samples.length * bytesPerSample;
     const buffer = new ArrayBuffer(44 + dataLength);
     const view = new DataView(buffer);
 
     let offset = 0;
-
     const writeString = (string) => {
       for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
       }
       offset += string.length;
     };
-
     const writeUint32 = (value) => {
       view.setUint32(offset, value, true);
       offset += 4;
     };
-
     const writeUint16 = (value) => {
       view.setUint16(offset, value, true);
       offset += 2;
@@ -106,7 +142,7 @@ export const useSpeechService = (language) => {
     writeString('fmt ');
     writeUint32(16);
     writeUint16(1);
-    writeUint16(numChannels);
+    writeUint16(1); // mono
     writeUint32(sampleRate);
     writeUint32(byteRate);
     writeUint16(blockAlign);
@@ -114,19 +150,10 @@ export const useSpeechService = (language) => {
     writeString('data');
     writeUint32(dataLength);
 
-    const channelData = [];
-    for (let channel = 0; channel < numChannels; channel++) {
-      channelData.push(audioBuffer.getChannelData(channel));
-    }
-
-    for (let i = 0; i < audioBuffer.length; i++) {
-      for (let channel = 0; channel < numChannels; channel++) {
-        let sample = channelData[channel][i];
-        sample = Math.max(-1, Math.min(1, sample));
-        sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
-        view.setInt16(offset, sample, true);
-        offset += 2;
-      }
+    for (let i = 0; i < samples.length; i++, offset += 2) {
+      let sample = Math.max(-1, Math.min(1, samples[i]));
+      sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+      view.setInt16(offset, sample, true);
     }
 
     return buffer;
@@ -144,13 +171,22 @@ export const useSpeechService = (language) => {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       const audioContext = new AudioContext();
       const decoded = await audioContext.decodeAudioData(arrayBuffer);
-      const wavBuffer = audioBufferToWav(decoded);
-      audioContext.close?.();
+      const targetSampleRate = 16000;
+      const monoSamples = mixToMono(decoded);
+      const resampledSamples = resampleToTargetRate(
+        monoSamples,
+        decoded.sampleRate,
+        targetSampleRate
+      );
+      const wavBuffer = encodeWavFromSamples(resampledSamples, targetSampleRate);
+      if (audioContext.close) {
+        await audioContext.close();
+      }
       const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
       return { blob: wavBlob, extension: 'wav' };
     } catch (error) {
       console.error('[Voice] Failed to convert recording to WAV, falling back to original blob', error);
-      return { blob: audioBlob, extension: mimeType.split('/')[1] || 'webm' };
+      return { blob: audioBlob, extension: getExtensionFromMime(mimeType) };
     }
   };
 
@@ -332,18 +368,20 @@ export const useSpeechService = (language) => {
       });
   };
 
-  const stopListening = async (setIsListening, setInput) => {
+  const stopListening = async (setIsListening, setInput, setProcessingState) => {
     console.log('[Voice] stopListening requested', { language, useBackendSTT, isRecording, isProcessing });
 
     // Handle backend STT for Telugu
     if (useBackendSTT) {
       if (!isRecording || !mediaRecorder) {
         console.log('[Voice] stopListening aborted: no active recording');
+        setProcessingState?.(false);
         return;
       }
       
       setIsListening(false);
       isRecording = false;
+      setProcessingState?.(true);
 
       return new Promise((resolve) => {
         mediaRecorder.onstop = async () => {
@@ -357,6 +395,7 @@ export const useSpeechService = (language) => {
             if (!audioChunks.length) {
               console.warn('[Voice] No audio captured during recording');
               cleanupRecording();
+              setProcessingState?.(false);
               resolve();
               return;
             }
@@ -369,6 +408,7 @@ export const useSpeechService = (language) => {
 
             if (!uploadBlob || !uploadBlob.size) {
               console.warn('[Voice] Processed audio blob is empty');
+              setProcessingState?.(false);
               resolve();
               return;
             }
@@ -393,6 +433,7 @@ export const useSpeechService = (language) => {
             ));
             cleanupRecording();
           } finally {
+            setProcessingState?.(false);
             resolve();
           }
         };
@@ -402,6 +443,7 @@ export const useSpeechService = (language) => {
         } catch (error) {
           console.error('[Voice] Error stopping MediaRecorder:', error);
           cleanupRecording();
+          setProcessingState?.(false);
           resolve();
         }
       });
@@ -415,6 +457,7 @@ export const useSpeechService = (language) => {
     
     setIsListening(false);
     isProcessing = false;
+    setProcessingState?.(false);
     
     try {
       SpeechRecognition.stopListening();
