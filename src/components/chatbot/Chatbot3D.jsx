@@ -53,7 +53,8 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
     handleImageSelect,
     toggleMute,
     setShowCarInput,
-    setShowImageUpload
+    setShowImageUpload,
+    isVoiceProcessing
   } = useChatLogic(language, { 
     disableClaims: Boolean(widgetMode && (clientName || '').toLowerCase().includes('vkai')),
     isTripMall: Boolean(widgetMode && (clientName || '').toLowerCase().includes('tripmall'))
@@ -317,6 +318,7 @@ const Chatbot = ({ isFullPage = false, widgetMode = false, clientName = '', clie
                 isMuted={isMuted}
                 toggleMute={toggleMute}
                 language={language}
+                isVoiceProcessing={isVoiceProcessing}
                 showImageUpload={showImageUpload}
                 selectedFile={selectedFile}
                 setSelectedFile={setSelectedFile}
