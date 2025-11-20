@@ -13,19 +13,24 @@ const AboutUs = () => {
   const teamMembers = [
     { 
       name: "Rachit", 
-      role: "Co-Founder", 
+      role: "Co-Founder & CEO", 
       image: "https://i.imgur.com/wc1ZutY.png", 
       bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
     },
     { 
       name: "Bharat Parmar", 
-      role: "Co-Founder", 
+      role: "Co-Founder & COO", 
       image: "https://i.imgur.com/OehHTK9.jpeg", 
       bio: "Seasoned business expert with comprehensive understanding of strategic business operations, technology integration, and organizational growth strategies." 
     },
     { 
+      name: "Abinash Adhikari", 
+      role: "Co-Founder & CIDO", 
+      image: "https://i.ibb.co/vx85nJzH/Abinash-Pic-from-Whats-App.jpg", 
+      bio: "Democratic and visionary data leader with 21+ years driving analytics innovation across leading global organizations, from Indian Statistical Institute to IBM, Mindtree, and Zuno General Insurance. Experienced in transforming businesses through strategic, future-ready data solutions"    },
+    { 
       name: "Adarsh", 
-      role: "Co-Founder", 
+      role: "Co-Founder & CTO", 
       image: "https://i.imgur.com/e9LoxyO.png", 
       bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
     },
@@ -365,10 +370,11 @@ const AboutUs = () => {
                 />
               </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Desktop / large screens */}
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                 {teamMembers.map((member, index) => (
                   <motion.div
-                    key={index}
+                    key={`${member.name}-desktop`}
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.2 }}
@@ -380,13 +386,13 @@ const AboutUs = () => {
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-full h-full object-cover object-center transition-all duration-700 filter group-hover:brightness-20 group-hover:blur-sm group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-all duration-700 filter md:group-hover:brightness-20 md:group-hover:blur-sm md:group-hover:scale-105"
                       />
                       {/* Overlay with gradient for better text visibility at bottom */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-all duration-500 
-                                  group-hover:bg-gray-900/90 overflow-hidden">
+                                  md:group-hover:bg-gray-900/90 overflow-hidden">
                         {/* Futuristic grid lines that become more visible on hover */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-all duration-700">
+                        <div className="absolute inset-0 opacity-0 md:group-hover:opacity-20 transition-all duration-700">
                           {[...Array(10)].map((_, i) => (
                             <div key={i} className="absolute left-0 right-0 h-px bg-blue-500/30" 
                                 style={{ top: `${i * 10}%` }}></div>
@@ -400,7 +406,7 @@ const AboutUs = () => {
                     </div>
                     
                     {/* Name and role at bottom middle */}
-                    <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end items-center text-center pb-6 px-4 z-10 transition-all duration-500 transform translate-y-0 group-hover:opacity-0 group-hover:translate-y-10">
+                    <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end items-center text-center pb-6 px-4 z-10 transition-all duration-500 transform translate-y-0 md:group-hover:opacity-0 md:group-hover:translate-y-10">
                       {/* Glowing accent line above name */}
                       <div className="w-16 h-0.5 bg-blue-400/80 mb-3"></div>
                       
@@ -416,7 +422,7 @@ const AboutUs = () => {
                     </div>
                     
                     {/* Content that appears on hover (centered) */}
-                    <div className="absolute inset-0 flex flex-col justify-center items-center p-6 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <div className="absolute inset-0 flex flex-col justify-center items-center p-6 z-20 opacity-0 md:group-hover:opacity-100 transition-all duration-500">
                       <div className="transform transition-all duration-500 text-center max-w-xs">
                         {/* Holographic accent line */}
                         <div className="w-16 h-0.5 bg-blue-400 mb-4 mx-auto"></div>
@@ -444,10 +450,41 @@ const AboutUs = () => {
                     </div>
                     
                     {/* Corner accents visible only on hover */}
-                    <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-blue-500/0 group-hover:border-blue-500/80 transition-all duration-700"></div>
-                    <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-blue-500/0 group-hover:border-blue-500/80 transition-all duration-700"></div>
-                    <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-blue-500/0 group-hover:border-blue-500/80 transition-all duration-700"></div>
-                    <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-blue-500/0 group-hover:border-blue-500/80 transition-all duration-700"></div>
+                    <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-blue-500/0 md:group-hover:border-blue-500/80 transition-all duration-700"></div>
+                    <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-blue-500/0 md:group-hover:border-blue-500/80 transition-all duration-700"></div>
+                    <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-blue-500/0 md:group-hover:border-blue-500/80 transition-all duration-700"></div>
+                    <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-blue-500/0 md:group-hover:border-blue-500/80 transition-all duration-700"></div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Mobile-friendly cards */}
+              <div className="md:hidden flex flex-col gap-10">
+                {teamMembers.map((member, index) => (
+                  <motion.div
+                    key={`${member.name}-mobile`}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="bg-gray-900/60 border border-gray-800 rounded-2xl overflow-hidden shadow-xl"
+                  >
+                    <div className="h-64 w-full overflow-hidden">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <p className="text-sm uppercase tracking-widest text-blue-400">{member.role}</p>
+                        <h3 className="text-2xl font-semibold text-white mt-1">{member.name}</h3>
+                      </div>
+                      <p className="text-gray-300 text-base leading-relaxed">
+                        {member.bio}
+                      </p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
