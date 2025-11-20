@@ -25,9 +25,9 @@ const AboutUs = () => {
     },
     { 
       name: "Abinash Adhikari", 
-      role: "Co-Founder & CIDO", 
+      role: "Co-Founder & CDIO", 
       image: "https://i.ibb.co/vx85nJzH/Abinash-Pic-from-Whats-App.jpg", 
-      bio: "Democratic and visionary data leader with 21+ years driving analytics innovation across leading global organizations, from Indian Statistical Institute to IBM, Mindtree, and Zuno General Insurance. Experienced in transforming businesses through strategic, future-ready data solutions"    },
+      bio: "Democratic and visionary data leader with 21+ years driving innovation, from Indian Statistical Institute to IBM, Mindtree, and Zuno General Insurance."    },
     { 
       name: "Adarsh", 
       role: "Co-Founder & CTO", 
