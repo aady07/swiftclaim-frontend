@@ -270,14 +270,19 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         <meta property="og:url" content="https://www.miraista.com" />
         <meta property="og:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
         <meta property="og:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
-        <meta property="og:image" content="https://www.miraista.com/og-image.jpg" />
+        <meta property="og:image" content="https://www.miraista.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
         
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.miraista.com" />
         <meta property="twitter:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
         <meta property="twitter:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
-        <meta property="twitter:image" content="https://www.miraista.com/og-image.jpg" />
+        <meta property="twitter:image" content="https://www.miraista.com/og-image.png" />
+        <meta property="twitter:image:width" content="1200" />
+        <meta property="twitter:image:height" content="630" />
         
         {/* Additional SEO tags */}
         <link rel="canonical" href="https://www.miraista.com" />
