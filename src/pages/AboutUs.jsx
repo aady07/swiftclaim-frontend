@@ -11,29 +11,31 @@ const AboutUs = () => {
   const navigate = useNavigate();
 
   const teamMembers = [
-    { 
-      name: "Rachit", 
-      role: "Co-Founder & CEO", 
-      image: "https://i.imgur.com/wc1ZutY.png", 
-      bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
-    },
+    // Commented out - can be restored easily
+    // { 
+    //   name: "Rachit", 
+    //   role: "Co-Founder & CEO", 
+    //   image: "https://i.imgur.com/wc1ZutY.png", 
+    //   bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
+    // },
     { 
       name: "Bharat Parmar", 
-      role: "Co-Founder & COO", 
+      role: "Co-Founder & Director", 
       image: "https://i.imgur.com/OehHTK9.jpeg", 
       bio: "Seasoned business expert with comprehensive understanding of strategic business operations, technology integration, and organizational growth strategies." 
     },
     { 
       name: "Abinash Adhikari", 
-      role: "Co-Founder & CDIO", 
+      role: "Co-Founder & Director", 
       image: "https://i.ibb.co/vx85nJzH/Abinash-Pic-from-Whats-App.jpg", 
       bio: "Democratic and visionary data leader with 21+ years driving innovation, from Indian Statistical Institute to IBM, Mindtree, and Zuno General Insurance."    },
-    { 
-      name: "Adarsh", 
-      role: "Co-Founder & CTO", 
-      image: "https://i.imgur.com/e9LoxyO.png", 
-      bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
-    },
+    // Commented out - can be restored easily
+    // { 
+    //   name: "Adarsh", 
+    //   role: "Co-Founder & CTO", 
+    //   image: "https://i.imgur.com/e9LoxyO.png", 
+    //   bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
+    // },
   ];
 
   const values = [
@@ -174,18 +176,13 @@ const AboutUs = () => {
               "founders": [
                 {
                   "@type": "Person",
-                  "name": "Rachit",
-                  "jobTitle": "Co-Founder"
-                },
-                {
-                  "@type": "Person",
                   "name": "Bharat Parmar",
-                  "jobTitle": "Co-Founder"
+                  "jobTitle": "Co-Founder & Director"
                 },
                 {
                   "@type": "Person",
-                  "name": "Adarsh",
-                  "jobTitle": "Co-Founder"
+                  "name": "Abinash Adhikari",
+                  "jobTitle": "Co-Founder & Director"
                 }
               ]
             }

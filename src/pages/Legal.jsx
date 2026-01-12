@@ -26,7 +26,7 @@ const Legal = () => {
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
         <title>Legal Information | Miraista</title>
-        <meta name="description" content="Legal information, terms of service, and privacy policy for Miraista - A brand of NexoraTrading Ventures PVT LTD." />
+        <meta name="description" content="Legal information, terms of service, and privacy policy for Miraista." />
         <meta name="keywords" content="legal information, terms of service, privacy policy, Miraista legal, company information" />
       </Helmet>
 
@@ -112,23 +112,16 @@ const Legal = () => {
               <h2 className="text-2xl font-bold text-white mb-4">Company Information</h2>
               <div className="w-20 h-1 bg-blue-500 mb-6"></div>
               <p className="text-gray-300 mb-4">
-                Miraista is a brand of NexoraTrading Ventures PVT LTD, a registered company in India. Our parent company provides the legal framework and foundation for our innovative AI solutions.
+                Miraista is a registered company providing innovative AI-powered solutions for insurance claim processing and business automation.
               </p>
               <div className="bg-gray-900/50 p-6 rounded-lg border border-gray-700">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Brand Name</p>
+                    <p className="text-gray-400 text-sm mb-1">Company Name</p>
                     <p className="text-white font-medium">Miraista</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">Legal Entity</p>
-                    <p className="text-white font-medium">NexoraTrading Ventures PVT LTD</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm mb-1">CIN Number</p>
-                    <p className="text-white font-medium">U46102DL2025PTC446621</p>
-                  </div>
-                  <div>
+             
                     <p className="text-gray-400 text-sm mb-1">Website</p>
                     <p className="text-white font-medium">www.miraista.com</p>
                   </div>
