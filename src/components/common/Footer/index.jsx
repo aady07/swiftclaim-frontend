@@ -180,7 +180,7 @@ const Footer = () => {
           <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
             <div className="text-center md:text-left">
               <p className="text-white text-sm">
-                &copy; {currentYear} Miraista. A brand of NexoraTrading Ventures PVT LTD. All rights reserved.
+                &copy; {currentYear} Miraista All rights reserved.
               </p>
             </div>
             <div className="text-center md:text-right">
