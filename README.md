@@ -11,26 +11,44 @@ Miraista's frontend application for insurance claim processing. This repository 
 - Git
 
 ### Local Development
-1. Clone the repository
-```bash
-git clone git@github.com:miraista/frontend.git
-cd frontend
-```
 
-2. Install dependencies
-```bash
-npm install
-```
+#### Prerequisites
+- **Node.js v14+** (v18+ recommended) - [Download here](https://nodejs.org/)
+- **npm v7+** (comes with Node.js)
+- **Git**
 
-3. Create environment file
-```bash
-cp .env.example .env
-```
+#### Setup Steps
 
-4. Start development server
-```bash
-npm run dev
-```
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd Frontend_Swiftclaim
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+   ⚠️ **Note:** If you get "npm is not recognized", install Node.js first (see SETUP_GUIDE.md)
+
+3. **Create environment file (optional)**
+   ```bash
+   # Windows:
+   copy .env.example .env
+   
+   # Mac/Linux:
+   cp .env.example .env
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+   
+   The app will be available at: `http://localhost:5173`
+
+#### Troubleshooting
+If you encounter "command not recognized" errors, see [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed troubleshooting steps.
 
 ### Environment Variables
 Required environment variables:

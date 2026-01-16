@@ -21,7 +21,7 @@ const ChatbotPage = () => {
         <meta name="twitter:description" content="Experience our advanced AI chatbot powered by cutting-edge technology. Get instant support and streamline your business processes." />
         <meta name="twitter:image" content="https://www.miraista.com/images/chatbot-preview.jpg" />
         <link rel="canonical" href="https://www.miraista.com/chatbot" />
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content="noindex, nofollow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Miraista" />
         <meta name="language" content="English" />
