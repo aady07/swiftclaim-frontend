@@ -177,9 +177,9 @@ const ClaimUpload = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>AI-Powered Claim Upload & Verification | Miraista</title>
-        <meta name="description" content="Upload and process your insurance claims with Miraista's advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs. Our AI-powered verification ensures fast, reliable claim processing." />
-        <meta name="keywords" content="claim upload, insurance claims, AI claim processing, damage assessment, claim analysis, Miraista claims, vehicle damage verification, AI damage detection, automated claim processing, insurance verification" />
+        <title>Vehicle Damage Assessment AI | Upload Motor Damage Images | Miraista</title>
+        <meta name="description" content="Upload vehicle images for instant automated motor damage assessment with Miraista's vehicle damage assessment AI. Get accurate motor damage analysis, automated vehicle damage detection, and detailed damage reports. Our AI-powered motor damage assessment delivers fast, reliable results." />
+        <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment, automated vehicle damage assessment, upload vehicle damage, motor damage detection, vehicle damage analysis AI, automated motor damage analysis, vehicle damage assessment tool, AI motor damage detector, vehicle damage AI scanner" />
         <meta property="og:title" content="AI-Powered Claim Upload & Verification | Miraista" />
         <meta property="og:description" content="Upload and process your insurance claims with our advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs." />
         <meta property="og:url" content="https://www.miraista.com/claim-upload" />
@@ -267,16 +267,16 @@ const ClaimUpload = () => {
           <motion.h1 
             className="max-w-3xl text-center text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl"
           >
-            Upload & Verify Your Claim
+            Vehicle Damage Assessment AI
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mt-2 hover:scale-105 transition-transform duration-300">
-              Powered by AI
+              Automated Motor Damage Assessment
             </span>
           </motion.h1>
           
           <motion.p 
             className="my-6 max-w-xl text-center text-lg leading-relaxed md:text-xl text-gray-300"
           >
-            Upload an image of your damaged vehicle and our AI will analyze it in seconds, providing verification with high accuracy.
+            Upload vehicle photos and receive instant damage analysis. Our AI-powered system detects issues, evaluates severity, and generates comprehensive reports with high accuracy in seconds.
           </motion.p>
           
           <motion.div
@@ -396,8 +396,8 @@ const ClaimUpload = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Upload Document</h3>
-              <p className="text-gray-300">Upload your claim document or image in seconds</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Upload Vehicle Photo</h3>
+              <p className="text-gray-300">Quickly upload images of your vehicle. Support for multiple formats with secure processing that begins immediately after upload.</p>
             </motion.div>
 
             {/* Step 2 */}
@@ -418,7 +418,7 @@ const ClaimUpload = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-white">AI Analysis</h3>
-              <p className="text-gray-300">Our advanced AI analyzes the content with high accuracy</p>
+              <p className="text-gray-300">Advanced algorithms analyze images to detect damage, identify affected areas, and evaluate severity with precision using machine learning technology.</p>
             </motion.div>
           
             {/* Step 3 */}
@@ -438,8 +438,8 @@ const ClaimUpload = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-white">Instant Verification</h3>
-              <p className="text-gray-300">Get instant verification results and recommended next steps</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">Detailed Results</h3>
+              <p className="text-gray-300">Receive comprehensive assessment reports with identified damage areas, severity ratings, and actionable insights for your vehicle.</p>
             </motion.div>
           </motion.div>
         </motion.div>

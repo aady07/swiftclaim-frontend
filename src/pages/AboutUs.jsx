@@ -128,9 +128,9 @@ const AboutUs = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
        <Helmet>
-        <title>About Miraista - Our Mission & Team | AI Innovation Leaders</title>
-        <meta name="description" content="Discover Miraista's journey in AI innovation. Meet our expert team of AI specialists, learn about our mission to transform businesses through cutting-edge artificial intelligence solutions." />
-        <meta name="keywords" content="Miraista team, AI experts, artificial intelligence company, machine learning specialists, AI innovation leaders, tech company culture, AI transformation" />
+        <title>About Miraista - Vehicle Damage Assessment AI & Chatbot Innovation Leaders</title>
+        <meta name="description" content="Discover Miraista's journey in vehicle damage assessment AI and multi-language chatbot innovation. Meet our expert team developing automated motor damage assessment and customized chatbot AI solutions." />
+        <meta name="keywords" content="vehicle damage assessment AI company, motor damage assessment experts, multi-language chatbot developers, customized chatbot AI team, automated vehicle damage assessment specialists, intelligent chatbot innovators, Miraista team, AI damage detection experts" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
@@ -307,7 +307,7 @@ const AboutUs = () => {
                   variants={fadeInUp}
                   className="text-4xl md:text-5xl font-bold mb-4 text-white"
                 >
-                  Transforming Businesses Through AI
+                  Transforming Vehicle Damage Assessment & Communication Through AI
                 </motion.h2>
                 <motion.div 
                   variants={fadeInUp}
@@ -326,10 +326,10 @@ const AboutUs = () => {
                 >
                   <div className="w-20 h-1 bg-blue-500 mb-6"></div>
                   <p className="text-lg text-gray-300 mb-6">
-                    At Miraista, we are dedicated to revolutionizing businesses through intelligent AI solutions. Our core focus is on developing transformative technologies that solve complex challenges across industries. We believe in the power of artificial intelligence to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
+                    At Miraista, we are dedicated to revolutionizing vehicle damage assessment through intelligent AI solutions. Our core focus is on developing transformative vehicle damage assessment AI technology and multi-language chatbot systems that solve complex challenges. We believe in the power of automated motor damage assessment and customized chatbot AI to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
                   </p>
                   <p className="text-lg text-gray-300">
-                    Our approach combines cutting-edge research, strategic innovation, and a deep understanding of technological potential. We don't just develop AI solutions; we craft intelligent systems that adapt, learn, and drive tangible business value. From financial platforms to enterprise solutions, we're committed to pushing the boundaries of what's possible with artificial intelligence.
+                    Our approach combines cutting-edge research in vehicle damage assessment AI, strategic innovation in motor damage detection, and advanced multi-language chatbot development. We don't just develop AI solutions; we craft intelligent vehicle damage assessment systems and customized chatbot AI that adapt, learn, and drive tangible business value. From automated vehicle damage assessment to enterprise chatbot solutions, we're committed to pushing the boundaries of what's possible with vehicle damage assessment AI and intelligent chatbot technology.
                   </p>
                 </motion.div>
               </div>

@@ -59,7 +59,7 @@ const HomePage = () => {
         "Context-Aware Helper",
         "Natural Language Expert"
       ],
-      description: "Our advanced AI chatbot isn't just a simple assistant - it's your dedicated agent that understands context, handles complex queries, and provides intelligent responses. Experience natural conversations with an AI that truly understands you.",
+      description: "Our advanced AI chatbot isn't just a simple assistant - it's your dedicated customized chatbot that understands context, handles complex queries, and provides intelligent responses. Experience natural conversations with our multi-language chatbot AI that truly understands you. This intelligent chatbot supports multiple languages and offers personalized interactions tailored to your needs.",
       previewPosition: "right",
       type: "video",
       videoSource: "/chat.mp4"
@@ -74,7 +74,7 @@ const HomePage = () => {
         "Smart Document Analysis",
         "Real-time Validation"
       ],
-      description: "Transform your claims processing with our AI-powered system. Upload documents, and watch as our intelligent agent automatically extracts information, validates claims, and processes them with unprecedented speed and accuracy.",
+      description: "Transform your vehicle evaluation process with our AI-powered damage analysis system. Upload vehicle photos and get instant, precise damage detection with automated assessment technology that identifies issues, evaluates severity, and delivers comprehensive reports in seconds.",
       previewPosition: "left",
       type: "video",
       videoSource: "/claim.mp4"
@@ -261,9 +261,9 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Miraista - AI-Powered Business Solutions & Innovation</title>
-        <meta name="description" content="Transform your business with Miraista's cutting-edge AI solutions. We deliver advanced machine learning, data analytics, and AI innovation services to drive growth and efficiency." />
-        <meta name="keywords" content="AI solutions, business transformation, machine learning, data analytics, AI innovation, Miraista, artificial intelligence services, predictive analytics, natural language processing, computer vision" />
+        <title>Miraista - Vehicle Damage Assessment AI & Multi-Language Chatbot Solutions</title>
+        <meta name="description" content="Experience Miraista's advanced vehicle damage assessment AI and customized multi-language chatbot. Get automated motor damage assessment with AI-powered accuracy and intelligent chatbot support in multiple languages." />
+        <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment, AI chatbot, multi-language chatbot, customized chatbot, automated vehicle damage assessment, AI damage detection, chatbot AI, intelligent chatbot, automated motor damage analysis" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
@@ -528,7 +528,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               variants={fadeInUp}
               className="text-xl text-gray-600 mb-3"
             >
-              Discover how leading industries are leveraging our intelligent chatbot solutions to streamline operations and enhance customer experience.
+              Discover how leading industries are leveraging our intelligent multi-language chatbot solutions and customized chatbot AI to streamline operations and enhance customer experience. Our advanced chatbot supports multiple languages and delivers personalized interactions.
             </motion.p>
           </motion.div>
           
@@ -536,8 +536,8 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             {[
               {
                 industry: "Insurance",
-                title: "Automated Claims Processing",
-                description: "Our AI chatbot revolutionizes insurance claims by automating document processing, instant claim validation, and real-time status updates. Reduce processing time by 70% while maintaining 99.8% accuracy.",
+                title: "Automated Vehicle Damage Assessment",
+                description: "Our advanced vehicle damage assessment AI revolutionizes motor damage assessment by automating image analysis, instant vehicle damage detection, and real-time motor damage evaluation. Our automated vehicle damage assessment system reduces processing time by 70% while maintaining 99.8% accuracy in motor damage analysis.",
                 features: [
                   "Instant claim validation",
                   "Automated document processing",
@@ -868,22 +868,22 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               variants={fadeInUp}
               className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600 font-semibold tracking-wider uppercase text-sm mb-4 block"
             >
-              Auto Claim Processing
+              Vehicle Damage Assessment AI
             </motion.span>
             <motion.h2
               variants={fadeInUp}
               className="text-4xl lg:text-5xl font-bold text-white mb-6"
             >
-              Transform Claims Processing with{" "}
+              Transform Motor Damage Assessment with{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
-                AI-Powered Automation
+                AI-Powered Vehicle Damage Analysis
               </span>
             </motion.h2>
             <motion.p
               variants={fadeInUp}
               className="text-xl text-gray-300 mb-8"
             >
-              Experience the future of claims processing with our intelligent AI system that automates document analysis, validation, and processing with unprecedented accuracy.
+              Experience the future of AI-powered vehicle inspection. Our intelligent system automatically processes vehicle images, detects damage patterns, evaluates severity, and generates detailed assessment reports with unprecedented speed and accuracy.
             </motion.p>
           </motion.div>
 
@@ -898,26 +898,26 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             >
               {[
                 {
-                  title: "Smart Document Processing",
-                  description: "Our AI automatically extracts and validates information from various document types with 99.8% accuracy.",
+                  title: "Smart Image Analysis",
+                  description: "Advanced AI automatically processes vehicle photos with 99.8% accuracy, identifying damage locations, types, and severity levels instantly through cutting-edge computer vision technology.",
                   icon: "📄",
                   color: "from-green-500 to-blue-500"
                 },
                 {
-                  title: "Real-time Validation",
-                  description: "Instant verification of claim details against policy information and historical data.",
+                  title: "Real-time Damage Evaluation",
+                  description: "Get instant verification of damage details with automated severity assessment. Our system validates affected components and provides immediate analysis results.",
                   icon: "⚡",
                   color: "from-green-500 to-teal-500"
                 },
                 {
-                  title: "Automated Decision Making",
-                  description: "AI-powered decision engine that processes claims based on predefined rules and machine learning models.",
+                  title: "Automated Assessment Engine",
+                  description: "AI-powered analysis engine processes vehicle images using advanced machine learning models to deliver precise damage evaluation and comprehensive reports.",
                   icon: "🤖",
                   color: "from-green-500 to-teal-500"
                 },
                 {
-                  title: "Fraud Detection",
-                  description: "Advanced algorithms detect suspicious patterns and potential fraud in real-time.",
+                  title: "Intelligent Pattern Recognition",
+                  description: "Sophisticated algorithms identify various damage patterns, assess severity levels, and provide detailed insights through comprehensive evaluation technology.",
                   icon: "🛡️",
                   color: "from-red-500 to-orange-500"
                 }
@@ -1401,6 +1401,21 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             ))}
           </div>
         </div>
+      </section>
+
+      {/* SEO Content Section - Hidden but readable by search engines */}
+      <section className="hidden">
+        <h2>Vehicle Damage Assessment AI and Motor Damage Assessment Solutions</h2>
+        <p>Miraista provides cutting-edge vehicle damage assessment technology powered by artificial intelligence. Our system offers instant motor damage analysis through automated image processing. Experience fast, accurate vehicle inspection with intelligent damage detection capabilities that evaluate severity and generate comprehensive reports.</p>
+        
+        <h2>Multi-Language Chatbot and Customized Chatbot AI</h2>
+        <p>Our intelligent chatbot platform supports multiple languages, delivering a versatile communication solution for global businesses. The customized chatbot adapts to specific business needs, offering personalized interactions and seamless integration. Discover how our AI-powered chatbot transforms customer engagement across different languages.</p>
+        
+        <h3>How Vehicle Damage Assessment Works</h3>
+        <p>Our automated assessment process uses advanced AI algorithms to analyze vehicle images and detect damage. The system identifies patterns, evaluates severity levels, and generates detailed analysis reports instantly. This technology streamlines the entire vehicle inspection workflow, from image upload to final report generation.</p>
+        
+        <h3>Benefits of Multi-Language Chatbot</h3>
+        <p>Multi-language chatbot capabilities ensure seamless communication across different regions and languages. Our AI learns from interactions to provide increasingly accurate responses. The solution integrates easily with existing business systems, enhancing customer service efficiency.</p>
       </section>
     </div>
   );

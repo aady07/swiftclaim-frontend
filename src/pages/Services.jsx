@@ -45,9 +45,9 @@ const Services = () => {
     individual: [
       {
         icon: <FiShield />,
-        title: "Claim Verification",
-        description: "Verify the authenticity of claims with our AI-powered verification system",
-        features: ["Instant verification", "99.8% accuracy", "Secure processing", "Detailed reports"]
+        title: "Vehicle Damage Assessment AI",
+        description: "Automated motor damage assessment with our advanced vehicle damage assessment AI system that analyzes vehicle images instantly",
+        features: ["Automated vehicle damage assessment", "Motor damage detection", "99.8% accuracy", "Detailed damage analysis reports"]
       },
       {
         icon: <FiDatabase />,
@@ -57,9 +57,9 @@ const Services = () => {
       },
       {
         icon: <FiUsers />,
-        title: "User Profiling",
-        description: "Create comprehensive profiles for better understanding of claim patterns",
-        features: ["Behavioral analysis", "Risk assessment", "User categorization", "Continuous learning"]
+        title: "Multi-Language Chatbot AI",
+        description: "Customized chatbot AI with multi-language support for seamless customer communication across different languages",
+        features: ["Multi-language chatbot capabilities", "Customized chatbot responses", "24/7 intelligent chatbot support", "Personalized chatbot interactions"]
       }
     ],
     business: [
@@ -85,18 +85,18 @@ const Services = () => {
   };
   const processSteps = [
     {
-      title: "Data Submission",
-      description: "Upload your documents for verification through our secure portal",
+      title: "Image Submission",
+      description: "Upload vehicle photos through our secure portal for instant processing and analysis",
       number: "01"
     },
     {
       title: "AI Processing",
-      description: "Our advanced AI analyzes the submitted information for authenticity",
+      description: "Advanced algorithms analyze images to detect damage patterns and evaluate severity with precision",
       number: "02"
     },
     {
-      title: "Verification Report",
-      description: "Receive a detailed verification report with actionable insights",
+      title: "Detailed Report",
+      description: "Receive comprehensive assessment reports with identified issues, severity ratings, and recommendations",
       number: "03"
     },
     {
@@ -153,9 +153,9 @@ const Services = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Services</title>
-        <meta name="description" content="Discover Miraista's comprehensive AI-powered verification services. From individual claim verification to enterprise solutions, we provide accurate and efficient verification systems." />
-        <meta name="keywords" content="AI verification services, claim verification, enterprise solutions, data analysis, user profiling, Miraista services" />
+        <title>Vehicle Damage Assessment AI Services | Multi-Language Chatbot Solutions</title>
+        <meta name="description" content="Discover Miraista's comprehensive vehicle damage assessment AI services and multi-language chatbot solutions. Automated motor damage assessment, customized chatbot AI, and intelligent vehicle damage analysis for businesses." />
+        <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment services, automated vehicle damage assessment, AI chatbot services, multi-language chatbot, customized chatbot AI, intelligent chatbot solutions, motor damage detection, vehicle damage analysis AI" />
         <meta property="og:title" content="Services | Miraista - AI-Powered Verification Solutions" />
         <meta property="og:description" content="Explore our range of AI-powered verification services designed for both individuals and businesses. Get accurate, efficient, and secure verification solutions." />
         <meta property="og:url" content="https://www.miraista.com/services" />
@@ -206,9 +206,9 @@ const Services = () => {
               variants={fadeInUp}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6"
             >
-              <span className="block mb-2 sm:mb-4">AI-Powered</span>
+              <span className="block mb-2 sm:mb-4">Vehicle Damage Assessment AI</span>
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                Verification Solutions
+                & Multi-Language Chatbot
               </span>
             </motion.h1>
             
@@ -216,7 +216,7 @@ const Services = () => {
               variants={fadeInUp}
               className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-8 sm:mb-10 text-gray-300 px-4 sm:px-0"
             >
-              We offer cutting-edge verification services powered by artificial intelligence to ensure accuracy and reliability for individuals and businesses alike.
+              We offer cutting-edge vehicle damage assessment AI services and customized multi-language chatbot solutions powered by artificial intelligence. Our automated motor damage assessment and intelligent chatbot AI ensure accuracy and reliability for individuals and businesses alike.
             </motion.p>
             
             <motion.div
@@ -275,8 +275,14 @@ const Services = () => {
               variants={fadeInUp}
               className="text-4xl md:text-5xl font-bold mb-4 text-white"
             >
-              Our Verification Services
+              Vehicle Damage Assessment & Chatbot Services
             </motion.h2>
+            <motion.p
+              variants={fadeInUp}
+              className="text-gray-300 mb-6 max-w-3xl mx-auto"
+            >
+              Our AI-powered vehicle inspection services deliver precise automated damage assessment. Combined with our multilingual chatbot and customizable AI communication solutions, we provide comprehensive automation for vehicle analysis and seamless customer support across languages.
+            </motion.p>
             <motion.div 
               variants={fadeInUp}
               className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"
@@ -380,8 +386,14 @@ const Services = () => {
               variants={fadeInUp}
               className="text-4xl md:text-5xl font-bold mb-4 text-white"
             >
-              Our Verification Process
+              Vehicle Damage Assessment Process
             </motion.h2>
+            <motion.p
+              variants={fadeInUp}
+              className="text-gray-300 mb-6 max-w-3xl mx-auto"
+            >
+              Our streamlined workflow processes vehicle images efficiently using advanced AI algorithms. The system delivers instant damage detection, severity evaluation, and comprehensive inspection reports with exceptional accuracy.
+            </motion.p>
             <motion.div 
               variants={fadeInUp}
               className="w-24 h-1 bg-gradient-to-r from-gray-500 to-gray-700 mx-auto"
