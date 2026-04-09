@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getLanguageLocale } from '../../utils/languageUtils';
 
-const API_BASE_URL = 'https://aadybackend.site/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 const buildPayload = (messageData = {}, languageHint) => {
   const resolvedLanguage = getLanguageLocale(languageHint ?? messageData.language);

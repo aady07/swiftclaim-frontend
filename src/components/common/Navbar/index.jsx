@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom"; // Added useLocation hook
 import { motion, AnimatePresence } from "framer-motion";
 import { IoHome } from "react-icons/io5";
-import { BsFillPeopleFill } from "react-icons/bs";
+import { BsFillPeopleFill, BsJournalText } from "react-icons/bs";
 import { MdMiscellaneousServices } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { FaAngleDown } from "react-icons/fa";
@@ -30,7 +30,7 @@ const Navbar = () => {
     // Special case for services dropdown
     if (path === "#") {
       // Check if any service option path is active
-      return serviceOptions.some(option => location.pathname === option.href);
+      return location.pathname === "/services" || location.pathname === "/products" || serviceOptions.some(option => !option.external && location.pathname === option.href);
     }
     
     return location.pathname.startsWith(path);
@@ -114,13 +114,15 @@ const Navbar = () => {
   const navItems = [
     { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 3, text: "Services", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
-    { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
+    { id: 3, text: "Products", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
+    { id: 4, text: "Blog", href: "/blog", icon: <BsJournalText className="text-xl" /> },
+    { id: 5, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
   ];
 
   const serviceOptions = [
     { id: 1, text: "Claim", href: "/claimupload" },
-    { id: 2, text: "Chatbot", href: "/chatbotpage" }
+    { id: 2, text: "Chatbot", href: "/chatbotpage" },
+    { id: 3, text: "UKTI", href: "https://meetukti.com/", external: true }
   ];
 
   // Function to get window width safely (for SSR compatibility)
@@ -129,7 +131,7 @@ const Navbar = () => {
   };
 
   // Check if current path is a service page
-  const isServicePage = serviceOptions.some(option => location.pathname === option.href);
+  const isServicePage = location.pathname === "/services" || location.pathname === "/products" || serviceOptions.some(option => !option.external && location.pathname === option.href);
 
   return (
     <motion.div 
@@ -257,19 +259,33 @@ const Navbar = () => {
                           role="menu"
                         >
                           {serviceOptions.map((option) => (
-                            <Link
-                              key={option.id}
-                              to={option.href}
-                              className={`block px-4 py-3 text-sm ${
-                                isActive(option.href)
-                                  ? "text-blue-400 bg-blue-900/30"
-                                  : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
-                              } transition-colors duration-200`}
-                              role="menuitem"
-                              onClick={handleServiceOptionClick}
-                            >
-                              {option.text}
-                            </Link>
+                            option.external ? (
+                              <a
+                                key={option.id}
+                                href={option.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block px-4 py-3 text-sm text-gray-200 hover:text-blue-400 hover:bg-blue-900/20 transition-colors duration-200"
+                                role="menuitem"
+                                onClick={handleServiceOptionClick}
+                              >
+                                {option.text}
+                              </a>
+                            ) : (
+                              <Link
+                                key={option.id}
+                                to={option.href}
+                                className={`block px-4 py-3 text-sm ${
+                                  isActive(option.href)
+                                    ? "text-blue-400 bg-blue-900/30"
+                                    : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
+                                } transition-colors duration-200`}
+                                role="menuitem"
+                                onClick={handleServiceOptionClick}
+                              >
+                                {option.text}
+                              </Link>
+                            )
                           ))}
                         </motion.div>
                       )}
@@ -384,18 +400,31 @@ const Navbar = () => {
                                   className="mt-2 ml-4 space-y-2"
                                 >
                                   {serviceOptions.map((option) => (
-                                    <Link
-                                      key={option.id}
-                                      to={option.href}
-                                      className={`block px-4 py-2 rounded-lg text-base ${
-                                        isActive(option.href)
-                                          ? "text-blue-400 bg-blue-900/30"
-                                          : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
-                                      } transition-colors duration-200`}
-                                      onClick={handleServiceOptionClick}
-                                    >
-                                      {option.text}
-                                    </Link>
+                                    option.external ? (
+                                      <a
+                                        key={option.id}
+                                        href={option.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block px-4 py-2 rounded-lg text-base text-gray-200 hover:text-blue-400 hover:bg-blue-900/20 transition-colors duration-200"
+                                        onClick={handleServiceOptionClick}
+                                      >
+                                        {option.text}
+                                      </a>
+                                    ) : (
+                                      <Link
+                                        key={option.id}
+                                        to={option.href}
+                                        className={`block px-4 py-2 rounded-lg text-base ${
+                                          isActive(option.href)
+                                            ? "text-blue-400 bg-blue-900/30"
+                                            : "text-gray-200 hover:text-blue-400 hover:bg-blue-900/20"
+                                        } transition-colors duration-200`}
+                                        onClick={handleServiceOptionClick}
+                                      >
+                                        {option.text}
+                                      </Link>
+                                    )
                                   ))}
                                 </motion.div>
                               )}

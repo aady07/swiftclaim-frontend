@@ -278,10 +278,10 @@ const Contacts = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/products")}
                 className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
               >
-                Our Services
+                Our Products
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -593,7 +593,7 @@ const Contacts = () => {
                   <motion.button
                     className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg font-bold"
                     whileHover={{ scale: 1.05 }}
-                    onClick={() => navigate("/services")}
+                    onClick={() => navigate("/products")}
 
                     whileTap={{ scale: 0.95 }}
                   >

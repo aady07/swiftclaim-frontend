@@ -11,31 +11,18 @@ const AboutUs = () => {
   const navigate = useNavigate();
 
   const teamMembers = [
-    // Commented out - can be restored easily
-    // { 
-    //   name: "Rachit", 
-    //   role: "Co-Founder & CEO", 
-    //   image: "https://i.imgur.com/wc1ZutY.png", 
-    //   bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
-    // },
+    { 
+      name: "Rachit", 
+      role: "Co-Founder & CEO", 
+      image: "https://i.imgur.com/wc1ZutY.png", 
+      bio: "Expert in AI and machine learning with deep specialization in financial platform technologies. Develops advanced AI solutions that transform complex financial data into actionable insights." 
+    },
     { 
       name: "Bharat Parmar", 
       role: "Co-Founder & Director", 
       image: "https://i.imgur.com/OehHTK9.jpeg", 
       bio: "Seasoned business expert with comprehensive understanding of strategic business operations, technology integration, and organizational growth strategies." 
     },
-    { 
-      name: "Abinash Adhikari", 
-      role: "Co-Founder & Director", 
-      image: "https://i.ibb.co/vx85nJzH/Abinash-Pic-from-Whats-App.jpg", 
-      bio: "Democratic and visionary data leader with 21+ years driving innovation, from Indian Statistical Institute to IBM, Mindtree, and Zuno General Insurance."    },
-    // Commented out - can be restored easily
-    // { 
-    //   name: "Adarsh", 
-    //   role: "Co-Founder & CTO", 
-    //   image: "https://i.imgur.com/e9LoxyO.png", 
-    //   bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
-    // },
   ];
 
   const values = [
@@ -176,14 +163,14 @@ const AboutUs = () => {
               "founders": [
                 {
                   "@type": "Person",
-                  "name": "Bharat Parmar",
-                  "jobTitle": "Co-Founder & Director"
+                  "name": "Rachit",
+                  "jobTitle": "Co-Founder & CEO"
                 },
                 {
                   "@type": "Person",
-                  "name": "Abinash Adhikari",
+                  "name": "Bharat Parmar",
                   "jobTitle": "Co-Founder & Director"
-                }
+                },
               ]
             }
           })}
@@ -253,10 +240,10 @@ const AboutUs = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/products")}
                 className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
               >
-                Our Services
+                Our Products
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -368,7 +355,7 @@ const AboutUs = () => {
               </motion.div>
               
               {/* Desktop / large screens */}
-              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
                 {teamMembers.map((member, index) => (
                   <motion.div
                     key={`${member.name}-desktop`}

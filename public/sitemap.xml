@@ -32,6 +32,12 @@
 	<changefreq>weekly</changefreq>
 </url>
 <url>
+	<loc>https://miraista.com/blog</loc>
+	<lastmod>2026-01-17</lastmod>
+	<priority>0.8</priority>
+	<changefreq>weekly</changefreq>
+</url>
+<url>
 	<loc>https://miraista.com/careers</loc>
 	<lastmod>2026-01-17</lastmod>
 	<priority>0.7</priority>
