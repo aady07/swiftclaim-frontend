@@ -153,14 +153,14 @@ const Services = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Vehicle Damage Assessment AI Services | Multi-Language Chatbot Solutions</title>
+        <title>Vehicle Damage Assessment AI Products | Multi-Language Chatbot Solutions</title>
         <meta name="description" content="Discover Miraista's comprehensive vehicle damage assessment AI services and multi-language chatbot solutions. Automated motor damage assessment, customized chatbot AI, and intelligent vehicle damage analysis for businesses." />
         <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment services, automated vehicle damage assessment, AI chatbot services, multi-language chatbot, customized chatbot AI, intelligent chatbot solutions, motor damage detection, vehicle damage analysis AI" />
-        <meta property="og:title" content="Services | Miraista - AI-Powered Verification Solutions" />
+        <meta property="og:title" content="Products | Miraista - AI-Powered Verification Solutions" />
         <meta property="og:description" content="Explore our range of AI-powered verification services designed for both individuals and businesses. Get accurate, efficient, and secure verification solutions." />
-        <meta property="og:url" content="https://www.miraista.com/services" />
+        <meta property="og:url" content="https://www.miraista.com/products" />
         <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://www.miraista.com/services" />
+        <link rel="canonical" href="https://www.miraista.com/products" />
       </Helmet>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
@@ -216,7 +216,7 @@ const Services = () => {
               variants={fadeInUp}
               className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-8 sm:mb-10 text-gray-300 px-4 sm:px-0"
             >
-              We offer cutting-edge vehicle damage assessment AI services and customized multi-language chatbot solutions powered by artificial intelligence. Our automated motor damage assessment and intelligent chatbot AI ensure accuracy and reliability for individuals and businesses alike.
+              We offer cutting-edge vehicle damage assessment AI products and customized multi-language chatbot solutions powered by artificial intelligence. Our automated motor damage assessment and intelligent chatbot AI ensure accuracy and reliability for individuals and businesses alike.
             </motion.p>
             
             <motion.div
@@ -234,7 +234,7 @@ const Services = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/products")}
                 className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-slate-500 text-white rounded-lg text-base sm:text-lg font-medium"
               >
                 Learn More
@@ -275,13 +275,13 @@ const Services = () => {
               variants={fadeInUp}
               className="text-4xl md:text-5xl font-bold mb-4 text-white"
             >
-              Vehicle Damage Assessment & Chatbot Services
+              Vehicle Damage Assessment & Chatbot Products
             </motion.h2>
             <motion.p
               variants={fadeInUp}
               className="text-gray-300 mb-6 max-w-3xl mx-auto"
             >
-              Our AI-powered vehicle inspection services deliver precise automated damage assessment. Combined with our multilingual chatbot and customizable AI communication solutions, we provide comprehensive automation for vehicle analysis and seamless customer support across languages.
+              Our AI-powered vehicle inspection products deliver precise automated damage assessment. Combined with our multilingual chatbot and customizable AI communication solutions, we provide comprehensive automation for vehicle analysis and seamless customer support across languages.
             </motion.p>
             <motion.div 
               variants={fadeInUp}
@@ -289,7 +289,7 @@ const Services = () => {
             />
           </motion.div>
           
-          {/* Service type tabs */}
+          {/* Product type tabs */}
           <motion.div 
             variants={fadeInUp}
             initial="hidden"
@@ -309,9 +309,40 @@ const Services = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {tab} Services
+                {tab} Products
               </motion.button>
             ))}
+          </motion.div>
+
+          {/* UKTI product spotlight */}
+          <motion.div
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <div className="bg-gradient-to-br from-blue-900/30 to-gray-800/60 border border-blue-500/30 rounded-2xl p-8">
+              <p className="text-sm uppercase tracking-wider text-blue-300 mb-2">Meet UKTI</p>
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">AI-powered early learning product for schools</h3>
+              <p className="text-gray-300 mb-6">
+                UKTI is an AI-powered early learning platform that helps schools deliver engaging, activity-based learning for young children. Using voice, image recognition, and guided classroom workflows, UKTI supports teachers in building language, cognition, and confidence through interactive playgroup and foundational learning modules.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-200 mb-6">
+                <div>- AI-assisted learning through voice + visual interaction</div>
+                <div>- Built for schools, teachers, and classroom workflows</div>
+                <div>- Real-time student activity tracking and progress visibility</div>
+                <div>- Designed for early years: playful, structured, and scalable</div>
+              </div>
+              <a
+                href="https://meetukti.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold"
+              >
+                Visit UKTI
+              </a>
+            </div>
           </motion.div>
 
           {/* Services grid - Updated animation properties */}

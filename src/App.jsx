@@ -15,6 +15,7 @@ import APIDocumentation from "./pages/APIDocumentation";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
+import Blog from "./pages/Blog";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
 
@@ -44,12 +45,14 @@ const App = () => {
           <Route path="/" element={<Intro />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/products" element={<Services />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/claimupload" element={<ClaimUpload />} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />
           <Route path="/chatbot-iframe" element={<ChatbotIframePage />} />
           <Route path="/apidocs" element={<APIDocumentation />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/legal" element={<Legal />} />
           <Route path="/widget" element={<Widget />} />
           <Route path="*" element={<NotFound />} />
