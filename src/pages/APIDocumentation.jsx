@@ -193,10 +193,10 @@ const APIDocumentation = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/products")}
+                onClick={() => navigate("/services")}
                 className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
               >
-                View Products
+                View Services
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}

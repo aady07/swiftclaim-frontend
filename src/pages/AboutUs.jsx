@@ -23,6 +23,13 @@ const AboutUs = () => {
       image: "https://i.imgur.com/OehHTK9.jpeg", 
       bio: "Seasoned business expert with comprehensive understanding of strategic business operations, technology integration, and organizational growth strategies." 
     },
+    // Commented out - can be restored easily
+    // { 
+    //   name: "Adarsh", 
+    //   role: "Co-Founder & CTO", 
+    //   image: "https://i.imgur.com/e9LoxyO.png", 
+    //   bio: "Technical expert with full-stack experience specializing in creating and deploying large-scale financial applications with robust architectural design." 
+    // },
   ];
 
   const values = [
@@ -163,14 +170,14 @@ const AboutUs = () => {
               "founders": [
                 {
                   "@type": "Person",
-                  "name": "Rachit",
-                  "jobTitle": "Co-Founder & CEO"
-                },
-                {
-                  "@type": "Person",
                   "name": "Bharat Parmar",
                   "jobTitle": "Co-Founder & Director"
                 },
+                {
+                  "@type": "Person",
+                  "name": "Abinash Adhikari",
+                  "jobTitle": "Co-Founder & Director"
+                }
               ]
             }
           })}
@@ -240,10 +247,10 @@ const AboutUs = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/products")}
+                onClick={() => navigate("/services")}
                 className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
               >
-                Our Products
+                Our Services
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -355,7 +362,7 @@ const AboutUs = () => {
               </motion.div>
               
               {/* Desktop / large screens */}
-              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                 {teamMembers.map((member, index) => (
                   <motion.div
                     key={`${member.name}-desktop`}
