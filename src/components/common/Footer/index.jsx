@@ -13,15 +13,14 @@ const Footer = () => {
   const navItems = [
     { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 3, text: "Products", href: "/products", icon: <MdMiscellaneousServices className="text-xl" /> },
+    { id: 3, text: "Services", href: "/services", icon: <MdMiscellaneousServices className="text-xl" /> },
     { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
     { id: 5, text: "Contacts", href: "/contacts", icon: <BiSupport className="text-xl" /> },
   ];
 
   const serviceOptions = [
     { id: 1, text: "Claim", href: "/claimupload" },
-    { id: 2, text: "Chatbot", href: "/chatbotpage" },
-    { id: 3, text: "UKTI", href: "https://meetukti.com/", external: true }
+    { id: 2, text: "Chatbot", href: "/chatbotpage" }
   ];
 
   const fadeInUp = {
@@ -148,7 +147,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* Product Options */}
+          {/* Service Options */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -157,33 +156,19 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             className="flex flex-col items-center md:items-start md:pl-8"
           >
-            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Product Options</h5>
+            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Service Options</h5>
             <ul className="space-y-3 w-full list-none">
               {serviceOptions.map((option) => (
                 <li key={option.id} className="w-full">
-                  {option.external ? (
-                    <motion.a
-                      href={option.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  <Link to={option.href} className="block" aria-label={`Learn more about ${option.text}`}>
+                    <motion.div
                       whileHover={{ x: 5 }}
                       whileTap={{ scale: 0.95 }}
-                      className="block text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
-                      aria-label={`Open ${option.text} website`}
+                      className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
                     >
                       {option.text}
-                    </motion.a>
-                  ) : (
-                    <Link to={option.href} className="block" aria-label={`Learn more about ${option.text}`}>
-                      <motion.div
-                        whileHover={{ x: 5 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="text-gray-400 hover:text-blue-400 transition-colors duration-300 text-sm md:text-base"
-                      >
-                        {option.text}
-                      </motion.div>
-                    </Link>
-                  )}
+                    </motion.div>
+                  </Link>
                 </li>
               ))}
             </ul>
