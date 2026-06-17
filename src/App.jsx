@@ -16,6 +16,7 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import Blog from "./pages/Blog";
+import LendOS from "./pages/LendOS";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
 
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/" element={<Intro />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/lendos" element={<LendOS />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/claimupload" element={<ClaimUpload />} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />

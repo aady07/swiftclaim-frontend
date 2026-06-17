@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { FiCheck, FiShield, FiDatabase, FiUsers, FiTrendingUp, FiLayers, FiCode } from "react-icons/fi";
+import { FiCheck, FiShield, FiDatabase, FiUsers, FiTrendingUp, FiLayers, FiCode, FiArrowRight } from "react-icons/fi";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
@@ -153,11 +153,12 @@ const Services = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Vehicle Damage Assessment AI Services | Multi-Language Chatbot Solutions</title>
-        <meta name="description" content="Discover Miraista's comprehensive vehicle damage assessment AI services and multi-language chatbot solutions. Automated motor damage assessment, customized chatbot AI, and intelligent vehicle damage analysis for businesses." />
-        <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment services, automated vehicle damage assessment, AI chatbot services, multi-language chatbot, customized chatbot AI, intelligent chatbot solutions, motor damage detection, vehicle damage analysis AI" />
-        <meta property="og:title" content="Services | Miraista - AI-Powered Verification Solutions" />
-        <meta property="og:description" content="Explore our range of AI-powered verification services designed for both individuals and businesses. Get accurate, efficient, and secure verification solutions." />
+        <title>LendOS Digital Lending Platform | AI Credit Decisioning & Lending Services | Miraista</title>
+        <meta name="description" content="Explore LendOS, Miraista's AI-powered end-to-end digital lending platform for Banks, NBFCs & Fintechs. Plus vehicle damage assessment AI and multi-language chatbot solutions. Credit decisions in under 10 seconds." />
+        <meta name="keywords" content="LendOS, digital lending platform, AI lending services, credit decisioning, loan disbursal, NBFC lending software, fintech lending, vehicle damage assessment AI, multi-language chatbot, automated motor damage assessment" />
+        <meta property="og:title" content="LendOS Digital Lending Platform | AI-Powered Lending Services | Miraista" />
+        <meta property="og:description" content="LendOS enables Banks, NBFCs & Fintechs to onboard customers, underwrite loans, disburse funds, and manage collections. Also explore our vehicle damage assessment AI and chatbot solutions." />
+        <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
         <meta property="og:url" content="https://www.miraista.com/services" />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://www.miraista.com/services" />
@@ -254,6 +255,65 @@ const Services = () => {
           </svg>
         </div>
       </section>
+
+      {/* LendOS Featured Service */}
+      <div className="bg-gradient-to-b from-gray-900 to-black pt-16">
+        <div className="container mx-auto px-4">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <motion.div
+              variants={fadeInUp}
+              className="relative overflow-hidden rounded-2xl border border-green-500/20 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-blue-500/5 to-green-500/5" />
+              <div className="relative grid lg:grid-cols-2 gap-8 items-center p-8 md:p-12">
+                <div>
+                  <span className="inline-block text-green-400 uppercase tracking-wider text-sm font-semibold mb-3">Featured Product</span>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">LendOS</h2>
+                  <p className="text-lg text-gray-300 mb-4">
+                    AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections
+                  </p>
+                  <p className="text-gray-400 mb-6">
+                    Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios—all in a single platform.
+                  </p>
+                  <ul className="space-y-2 mb-8">
+                    {["Credit Decisions in Under 10 Seconds", "End-to-End Lending Automation", "Modular & Configurable Platform"].map((feature) => (
+                      <li key={feature} className="flex items-center gap-2 text-gray-300">
+                        <FiCheck className="text-green-500 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate("/lendos")}
+                    className="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg font-semibold flex items-center gap-2"
+                  >
+                    Explore LendOS <FiArrowRight />
+                  </motion.button>
+                </div>
+                <div className="hidden lg:block">
+                  <div className="p-1 rounded-2xl bg-gradient-to-r from-green-500 via-blue-500 to-green-500 shadow-lg shadow-green-500/20">
+                    <div className="rounded-2xl bg-gray-900/90 p-2">
+                      <img
+                        src="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png"
+                        alt="LendOS Digital Lending Platform"
+                        className="w-full h-auto object-contain rounded-xl"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
 
       {/* Main content with gradient background */}
       <div className="bg-gradient-to-b from-gray-900 to-black">

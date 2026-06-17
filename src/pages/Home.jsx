@@ -5,11 +5,14 @@ import { useScroll, useTransform } from "framer-motion";
 import { Helmet } from "react-helmet";
 
 // Typewriter effect component
-const TypewriterText = ({ text, variations, color = "from-green-500 to-blue-600" }) => {
+const TypewriterText = ({ text, variations, onVariationChange }) => {
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentVariation, setCurrentVariation] = useState(0);
+
+  useEffect(() => {
+    onVariationChange?.(currentVariation);
+  }, [currentVariation, onVariationChange]);
 
   useEffect(() => {
     const currentText = variations[currentVariation];
@@ -50,6 +53,24 @@ const HomePage = () => {
   // Hero section text carousel data with variations
   const heroTexts = [
     {
+      title: "LendOS",
+      subtitle: "Digital Lending Platform",
+      subtitleVariations: [
+        "Digital Lending Platform",
+        "Instant Credit Decisioning",
+        "End-to-End Automation",
+      ],
+      description: "AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections. Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios—all in a single platform.",
+      uspBanner: "Credit Decisions in Under 10 Seconds—even for New-to-Bank Customers.",
+      previewPosition: "right",
+      type: "image",
+      imageSources: [
+        "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero.png",
+        "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero1.png",
+        "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png",
+      ],
+    },
+    {
       title: "Meet Your AI Agent",
       subtitle: "Smart Chatbot Assistant",
       subtitleVariations: [
@@ -82,6 +103,24 @@ const HomePage = () => {
   ];
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [lendosImageIndex, setLendosImageIndex] = useState(0);
+
+  const getPrimaryCTA = () => {
+    if (currentTextIndex === 0) return { label: "Explore LendOS", path: "/lendos" };
+    if (currentTextIndex === 1) return { label: "Meet Your Agent", path: "/chatbotpage" };
+    return { label: "Try It Now", path: "/claimupload" };
+  };
+
+  const getSecondaryCTA = () => {
+    if (currentTextIndex === 0) return "/lendos";
+    return "/services";
+  };
+
+  useEffect(() => {
+    if (currentTextIndex !== 0) {
+      setLendosImageIndex(0);
+    }
+  }, [currentTextIndex]);
 
   useEffect(() => {
     // Auto-scroll carousel every 10-12 seconds
@@ -261,16 +300,16 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>Miraista - Vehicle Damage Assessment AI & Multi-Language Chatbot Solutions</title>
-        <meta name="description" content="Experience Miraista's advanced vehicle damage assessment AI and customized multi-language chatbot. Get automated motor damage assessment with AI-powered accuracy and intelligent chatbot support in multiple languages." />
-        <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment, AI chatbot, multi-language chatbot, customized chatbot, automated vehicle damage assessment, AI damage detection, chatbot AI, intelligent chatbot, automated motor damage analysis" />
+        <title>LendOS | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs</title>
+        <meta name="description" content="LendOS is an AI-powered end-to-end digital lending platform that enables Banks, NBFCs, and Fintechs to automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable infrastructure platform." />
+        <meta name="keywords" content="LendOS, digital lending platform, AI lending, credit decisioning, loan disbursal, collections management, NBFC lending software, fintech lending, instant credit decision, end-to-end lending platform, vehicle damage assessment AI, AI chatbot" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.miraista.com" />
-        <meta property="og:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
-        <meta property="og:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
-        <meta property="og:image" content="https://www.miraista.com/og-image.png" />
+        <meta property="og:title" content="LendOS - AI-Powered End-to-End Digital Lending Platform | Miraista" />
+        <meta property="og:description" content="Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, and manage collections—all in a single AI-powered platform. Credit decisions in under 10 seconds." />
+        <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -278,9 +317,9 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://www.miraista.com" />
-        <meta property="twitter:title" content="Miraista - AI-Powered Business Solutions & Innovation" />
-        <meta property="twitter:description" content="Transform your business with Miraista's cutting-edge AI solutions. Advanced machine learning and data analytics services for modern enterprises." />
-        <meta property="twitter:image" content="https://www.miraista.com/og-image.png" />
+        <meta property="twitter:title" content="LendOS - AI-Powered End-to-End Digital Lending Platform | Miraista" />
+        <meta property="twitter:description" content="Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, and manage collections—all in a single AI-powered platform." />
+        <meta property="twitter:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
         <meta property="twitter:image:width" content="1200" />
         <meta property="twitter:image:height" content="630" />
         
@@ -301,12 +340,33 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             "name": "Miraista",
             "url": "https://www.miraista.com",
             "logo": "https://www.miraista.com/logo.png",
-            "description": "AI-Powered Business Solutions & Innovation",
+            "description": "AI-Powered Digital Lending, Vehicle Damage Assessment & Chatbot Solutions",
             "sameAs": [
               "https://www.linkedin.com/company/miraista",
               "https://twitter.com/miraista",
               "https://www.facebook.com/miraista"
             ]
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "LendOS",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Web",
+            "description": "AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections. Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "provider": {
+              "@type": "Organization",
+              "name": "Miraista",
+              "url": "https://www.miraista.com"
+            },
+            "image": "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png"
           })}
         </script>
       </Helmet>
@@ -366,6 +426,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                       <TypewriterText 
                         text={heroTexts[currentTextIndex].subtitle}
                         variations={heroTexts[currentTextIndex].subtitleVariations}
+                        onVariationChange={currentTextIndex === 0 ? setLendosImageIndex : undefined}
                       />
                     </h1>
                     
@@ -383,17 +444,17 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 <motion.button
                   whileHover={{ scale: 1.05, rotateX: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(currentTextIndex === 0 ? "/chatbotpage" : "/claimupload")}
+                  onClick={() => navigate(getPrimaryCTA().path)}
                   className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 relative overflow-hidden group transform-gpu"
                 >
-                  <span className="relative z-10">{currentTextIndex === 0 ? "Meet Your Agent" : "Try It Now"}</span>
+                  <span className="relative z-10">{getPrimaryCTA().label}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0" />
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05, rotateX: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate("/services")}
+                  onClick={() => navigate(getSecondaryCTA())}
                   className="px-8 py-4 bg-gray-800/80 backdrop-blur-sm text-gray-200 rounded-xl text-lg font-semibold border-2 border-gray-700 hover:border-gray-600 transition-all duration-300 relative overflow-hidden group transform-gpu"
                 >
                   <span className="relative z-10">Learn More</span>
@@ -402,23 +463,33 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 </motion.button>
               </motion.div>
 
-              {/* Stats Section */}
+              {/* Stats / USP Section */}
               <motion.div
                 variants={fadeInUp}
-                className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-6"
+                className="mt-12"
               >
-                {[
-                  { value: "99.8%", label: "Accuracy" },
-                  { value: "24/7", label: "Support" },
-                  { value: "10x", label: "Faster" },
-                ].map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-gray-400">{stat.label}</div>
+                {heroTexts[currentTextIndex].uspBanner ? (
+                  <div className="px-4 py-3 rounded-xl bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20">
+                    <p className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600">
+                      {heroTexts[currentTextIndex].uspBanner}
+                    </p>
                   </div>
-                ))}
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                    {[
+                      { value: "99.8%", label: "Accuracy" },
+                      { value: "24/7", label: "Support" },
+                      { value: "10x", label: "Faster" },
+                    ].map((stat, index) => (
+                      <div key={index} className="text-center">
+                        <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600">
+                          {stat.value}
+                        </div>
+                        <div className="text-sm text-gray-400">{stat.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
 
               {/* Carousel Indicators with 3D Effect */}
@@ -446,9 +517,9 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
             >
               {heroTexts[currentTextIndex].type === 'video' ? (
                 <div className={`relative mx-auto ${
-                  currentTextIndex === 0 
+                  currentTextIndex === 1 
                     ? 'w-[400px] h-[600px] -mt-10'
-                    : 'w-[700px] h-[450px]' // Horizontal for claim.mp4
+                    : 'w-[700px] h-[450px]'
                 }`}>
                   <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl blur-2xl transform -rotate-6" />
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-2xl blur-2xl transform rotate-6" />
@@ -471,6 +542,37 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   {/* Decorative Elements */}
                   <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full blur-2xl animate-pulse" />
                   <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-full blur-2xl animate-pulse" />
+                </div>
+              ) : heroTexts[currentTextIndex].type === 'image' ? (
+                <div className="relative mx-auto w-full max-w-[620px] h-[400px]">
+                  <div className="p-1 rounded-2xl bg-gradient-to-r from-green-500 via-blue-500 to-green-500 shadow-lg shadow-green-500/20 h-full">
+                    <div className="rounded-2xl bg-gray-900/80 p-2 h-full flex items-center justify-center overflow-hidden">
+                      <AnimatePresence mode="wait">
+                        <motion.img
+                          key={heroTexts[currentTextIndex].imageSources[lendosImageIndex]}
+                          src={heroTexts[currentTextIndex].imageSources[lendosImageIndex]}
+                          alt="LendOS - AI-Powered End-to-End Digital Lending Platform"
+                          initial={{ opacity: 0, scale: 0.96 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 1.04 }}
+                          transition={{ duration: 0.45 }}
+                          className="w-full h-full object-contain rounded-xl"
+                        />
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  <div className="flex justify-center gap-2 mt-4">
+                    {heroTexts[currentTextIndex].imageSources.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          lendosImageIndex === idx
+                            ? "w-6 bg-gradient-to-r from-green-500 to-blue-600"
+                            : "w-1.5 bg-gray-600"
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div className="bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-gray-700 transform hover:scale-105 transition-transform duration-500">
@@ -1405,6 +1507,12 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
       {/* SEO Content Section - Hidden but readable by search engines */}
       <section className="hidden">
+        <h1>AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections</h1>
+        <p>LendOS is Miraista's AI-powered digital lending platform for Banks, NBFCs and Fintechs. Enable instant credit decisioning, loan disbursals, and collections management in a single end-to-end platform. Credit decisions in under 10 seconds—even for new-to-bank customers.</p>
+        
+        <h2>Digital Lending Platform Features</h2>
+        <p>Onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios—all powered by artificial intelligence. LendOS delivers intelligent automation across the entire lending lifecycle from application intake to collections and monitoring.</p>
+        
         <h2>Vehicle Damage Assessment AI and Motor Damage Assessment Solutions</h2>
         <p>Miraista provides cutting-edge vehicle damage assessment technology powered by artificial intelligence. Our system offers instant motor damage analysis through automated image processing. Experience fast, accurate vehicle inspection with intelligent damage detection capabilities that evaluate severity and generate comprehensive reports.</p>
         

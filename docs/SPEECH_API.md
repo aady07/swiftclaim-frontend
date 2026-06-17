@@ -6,7 +6,7 @@ This doc describes how this frontend calls the speech backend so another app can
 
 ## Base URL
 
-- All requests go to: **`http://localhost:8080/api/speech/`**  
+- All requests go to: **`https://uat-api.miraista.com/api/speech/`**  
 - Replace with your backend base URL if different.
 
 ---
@@ -16,7 +16,7 @@ This doc describes how this frontend calls the speech backend so another app can
 ### Endpoint
 
 - **URL:** `POST {base}/speech/tts`  
-- **Example:** `POST http://localhost:8080/api/speech/tts`
+- **Example:** `POST https://uat-api.miraista.com/api/speech/tts`
 
 ### Request
 
@@ -36,7 +36,7 @@ const formData = new FormData();
 formData.append('text', 'Hello, how can I help you?');
 formData.append('language', 'en-IN');
 
-const response = await fetch('http://localhost:8080/api/speech/tts', {
+const response = await fetch('https://uat-api.miraista.com/api/speech/tts', {
   method: 'POST',
   body: formData
 });
@@ -64,7 +64,7 @@ audio.play();
 ### Endpoint
 
 - **URL:** `POST {base}/speech/stt`  
-- **Example:** `POST http://localhost:8080/api/speech/stt`
+- **Example:** `POST https://uat-api.miraista.com/api/speech/stt`
 
 ### Request
 
@@ -86,7 +86,7 @@ const formData = new FormData();
 formData.append('file', audioBlob, 'audio.wav');  // or audio.webm, audio.mp3
 formData.append('language', 'en-IN');
 
-const response = await fetch('http://localhost:8080/api/speech/stt', {
+const response = await fetch('https://uat-api.miraista.com/api/speech/stt', {
   method: 'POST',
   body: formData
 });
