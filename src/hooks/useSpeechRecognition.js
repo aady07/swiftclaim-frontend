@@ -12,7 +12,7 @@ export const useCustomSpeechRecognition = ({ language, setInput, handleSend, set
       const formData = new FormData();
       formData.append('file', audioBlob, 'audio.wav');
       formData.append('language', getLanguageLocale(language));
-      const response = await fetch('http://localhost:8080/api/speech/stt', {
+      const response = await fetch('https://uat-api.miraista.com/api/speech/stt', {
         method: 'POST',
         body: formData
       });

@@ -19,8 +19,9 @@ const Footer = () => {
   ];
 
   const serviceOptions = [
-    { id: 1, text: "Claim", href: "/claimupload" },
-    { id: 2, text: "Chatbot", href: "/chatbotpage" }
+    { id: 1, text: "LendOS", href: "/lendos" },
+    { id: 2, text: "Claim", href: "/claimupload" },
+    { id: 3, text: "Chatbot", href: "/chatbotpage" }
   ];
 
   const fadeInUp = {

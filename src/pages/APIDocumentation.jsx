@@ -45,7 +45,7 @@ const APIDocumentation = () => {
         { name: "incidentDate", type: "String", required: true, description: "Date of the incident (YYYY-MM-DD format)" },
         { name: "description", type: "String", required: false, description: "Additional details about the claim" }
       ],
-      example: `curl -X POST "https://api.miraista.com/api/claims/upload" \\
+      example: `curl -X POST "https://uat-api.miraista.com/api/claims/upload" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -F "file=@claim_document.pdf" \\
   -F "claimType=health" \\
@@ -102,7 +102,7 @@ const APIDocumentation = () => {
       parameters: [
         { name: "claimId", type: "String", required: true, description: "Unique identifier of the claim" }
       ],
-      example: `curl -X GET "https://api.miraista.com/api/claims/CLAIM123/status" \\
+      example: `curl -X GET "https://uat-api.miraista.com/api/claims/CLAIM123/status" \\
   -H "Authorization: Bearer YOUR_API_KEY"`
     }
   ];

@@ -35,13 +35,13 @@ export const useSpeechService = (language) => {
       formData.append('text', text);
       formData.append('language', getLanguageLocale(language));
       console.log('[TTS] Sending request to /speech/tts', {
-        url: 'http://localhost:8080/api/speech/tts',
+        url: 'https://uat-api.miraista.com/api/speech/tts',
         payload: {
           text,
           language: getLanguageLocale(language)
         }
       });
-      const response = await fetch('http://localhost:8080/api/speech/tts', {
+      const response = await fetch('https://uat-api.miraista.com/api/speech/tts', {
         method: 'POST',
         body: formData
       });
@@ -200,7 +200,7 @@ export const useSpeechService = (language) => {
       const formData = new FormData();
       formData.append('file', audioBlob, `audio.${extension || 'wav'}`);
       formData.append('language', getLanguageLocale(language));
-      const response = await fetch('http://localhost:8080/api/speech/stt', {
+      const response = await fetch('https://uat-api.miraista.com/api/speech/stt', {
         method: 'POST',
         body: formData
       });

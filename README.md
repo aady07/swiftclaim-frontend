@@ -114,8 +114,8 @@ src/
 ## API Integration
 
 ### Endpoints
-- Damage Assessment: `https://api.miraista.com/v1/upload`
-- Chat Processing: `https://api.miraista.com/v1/chat`
+- Damage Assessment: `https://uat-api.miraista.com/v1/upload`
+- Chat Processing: `https://uat-api.miraista.com/v1/chat`
 
 ### Authentication
 - JWT-based authentication
