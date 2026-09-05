@@ -11,9 +11,22 @@
       ],
       "destination": "https://miraista.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/claim-upload",
+      "destination": "/claimupload",
+      "permanent": true
     }
   ],
   "rewrites": [
+    {
+      "source": "/consulting",
+      "destination": "/consulting.html"
+    },
+    {
+      "source": "/consulting/",
+      "destination": "/consulting.html"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
@@ -23,10 +36,15 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
       ]
     }
   ]
 }
-  

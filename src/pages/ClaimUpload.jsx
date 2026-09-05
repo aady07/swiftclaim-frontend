@@ -182,14 +182,14 @@ const ClaimUpload = () => {
         <meta name="keywords" content="vehicle damage assessment AI, motor damage assessment, automated vehicle damage assessment, upload vehicle damage, motor damage detection, vehicle damage analysis AI, automated motor damage analysis, vehicle damage assessment tool, AI motor damage detector, vehicle damage AI scanner" />
         <meta property="og:title" content="AI-Powered Claim Upload & Verification | Miraista" />
         <meta property="og:description" content="Upload and process your insurance claims with our advanced AI system. Get instant analysis, accurate damage assessment, and detailed cost estimates for vehicle repairs." />
-        <meta property="og:url" content="https://www.miraista.com/claim-upload" />
+        <meta property="og:url" content="https://miraista.com/claimupload" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.miraista.com/images/claim-upload-preview.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="AI-Powered Claim Upload & Verification | Miraista" />
         <meta name="twitter:description" content="Upload and process your insurance claims with our advanced AI system. Get instant analysis and accurate damage assessment." />
         <meta name="twitter:image" content="https://www.miraista.com/images/claim-upload-preview.jpg" />
-        <link rel="canonical" href="https://www.miraista.com/claim-upload" />
+        <link rel="canonical" href="https://miraista.com/claimupload" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Miraista" />
