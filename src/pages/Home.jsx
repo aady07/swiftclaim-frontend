@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScroll, useTransform } from "framer-motion";
-import { Helmet } from "react-helmet";
+import MarketingSEO from "../components/common/MarketingSEO";
+import ConsultingOverview from "../components/ConsultingOverview";
 
 // Typewriter effect component
 const TypewriterText = ({ text, variations, onVariationChange }) => {
@@ -299,77 +300,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
 
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
-      <Helmet>
-        <title>LendOS | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs</title>
-        <meta name="description" content="LendOS is an AI-powered end-to-end digital lending platform that enables Banks, NBFCs, and Fintechs to automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable infrastructure platform." />
-        <meta name="keywords" content="LendOS, digital lending platform, AI lending, credit decisioning, loan disbursal, collections management, NBFC lending software, fintech lending, instant credit decision, end-to-end lending platform, vehicle damage assessment AI, AI chatbot" />
-        
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.miraista.com" />
-        <meta property="og:title" content="LendOS - AI-Powered End-to-End Digital Lending Platform | Miraista" />
-        <meta property="og:description" content="Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, and manage collections—all in a single AI-powered platform. Credit decisions in under 10 seconds." />
-        <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
-        
-        {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://www.miraista.com" />
-        <meta property="twitter:title" content="LendOS - AI-Powered End-to-End Digital Lending Platform | Miraista" />
-        <meta property="twitter:description" content="Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, and manage collections—all in a single AI-powered platform." />
-        <meta property="twitter:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
-        <meta property="twitter:image:width" content="1200" />
-        <meta property="twitter:image:height" content="630" />
-        
-        {/* Additional SEO tags */}
-        <link rel="canonical" href="https://www.miraista.com" />
-        <meta name="robots" content="index, follow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="author" content="Miraista" />
-        <meta name="language" content="English" />
-        <meta name="revisit-after" content="7 days" />
-        <meta name="generator" content="React" />
-        
-        {/* Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Miraista",
-            "url": "https://www.miraista.com",
-            "logo": "https://www.miraista.com/logo.png",
-            "description": "AI-Powered Digital Lending, Vehicle Damage Assessment & Chatbot Solutions",
-            "sameAs": [
-              "https://www.linkedin.com/company/miraista",
-              "https://twitter.com/miraista",
-              "https://www.facebook.com/miraista"
-            ]
-          })}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            "name": "LendOS",
-            "applicationCategory": "FinanceApplication",
-            "operatingSystem": "Web",
-            "description": "AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections. Enable Banks, NBFCs & Fintechs to onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios.",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "provider": {
-              "@type": "Organization",
-              "name": "Miraista",
-              "url": "https://www.miraista.com"
-            },
-            "image": "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png"
-          })}
-        </script>
-      </Helmet>
+      <MarketingSEO />
       
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden pt-16">
@@ -411,6 +342,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
               variants={staggerContainer}
               className="max-w-2xl transform-gpu"
             >
+              <p className="text-xs sm:text-sm text-green-300 font-semibold tracking-widest uppercase mb-6">IT Consulting · Product Engineering · AI Solutions</p>
               <div className="mb-8">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -462,6 +394,8 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-full group-hover:translate-y-0" />
                 </motion.button>
               </motion.div>
+
+              <Link to="/consulting" className="inline-flex items-center gap-2 text-green-300 hover:text-white font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-400">Explore Consulting Services <span aria-hidden="true">↗</span></Link>
 
               {/* Stats / USP Section */}
               <motion.div
@@ -600,6 +534,8 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
           </div>  
         </div>  
       </section>
+
+      <ConsultingOverview />
 
       {/* Features Section with Advanced Interactive Cards */}
       <section className="py-12 relative overflow-hidden perspective-1000">
@@ -1505,26 +1441,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
         </div>
       </section>
 
-      {/* SEO Content Section - Hidden but readable by search engines */}
-      <section className="hidden">
-        <h1>AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections</h1>
-        <p>LendOS is Miraista's AI-powered digital lending platform for Banks, NBFCs and Fintechs. Enable instant credit decisioning, loan disbursals, and collections management in a single end-to-end platform. Credit decisions in under 10 seconds—even for new-to-bank customers.</p>
-        
-        <h2>Digital Lending Platform Features</h2>
-        <p>Onboard customers, underwrite applications, generate loan offers, disburse funds, manage collections, and monitor portfolios—all powered by artificial intelligence. LendOS delivers intelligent automation across the entire lending lifecycle from application intake to collections and monitoring.</p>
-        
-        <h2>Vehicle Damage Assessment AI and Motor Damage Assessment Solutions</h2>
-        <p>Miraista provides cutting-edge vehicle damage assessment technology powered by artificial intelligence. Our system offers instant motor damage analysis through automated image processing. Experience fast, accurate vehicle inspection with intelligent damage detection capabilities that evaluate severity and generate comprehensive reports.</p>
-        
-        <h2>Multi-Language Chatbot and Customized Chatbot AI</h2>
-        <p>Our intelligent chatbot platform supports multiple languages, delivering a versatile communication solution for global businesses. The customized chatbot adapts to specific business needs, offering personalized interactions and seamless integration. Discover how our AI-powered chatbot transforms customer engagement across different languages.</p>
-        
-        <h3>How Vehicle Damage Assessment Works</h3>
-        <p>Our automated assessment process uses advanced AI algorithms to analyze vehicle images and detect damage. The system identifies patterns, evaluates severity levels, and generates detailed analysis reports instantly. This technology streamlines the entire vehicle inspection workflow, from image upload to final report generation.</p>
-        
-        <h3>Benefits of Multi-Language Chatbot</h3>
-        <p>Multi-language chatbot capabilities ensure seamless communication across different regions and languages. Our AI learns from interactions to provide increasingly accurate responses. The solution integrates easily with existing business systems, enhancing customer service efficiency.</p>
-      </section>
+
     </div>
   );
 };

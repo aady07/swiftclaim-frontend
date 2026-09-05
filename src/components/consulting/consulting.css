@@ -1,0 +1,130 @@
+.consulting-page { --consult-green: #4ade80; --consult-blue: #60a5fa; }
+.consulting-page .consult-hero { position: relative; isolation: isolate; background: #060d19; }
+.consult-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at 15% 20%, #123b352d, transparent 55%), radial-gradient(ellipse at 85% 60%, #153b6e45, transparent 55%); }
+.consult-aurora { position: absolute; inset: 0; overflow: hidden; z-index: -1; pointer-events: none; }
+.consult-aurora::before, .consult-aurora::after { content: ''; position: absolute; width: 60%; height: 55%; border-radius: 50%; filter: blur(85px); opacity: .15; animation: consult-drift 14s ease-in-out infinite alternate; }
+.consult-aurora::before { background: #22c55e; left: -25%; top: -25%; }
+.consult-aurora::after { background: #2563eb; right: -25%; bottom: 0; animation-delay: -7s; }
+.consult-grid { position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(#7297b909 1px, transparent 1px), linear-gradient(90deg, #7297b909 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, transparent, #000 35%, transparent); }
+.consult-gradient-text { color: transparent; background: linear-gradient(105deg, #4ade80, #67e8f9, #60a5fa, #4ade80); background-size: 250% auto; background-clip: text; animation: consult-gradient 9s ease infinite; }
+.consult-hero-copy { animation: consult-enter .85s ease both; }
+.consult-hero-visual { position: relative; min-width: 0; aspect-ratio: 1 / 1; width: 112%; margin-left: -6%; isolation: isolate; }
+.consult-core-image { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%); animation: consult-float 8s ease-in-out infinite; }
+.consult-orbit { position: absolute; width: 87%; height: 87%; left: 6.5%; top: 6.5%; border: 1px solid #60a5fa22; border-radius: 50%; z-index: -1; animation: consult-orbit 32s linear infinite; }
+.consult-orbit::before { content: ''; width: 6px; height: 6px; position: absolute; top: 14%; left: 14%; border-radius: 50%; background: #67e8f9; box-shadow: 0 0 18px #38bdf8; }
+.consult-orbit-two { width: 68%; height: 68%; left: 16%; top: 16%; border-style: dashed; border-color: #4ade8026; animation-direction: reverse; animation-duration: 45s; }
+.consult-floating-label { position: absolute; display: flex; align-items: center; gap: 12px; background: #0d192ae8; border: 1px solid #7da7c62f; border-radius: 14px; padding: 12px 16px; box-shadow: 0 18px 40px #0005; backdrop-filter: blur(16px); animation: consult-float 7s ease-in-out infinite; }
+.consult-floating-label span:not(.consult-icon-tile):not(.consult-live-dot) { display: block; color: #94a3b8; font-size: 10px; }
+.consult-floating-label strong { display: block; font-size: 12px; color: #e2e8f0; font-weight: 500; margin-top: 3px; }
+.consult-label-top { left: -2%; top: 10%; }
+.consult-label-right { right: -1%; top: 59%; animation-delay: -2s; }
+.consult-label-bottom { left: 7%; bottom: 8%; animation-delay: -4s; }
+.consult-floating-label.consult-label-bottom span { font-size: 11px; color: #cbd5e1; }
+.consult-label-bottom > svg { color: #4ade80; }
+.consult-icon-tile { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: #4ade8014; color: #4ade80; }
+.consult-icon-blue { background: #60a5fa14; color: #60a5fa; }
+.consult-live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 4px #4ade8012; }
+.consult-visual-caption { position: absolute; bottom: -2%; left: 0; right: 0; text-align: center; color: #64748b; font-size: 9px; letter-spacing: .2em; }
+.consult-motion-control { display: inline-flex; align-items: center; gap: 7px; color: #94a3b8; font-size: 11px; border: 1px solid #334155; border-radius: 99px; padding: 7px 12px; white-space: nowrap; }
+.consult-motion-control:hover { color: #fff; border-color: #4ade80; }
+.consult-tech-ribbon { border-block: 1px solid #1e293b; padding: 28px 0; background: linear-gradient(90deg, #08121d, #0b1725, #08121d); }
+.consult-tech-ribbon > p { text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: #64748b; margin-bottom: 24px; }
+.consult-marquee-viewport { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.consult-marquee-track { display: flex; width: max-content; animation: consult-marquee 38s linear infinite; }
+.consult-marquee-group { display: flex; flex-shrink: 0; align-items: center; gap: 64px; padding-right: 64px; list-style: none; }
+.consult-marquee-group li { display: flex; align-items: center; gap: 12px; color: #a8b6c9; font-weight: 500; white-space: nowrap; font-size: 18px; }
+.consult-marquee-group svg { width: 25px; height: 25px; color: #88b7c7; }
+.consult-tech-ribbon:hover .consult-marquee-track { animation-play-state: paused; }
+.consult-glow { position: relative; isolation: isolate; overflow: hidden; }
+.consult-glow::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; background: radial-gradient(400px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), #38bdf814, transparent 70%); transition: opacity .3s; }
+.consult-glow:hover::before { opacity: 1; }
+.consult-service-card { transition: transform .3s, border-color .3s, box-shadow .3s; }
+.consult-service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 45px #0004; border-color: #4ade8066; }
+.consult-service-card .consult-service-icon { transition: transform .35s; }
+.consult-service-card:hover .consult-service-icon { transform: rotate(-8deg) scale(1.1); }
+.consult-service-number { position: absolute; right: 24px; top: 20px; font-family: monospace; font-size: 44px; color: #33415566; }
+.consult-reveal-pending { opacity: 0; transform: translateY(24px); }
+.consult-revealed { animation: consult-enter .7s ease both; }
+.consult-system-section { max-width: 1200px; padding: 0 32px 96px; margin: auto; }
+.consult-system-shell { display: grid; grid-template-columns: 1fr 1.1fr; border: 1px solid #2b4152; border-radius: 28px; background: radial-gradient(ellipse at 95% 0, #0c4a6e3b, transparent 60%), #08111e; }
+.consult-system-copy { padding: 44px; }
+.consult-system-switcher { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
+.consult-system-switcher button { display: flex; align-items: center; gap: 12px; border: 1px solid transparent; border-radius: 10px; padding: 12px 14px; text-align: left; color: #94a3b8; font-size: 14px; transition: background .2s, border-color .2s; }
+.consult-system-switcher button > svg:last-child { margin-left: auto; }
+.consult-system-switcher button:hover { color: #fff; background: #ffffff05; }
+.consult-system-switcher button[aria-pressed='true'] { color: #86efac; background: linear-gradient(90deg, #22c55e16, #3b82f60c); border-color: #4ade8033; }
+.consult-system-demo { display: flex; align-items: center; padding: 44px 32px; border-left: 1px solid #223040; background-image: radial-gradient(#44637a50 .8px, transparent .8px); background-size: 20px 20px; }
+.consult-system-content { width: 100%; animation: consult-enter .4s ease; }
+.consult-diagram { display: grid; grid-template-columns: 1fr 28px 1.2fr 28px 1fr; align-items: center; text-align: center; }
+.consult-diagram-node { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 105px; background: #0a1423; border: 1px solid #334155; border-radius: 15px; padding: 14px 7px; color: #94a3b8; }
+.consult-diagram-node svg { color: #60a5fa; width: 24px; height: 24px; }
+.consult-diagram-node span, .consult-diagram-core span { font-size: 10px; }
+.consult-diagram-core { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 150px; border-radius: 20px; border: 1px solid #4ade8066; background: linear-gradient(145deg, #123f35, #0a1b30); box-shadow: 0 0 45px #22c55e1a, inset 0 0 30px #4ade800a; color: #bbf7d0; }
+.consult-diagram-core > svg { width: 34px; height: 34px; color: #4ade80; }
+.consult-core-halo { position: absolute; inset: -7px; border: 1px solid #4ade8022; border-radius: 26px; animation: consult-pulse 3s ease-in-out infinite; pointer-events: none; }
+.consult-wire { height: 1px; background: linear-gradient(90deg, #60a5fa60, #4ade8090); position: relative; overflow: hidden; }
+.consult-wire::after { content: ''; display: block; width: 10px; height: 2px; background: #86efac; box-shadow: 0 0 8px #86efac; animation: consult-packet 2.5s linear infinite; }
+.consult-wire-second::after { animation-delay: 1.25s; }
+.consult-diagram-footnote { grid-column: 1 / -1; font-size: 10px; color: #64748b; margin-top: 26px; display: flex; justify-content: center; align-items: center; gap: 7px; }
+.consult-capabilities { position: relative; background: radial-gradient(ellipse at 0 35%, #064e3b20, transparent 55%), radial-gradient(ellipse at 100% 80%, #1e3a5f25, transparent 50%), #080f1c; }
+.consult-capability-card { transition: border-color .3s, background .3s; }
+.consult-capability-card:hover { border-color: #60a5fa55; background: #0c1728; }
+.consult-capability-card li { transition: border-color .2s, color .2s, transform .2s; }
+.consult-capability-card li:hover { border-color: #4ade8080; color: #86efac; transform: translateY(-2px); }
+.consult-rag-panel { position: relative; overflow: hidden; }
+.consult-rag-panel::before { content: ''; position: absolute; right: -100px; top: -100px; width: 300px; height: 300px; border: 1px solid #60a5fa12; border-radius: 50%; box-shadow: 0 0 0 40px #60a5fa06, 0 0 0 80px #60a5fa04; pointer-events: none; }
+.consult-rag-step { position: relative; animation: consult-step 10s ease-in-out infinite; }
+.consult-rag-step:nth-child(2) { animation-delay: 2s; }.consult-rag-step:nth-child(3) { animation-delay: 4s; }.consult-rag-step:nth-child(4) { animation-delay: 6s; }.consult-rag-step:nth-child(5) { animation-delay: 8s; }
+.consult-product-card { position: relative; overflow: hidden; background: radial-gradient(ellipse at top right, #164e632b, transparent 70%), #0a1321; transition: transform .3s, border-color .3s; }
+.consult-product-card:hover { transform: translateY(-5px); }
+.consult-product-card::before { content: ''; display: block; height: 56px; margin-bottom: 24px; border-bottom: 1px solid #60a5fa33; background: repeating-linear-gradient(90deg, transparent, transparent 18px, #60a5fa12 19px, transparent 20px), linear-gradient(0deg, #4ade8018, transparent); clip-path: polygon(0 90%, 0 60%, 15% 60%, 15% 30%, 35% 30%, 35% 50%, 55% 50%, 55% 10%, 80% 10%, 80% 0, 100% 0, 100% 100%, 0 100%); }
+.consult-process li { position: relative; }
+.consult-process li::before { content: ''; position: absolute; left: 0; top: -4px; width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 15px #4ade8066; }
+.consult-contact { position: relative; isolation: isolate; overflow: hidden; }
+.consult-contact::before { content: ''; z-index: -1; position: absolute; width: 550px; height: 550px; top: -200px; left: calc(50% - 275px); border: 1px solid #4ade8022; border-radius: 50%; box-shadow: 0 0 0 50px #60a5fa09, 0 0 0 100px #4ade8006, 0 0 0 150px #60a5fa04; animation: consult-pulse 7s ease-in-out infinite; }
+.consulting-page button:focus-visible, .consulting-page a:focus-visible { outline: 2px solid #4ade80; outline-offset: 4px; }
+@keyframes consult-enter { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes consult-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes consult-drift { to { transform: translate(20%, 30%) scale(1.15); } }
+@keyframes consult-gradient { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes consult-orbit { to { transform: rotate(360deg); } }
+@keyframes consult-marquee { to { transform: translateX(-50%); } }
+@keyframes consult-pulse { 0%,100% { opacity: .45; transform: scale(.97); } 50% { opacity: 1; transform: scale(1.03); } }
+@keyframes consult-packet { from { transform: translateX(-10px); } to { transform: translateX(40px); } }
+@keyframes consult-step { 0%,19%,100% { border-color: #4ade8080; box-shadow: 0 0 18px #4ade8012; } 20%,99% { border-color: #37415199; box-shadow: none; } }
+@media (max-width: 1023px) {
+  .consult-hero-visual { width: 100%; max-width: 570px; margin: 0 auto; }
+  .consult-system-shell { grid-template-columns: 1fr; }
+  .consult-system-demo { border-left: 0; border-top: 1px solid #223040; padding: 40px; }
+  .consult-system-switcher { flex-direction: row; flex-wrap: wrap; }
+  .consult-system-switcher button { flex: 1; white-space: nowrap; }
+}
+@media (max-width: 639px) {
+  .consult-hero-visual { margin-top: 10px; }
+  .consult-floating-label { padding: 9px 11px; gap: 8px; border-radius: 10px; }
+  .consult-floating-label strong { font-size: 10px; }
+  .consult-floating-label span:not(.consult-icon-tile):not(.consult-live-dot) { font-size: 8px; }
+  .consult-icon-tile { width: 26px; height: 26px; }
+  .consult-label-top { left: 0; top: 4%; }
+  .consult-label-right { right: 0; top: 66%; }
+  .consult-label-bottom { left: 0; bottom: 0; }
+  .consult-visual-caption { bottom: -12%; font-size: 8px; }
+  .consult-marquee-group { gap: 36px; padding-right: 36px; }
+  .consult-marquee-group li { font-size: 15px; }
+  .consult-system-section { padding: 0 24px 64px; }
+  .consult-system-copy { padding: 28px 24px; }
+  .consult-system-demo { padding: 32px 20px; }
+  .consult-system-switcher { flex-direction: column; }
+  .consult-system-switcher button { flex: none; }
+  .consult-diagram { grid-template-columns: 1fr 15px 1.1fr 15px 1fr; }
+  .consult-diagram-node { min-height: 95px; padding: 10px 4px; border-radius: 10px; }
+  .consult-diagram-core { min-height: 125px; border-radius: 14px; }
+  .consult-diagram-node span, .consult-diagram-core span { font-size: 9px; }
+  .consult-diagram-footnote { font-size: 9px; align-items: flex-start; }
+}
+.consult-motion-paused *, .consult-motion-paused *::before, .consult-motion-paused *::after { animation-play-state: paused !important; transition: none !important; }
+.consult-motion-paused .consult-reveal-pending, .consult-motion-paused .consult-revealed, .consult-motion-paused .consult-system-content, .consult-motion-paused .consult-hero-copy { opacity: 1; transform: none; animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .consulting-page *, .consulting-page *::before, .consulting-page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .consulting-page .consult-reveal-pending { opacity: 1; transform: none; }
+}

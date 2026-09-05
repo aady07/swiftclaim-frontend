@@ -163,6 +163,9 @@ const Services = () => {
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://www.miraista.com/services" />
       </Helmet>
+      <div className="relative z-10 pt-28 px-6 text-center bg-gray-950">
+        <a href="/consulting" className="text-green-300 hover:text-white text-sm">Need custom development or IT consulting? Explore our consulting services →</a>
+      </div>
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
         {/* Animated background gradient */}

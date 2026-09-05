@@ -13,7 +13,8 @@ const Footer = () => {
   const navItems = [
     { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 3, text: "Services", href: "/services", icon: <MdMiscellaneousServices className="text-xl" /> },
+    { id: 3, text: "Products", href: "/services", icon: <MdMiscellaneousServices className="text-xl" /> },
+    { id: 6, text: "IT Consulting", href: "/consulting", icon: <MdMiscellaneousServices className="text-xl" /> },
     { id: 4, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
     { id: 5, text: "Contacts", href: "/contacts", icon: <BiSupport className="text-xl" /> },
   ];
@@ -68,6 +69,7 @@ const Footer = () => {
                   style={{ maxWidth: "150px" }}
                 />
               </Link>
+              <p className="mt-4 text-sm text-gray-400 text-center md:text-left leading-relaxed">IT consulting, product engineering, and AI solutions.</p>
               <div className="mt-4">
                 <ul className="flex space-x-6 list-none">
                   {[
@@ -157,7 +159,7 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             className="flex flex-col items-center md:items-start md:pl-8"
           >
-            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Service Options</h5>
+            <h5 className="text-lg font-semibold text-white mb-4 w-full text-center md:text-left">Products</h5>
             <ul className="space-y-3 w-full list-none">
               {serviceOptions.map((option) => (
                 <li key={option.id} className="w-full">

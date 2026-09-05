@@ -171,8 +171,8 @@ const LendOS = () => {
           content="Automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable platform."
         />
         <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
-        <meta property="og:url" content="https://www.miraista.com/lendos" />
-        <link rel="canonical" href="https://www.miraista.com/lendos" />
+        <meta property="og:url" content="https://miraista.com/lendos" />
+        <link rel="canonical" href="https://miraista.com/lendos" />
         <meta name="robots" content="index, follow" />
         <script type="application/ld+json">
           {JSON.stringify({

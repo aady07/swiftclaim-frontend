@@ -13,14 +13,14 @@ const ChatbotPage = () => {
         <meta name="keywords" content="AI chatbot, virtual assistant, intelligent chatbot, Miraista chatbot, AI support, business automation, conversational AI, natural language processing, virtual support, automated assistance" />
         <meta property="og:title" content="AI Chatbot Assistant | Miraista - Intelligent Virtual Support" />
         <meta property="og:description" content="Experience our advanced AI chatbot powered by cutting-edge technology. Get instant support and streamline your business processes with our intelligent virtual assistant." />
-        <meta property="og:url" content="https://www.miraista.com/chatbot" />
+        <meta property="og:url" content="https://miraista.com/chatbotpage" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.miraista.com/images/chatbot-preview.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="AI Chatbot Assistant | Miraista - Intelligent Virtual Support" />
         <meta name="twitter:description" content="Experience our advanced AI chatbot powered by cutting-edge technology. Get instant support and streamline your business processes." />
         <meta name="twitter:image" content="https://www.miraista.com/images/chatbot-preview.jpg" />
-        <link rel="canonical" href="https://www.miraista.com/chatbot" />
+        <link rel="canonical" href="https://miraista.com/chatbotpage" />
         <meta name="robots" content="noindex, nofollow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Miraista" />

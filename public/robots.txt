@@ -1,7 +1,8 @@
 # Handle www and non-www versions
 User-agent: *
 Allow: /
-Allow: /claim-upload
+Allow: /claimupload
+Allow: /consulting
 Allow: /about-us
 Allow: /services
 Allow: /contacts
@@ -14,7 +15,6 @@ Host: https://miraista.com
 
 # Sitemap locations
 Sitemap: https://miraista.com/sitemap.xml
-Sitemap: https://www.miraista.com/sitemap.xml
 
 # Disallow admin and private routes
 Disallow: /admin/

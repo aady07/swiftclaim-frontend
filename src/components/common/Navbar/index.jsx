@@ -114,7 +114,8 @@ const Navbar = () => {
   const navItems = [
     { id: 1, text: "Home", href: "/", icon: <IoHome className="text-xl" /> },
     { id: 2, text: "About Us", href: "/about-us", icon: <BsFillPeopleFill className="text-xl" /> },
-    { id: 3, text: "Services", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
+    { id: 3, text: "Products", href: "#", icon: <MdMiscellaneousServices className="text-xl" />, isDropdown: true },
+    { id: 6, text: "IT Consulting", href: "/consulting", icon: <MdMiscellaneousServices className="text-xl" /> },
     { id: 4, text: "Blog", href: "/blog", icon: <BsJournalText className="text-xl" /> },
     { id: 5, text: "Careers", href: "/careers", icon: <BsFillPeopleFill className="text-xl" /> },
   ];
@@ -200,14 +201,14 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex flex-1 justify-start z-10 ml-8">
-          <ul className="flex space-x-4 items-center list-none">
+        <div className="hidden lg:flex flex-1 justify-start z-10 ml-4">
+          <ul className="flex space-x-1 items-center list-none">
             {navItems.map((item) => (
               <li key={item.id} className="relative" ref={item.isDropdown ? dropdownRef : null}>
                 {!item.isDropdown ? (
                   <Link to={item.href}>
                     <motion.div
-                      className={`flex items-center gap-1 px-5 py-2 rounded-full cursor-pointer text-base font-semibold
+                      className={`flex items-center gap-1 px-3 py-2 rounded-full cursor-pointer text-sm font-semibold whitespace-nowrap
                                ${scrolled 
                                   ? isActive(item.href)
                                     ? "text-blue-400 bg-blue-900/30 border border-blue-500/30 shadow-inner shadow-blue-500/20" // Active state with glow
@@ -224,7 +225,7 @@ const Navbar = () => {
                 ) : (
                   <div className="relative">
                     <motion.button
-                      className={`flex items-center gap-1 px-5 py-2 rounded-full cursor-pointer text-base font-semibold ${
+                      className={`flex items-center gap-1 px-3 py-2 rounded-full cursor-pointer text-sm font-semibold whitespace-nowrap ${
                                  scrolled
                                     ? servicesDropdown || isServicePage
                                       ? "text-blue-400 bg-blue-900/30 border border-blue-500/30 shadow-inner shadow-blue-500/20" // Active state with glow
@@ -287,7 +288,7 @@ const Navbar = () => {
         <div className="hidden lg:block z-10">
           <Link to="/contacts">
             <motion.button
-              className={`px-6 py-2 rounded-full text-base font-semibold ${
+              className={`px-6 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${
                 scrolled
                   ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
                   : "bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-lg shadow-blue-400/25 hover:shadow-blue-400/40"
