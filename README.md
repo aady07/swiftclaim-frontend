@@ -1,165 +1,67 @@
-# Miraista Frontend
+# Miraista — AI-Powered Motor Insurance Claim Automation
 
 ## Overview
-Miraista's frontend application for insurance claim processing. This repository contains the production codebase for the client-facing web application.
 
-## Development Setup
+**Miraista** is an AI-powered motor insurance claim processing platform designed to simplify and automate vehicle damage assessment and claim handling.
 
-### Requirements
-- Node.js v14+
-- npm v7+
-- Git
+The platform combines **computer vision, AI-powered damage assessment, OCR, automated workflows, and conversational AI** to reduce the manual effort involved in processing motor insurance claims.
 
-### Local Development
+Users can submit vehicle images and relevant claim documents, after which the system processes the information and assists with damage identification, assessment, claim processing, and report generation.
 
-#### Prerequisites
-- **Node.js v14+** (v18+ recommended) - [Download here](https://nodejs.org/)
-- **npm v7+** (comes with Node.js)
-- **Git**
+---
 
-#### Setup Steps
+## Key Features
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd Frontend_Swiftclaim
-   ```
+### 🚗 AI-Powered Vehicle Damage Assessment
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-   ⚠️ **Note:** If you get "npm is not recognized", install Node.js first (see SETUP_GUIDE.md)
+The platform analyzes vehicle images to identify visible damage and determine the affected areas of the vehicle.
 
-3. **Create environment file (optional)**
-   ```bash
-   # Windows:
-   copy .env.example .env
-   
-   # Mac/Linux:
-   cp .env.example .env
-   ```
+Key capabilities include:
 
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-   
-   The app will be available at: `http://localhost:5173`
+- Vehicle image analysis
+- Damage detection
+- Damaged component identification
+- Damage classification
+- Damage severity assessment
+- Automated assessment results
+- AI-assisted repair/cost estimation
 
-#### Troubleshooting
-If you encounter "command not recognized" errors, see [SETUP_GUIDE.md](./SETUP_GUIDE.md) for detailed troubleshooting steps.
+### 📄 Intelligent Document Processing
 
-### Environment Variables
-Required environment variables:
-- `VITE_API_URL`: Backend API endpoint
-- `VITE_APP_NAME`: Application name
-- `VITE_APP_ENV`: Environment (development/production)
+The system supports processing of insurance and vehicle-related documents using OCR and automated data extraction.
 
-## Project Structure
+The document processing workflow helps extract relevant information and reduce manual data entry during claim submission.
 
-```
-src/
-├── components/          # Reusable UI components
-│   ├── chatbot/        # Chatbot interface components
-│   ├── claims/         # Claim processing components
-│   └── layout/         # Layout components
-├── hooks/              # Custom React hooks
-├── pages/              # Page components
-├── styles/             # Global styles
-└── utils/              # Utility functions
-```
+### 🤖 AI Claim Assistant
 
-## Key Components
+Miraista includes an AI-powered conversational interface that helps users interact with the claim-processing system.
 
-### Chatbot System
-- `Chatbot3D.jsx`: Main chatbot interface with 3D avatar
-- `useChatLogic.js`: Chatbot state management and API integration
-- Supports voice interaction and bilingual communication
+The chatbot provides:
 
-### Claim Processing
-- `ClaimUploadUI.jsx`: Document upload and processing interface
-- Real-time damage assessment
-- Cost estimation and report generation
+- Claim-related assistance
+- Guided claim submission
+- Status and workflow interaction
+- Voice interaction
+- Bilingual communication
+- Integration with backend claim-processing APIs
 
-## Development Guidelines
+### 📊 Automated Claim Workflow
 
-### Code Style
-- Follow ESLint configuration
-- Use Prettier for code formatting
-- Follow component naming conventions
+The platform brings different stages of the claim process into a single workflow:
 
-### Git Workflow
-1. Create feature branch from `develop`
-2. Follow branch naming: `feature/JIRA-123-description`
-3. Submit PR to `develop` branch
-4. Require minimum 1 reviewer approval
-
-### Testing
-- Run unit tests: `npm test`
-- Run E2E tests: `npm run test:e2e`
-- Maintain minimum 80% test coverage
-
-## Deployment
-
-### Staging
-- Automatic deployment on merge to `develop`
-- Deployed to: `https://staging.miraista.com`
-
-### Production
-- Manual deployment from `main` branch
-- Deployed to: `https://app.miraista.com`
-- Requires team lead approval
-
-## API Integration
-
-### Endpoints
-- Damage Assessment: `https://uat-api.miraista.com/v1/upload`
-- Chat Processing: `https://uat-api.miraista.com/v1/chat`
-
-### Authentication
-- JWT-based authentication
-- Token refresh mechanism implemented
-- Session management handled by `useAuth` hook
-
-## Performance Monitoring
-
-### Metrics
-- Page load time
-- API response time
-- Error rates
-- User interaction metrics
-
-### Tools
-- New Relic for performance monitoring
-- Sentry for error tracking
-- Google Analytics for user behavior
-
-## Security
-
-### Requirements
-- Regular dependency updates
-- Security audit compliance
-- Data encryption standards
-- XSS prevention measures
-
-### Best Practices
-- Input validation
-- CSRF protection
-- Secure cookie handling
-- API rate limiting
-
-## Support
-
-### Internal Resources
-- JIRA: Project tracking
-- Confluence: Documentation
-- Slack: Team communication
-
-### Contact
-- Tech Lead: [Name] (email)
-- DevOps: [Name] (email)
-- Security: [Name] (email)
-
-## License
-Proprietary - Miraista Inc. All rights reserved.
+```text
+Vehicle / Document Upload
+          ↓
+     Data Extraction
+          ↓
+    AI Image Analysis
+          ↓
+   Damage Detection
+          ↓
+ Damage Classification
+          ↓
+   Damage Assessment
+          ↓
+ Cost / Claim Estimation
+          ↓
+   Assessment Report
