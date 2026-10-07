@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useScroll, useTransform } from "framer-motion";
 import MarketingSEO from "../components/common/MarketingSEO";
+import { trackEvent } from "../lib/posthog";
 import ConsultingOverview from "../components/ConsultingOverview";
 
 // Typewriter effect component
@@ -376,7 +377,13 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                 <motion.button
                   whileHover={{ scale: 1.05, rotateX: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(getPrimaryCTA().path)}
+                  onClick={() => {
+                    const cta = getPrimaryCTA();
+                    if (cta.path === "/lendos") {
+                      trackEvent("lendos_cta_clicked", { cta: "explore_lendos_home" });
+                    }
+                    navigate(cta.path);
+                  }}
                   className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 relative overflow-hidden group transform-gpu"
                 >
                   <span className="relative z-10">{getPrimaryCTA().label}</span>

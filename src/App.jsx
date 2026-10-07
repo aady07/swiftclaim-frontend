@@ -20,6 +20,7 @@ import Consulting from "./pages/Consulting";
 import LendOS from "./pages/LendOS";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
+import { initPosthog, trackPageview } from "./lib/posthog";
 
 // ScrollToTop component to reset scroll position on route change
 const ScrollToTop = () => {
@@ -34,6 +35,15 @@ const ScrollToTop = () => {
 
 const App = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    initPosthog();
+  }, []);
+
+  useEffect(() => {
+    trackPageview(location.pathname);
+  }, [location.pathname]);
+
   const isChatbotPage = location.pathname === "/chatbotpage";
   const isChatbotIframe = location.pathname === "/chatbot-iframe";
   const isWidget = location.pathname === "/widget";
