@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useScroll } from "framer-motion";
 import { useTransform } from "framer-motion";
 import { Helmet } from "react-helmet";
+import { trackEvent } from "../lib/posthog";
 
 
 // Animation variants
@@ -111,6 +112,7 @@ const Contacts = () => {
     if (validateForm()) {
       try {
         await formSubmit(e);
+        trackEvent("contact_form_submitted", { source: "contacts_page" });
         setFormData({ name: "", email: "", subject: "", message: "" });
         setErrors({});
       } catch (error) {

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
+import { trackEvent } from "../lib/posthog";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -41,6 +42,10 @@ const LENDOS_HERO_IMAGES = [
 
 const LendOS = () => {
   const navigate = useNavigate();
+  const goToContact = (cta) => {
+    trackEvent("lendos_cta_clicked", { cta });
+    navigate("/contacts");
+  };
   const [heroImageIndex, setHeroImageIndex] = useState(0);
 
   useEffect(() => {
@@ -233,7 +238,7 @@ const LendOS = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate("/contacts")}
+                onClick={() => goToContact("request_demo")}
                 className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25"
               >
                 Request Demo
@@ -241,7 +246,7 @@ const LendOS = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => navigate("/contacts")}
+                onClick={() => goToContact("book_consultation")}
                 className="px-8 py-4 bg-gray-800/80 backdrop-blur-sm text-gray-200 rounded-xl text-lg font-semibold border-2 border-blue-500/30 hover:border-blue-500/50"
               >
                 Book a Consultation
@@ -544,7 +549,7 @@ const LendOS = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/contacts")}
+              onClick={() => goToContact("request_demo_footer")}
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25 flex items-center justify-center gap-2"
             >
               Request a Demo <FiArrowRight />
@@ -552,7 +557,7 @@ const LendOS = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/contacts")}
+              onClick={() => goToContact("talk_to_team")}
               className="px-8 py-4 bg-gray-800/80 border-2 border-gray-700 text-gray-200 rounded-xl text-lg font-semibold"
             >
               Talk to Our Team
