@@ -235,9 +235,15 @@ const AboutUs = () => {
             
             <motion.p
               variants={fadeInUp}
-              className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto"
+              className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
             >
               We are innovators in AI solutions, dedicated to transforming businesses with cutting-edge technology.
+            </motion.p>
+            <motion.p
+              variants={fadeInUp}
+              className="text-sm md:text-base text-gray-400 mb-8 max-w-3xl mx-auto"
+            >
+              Miraista is an AI product of Nexoratrading Ventures Private Limited.
             </motion.p>
             
             <motion.div
@@ -320,7 +326,7 @@ const AboutUs = () => {
                 >
                   <div className="w-20 h-1 bg-blue-500 mb-6"></div>
                   <p className="text-lg text-gray-300 mb-6">
-                    At Miraista, we are dedicated to revolutionizing vehicle damage assessment through intelligent AI solutions. Our core focus is on developing transformative vehicle damage assessment AI technology and multi-language chatbot systems that solve complex challenges. We believe in the power of automated motor damage assessment and customized chatbot AI to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
+                    Miraista is an AI product of Nexoratrading Ventures Private Limited. At Miraista, we are dedicated to revolutionizing vehicle damage assessment through intelligent AI solutions. Our core focus is on developing transformative vehicle damage assessment AI technology and multi-language chatbot systems that solve complex challenges. We believe in the power of automated motor damage assessment and customized chatbot AI to unlock unprecedented efficiency, drive innovation, and create meaningful impact.
                   </p>
                   <p className="text-lg text-gray-300">
                     Our approach combines cutting-edge research in vehicle damage assessment AI, strategic innovation in motor damage detection, and advanced multi-language chatbot development. We don't just develop AI solutions; we craft intelligent vehicle damage assessment systems and customized chatbot AI that adapt, learn, and drive tangible business value. From automated vehicle damage assessment to enterprise chatbot solutions, we're committed to pushing the boundaries of what's possible with vehicle damage assessment AI and intelligent chatbot technology.
