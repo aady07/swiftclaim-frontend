@@ -46,6 +46,10 @@ const LendOZ = () => {
     trackEvent("lendos_cta_clicked", { cta });
     navigate("/contacts");
   };
+  const openDemo = (cta) => {
+    trackEvent("lendos_cta_clicked", { cta });
+    window.open("https://demo.lendozz.com/", "_blank", "noopener,noreferrer");
+  };
   const [heroImageIndex, setHeroImageIndex] = useState(0);
 
   useEffect(() => {
@@ -238,8 +242,16 @@ const LendOZ = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => goToContact("request_demo")}
+                onClick={() => openDemo("try_demo")}
                 className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25"
+              >
+                Try the Demo
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => goToContact("request_demo")}
+                className="px-8 py-4 bg-gray-800/80 backdrop-blur-sm text-gray-200 rounded-xl text-lg font-semibold border-2 border-blue-500/30 hover:border-blue-500/50"
               >
                 Request Demo
               </motion.button>
@@ -549,10 +561,18 @@ const LendOZ = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => goToContact("request_demo_footer")}
+              onClick={() => openDemo("try_demo_footer")}
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl text-lg font-semibold shadow-lg shadow-green-500/25 flex items-center justify-center gap-2"
             >
-              Request a Demo <FiArrowRight />
+              Try the Demo <FiArrowRight />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => goToContact("request_demo_footer")}
+              className="px-8 py-4 bg-gray-800/80 border-2 border-gray-700 text-gray-200 rounded-xl text-lg font-semibold"
+            >
+              Request a Demo
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
