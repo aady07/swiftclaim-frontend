@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect } from "react";
 import Intro from "./components/Intro";
@@ -17,7 +17,7 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import Blog from "./pages/Blog";
 import Consulting from "./pages/Consulting";
-import LendOS from "./pages/LendOS";
+import LendOZ from "./pages/LendOS";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Widget from "./pages/Widget";
 import { initPosthog, trackPageview } from "./lib/posthog";
@@ -58,7 +58,8 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
           <Route path="/consulting" element={<Consulting />} />
-          <Route path="/lendos" element={<LendOS />} />
+          <Route path="/lendoz" element={<LendOZ />} />
+          <Route path="/lendos" element={<Navigate to="/lendoz" replace />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/claimupload" element={<ClaimUpload />} />
           <Route path="/chatbotpage" element={<ChatbotPage />} />

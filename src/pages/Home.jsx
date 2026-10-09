@@ -55,7 +55,7 @@ const HomePage = () => {
   // Hero section text carousel data with variations
   const heroTexts = [
     {
-      title: "LendOS",
+      title: "LendOZ",
       subtitle: "Digital Lending Platform",
       subtitleVariations: [
         "Digital Lending Platform",
@@ -108,13 +108,13 @@ const HomePage = () => {
   const [lendosImageIndex, setLendosImageIndex] = useState(0);
 
   const getPrimaryCTA = () => {
-    if (currentTextIndex === 0) return { label: "Explore LendOS", path: "/lendos" };
+    if (currentTextIndex === 0) return { label: "Explore LendOZ", path: "/lendoz" };
     if (currentTextIndex === 1) return { label: "Meet Your Agent", path: "/chatbotpage" };
     return { label: "Try It Now", path: "/claimupload" };
   };
 
   const getSecondaryCTA = () => {
-    if (currentTextIndex === 0) return "/lendos";
+    if (currentTextIndex === 0) return "/lendoz";
     return "/services";
   };
 
@@ -379,7 +379,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                   whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     const cta = getPrimaryCTA();
-                    if (cta.path === "/lendos") {
+                    if (cta.path === "/lendoz") {
                       trackEvent("lendos_cta_clicked", { cta: "explore_lendos_home" });
                     }
                     navigate(cta.path);
@@ -492,7 +492,7 @@ const heroY = useTransform(scrollYProgress, [0, 0.15], [0, 100]);
                         <motion.img
                           key={heroTexts[currentTextIndex].imageSources[lendosImageIndex]}
                           src={heroTexts[currentTextIndex].imageSources[lendosImageIndex]}
-                          alt="LendOS - AI-Powered End-to-End Digital Lending Platform"
+                          alt="LendOZ - AI-Powered End-to-End Digital Lending Platform"
                           initial={{ opacity: 0, scale: 0.96 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 1.04 }}
