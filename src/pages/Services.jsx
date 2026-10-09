@@ -153,11 +153,11 @@ const Services = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>LendOS Digital Lending Platform | AI Credit Decisioning & Lending Services | Miraista</title>
-        <meta name="description" content="Explore LendOS, Miraista's AI-powered end-to-end digital lending platform for Banks, NBFCs & Fintechs. Plus vehicle damage assessment AI and multi-language chatbot solutions. Credit decisions in under 10 seconds." />
-        <meta name="keywords" content="LendOS, digital lending platform, AI lending services, credit decisioning, loan disbursal, NBFC lending software, fintech lending, vehicle damage assessment AI, multi-language chatbot, automated motor damage assessment" />
-        <meta property="og:title" content="LendOS Digital Lending Platform | AI-Powered Lending Services | Miraista" />
-        <meta property="og:description" content="LendOS enables Banks, NBFCs & Fintechs to onboard customers, underwrite loans, disburse funds, and manage collections. Also explore our vehicle damage assessment AI and chatbot solutions." />
+        <title>LendOZ Digital Lending Platform | AI Credit Decisioning & Lending Services | Miraista</title>
+        <meta name="description" content="Explore LendOZ, Miraista's AI-powered end-to-end digital lending platform for Banks, NBFCs & Fintechs. Plus vehicle damage assessment AI and multi-language chatbot solutions. Credit decisions in under 10 seconds." />
+        <meta name="keywords" content="LendOZ, digital lending platform, AI lending services, credit decisioning, loan disbursal, NBFC lending software, fintech lending, vehicle damage assessment AI, multi-language chatbot, automated motor damage assessment" />
+        <meta property="og:title" content="LendOZ Digital Lending Platform | AI-Powered Lending Services | Miraista" />
+        <meta property="og:description" content="LendOZ enables Banks, NBFCs & Fintechs to onboard customers, underwrite loans, disburse funds, and manage collections. Also explore our vehicle damage assessment AI and chatbot solutions." />
         <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
         <meta property="og:url" content="https://www.miraista.com/services" />
         <meta property="og:type" content="website" />
@@ -259,7 +259,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* LendOS Featured Service */}
+      {/* LendOZ Featured Service */}
       <div className="bg-gradient-to-b from-gray-900 to-black pt-16">
         <div className="container mx-auto px-4">
           <motion.div
@@ -277,7 +277,7 @@ const Services = () => {
               <div className="relative grid lg:grid-cols-2 gap-8 items-center p-8 md:p-12">
                 <div>
                   <span className="inline-block text-green-400 uppercase tracking-wider text-sm font-semibold mb-3">Featured Product</span>
-                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">LendOS</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">LendOZ</h2>
                   <p className="text-lg text-gray-300 mb-4">
                     AI-Powered End-to-End Digital Lending Platform for Instant Credit Decisioning, Disbursals & Collections
                   </p>
@@ -295,10 +295,10 @@ const Services = () => {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate("/lendos")}
+                    onClick={() => navigate("/lendoz")}
                     className="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg font-semibold flex items-center gap-2"
                   >
-                    Explore LendOS <FiArrowRight />
+                    Explore LendOZ <FiArrowRight />
                   </motion.button>
                 </div>
                 <div className="hidden lg:block">
@@ -306,7 +306,7 @@ const Services = () => {
                     <div className="rounded-2xl bg-gray-900/90 p-2">
                       <img
                         src="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png"
-                        alt="LendOS Digital Lending Platform"
+                        alt="LendOZ Digital Lending Platform"
                         className="w-full h-auto object-contain rounded-xl"
                       />
                     </div>

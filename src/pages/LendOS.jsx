@@ -40,7 +40,7 @@ const LENDOS_HERO_IMAGES = [
   "https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png",
 ];
 
-const LendOS = () => {
+const LendOZ = () => {
   const navigate = useNavigate();
   const goToContact = (cta) => {
     trackEvent("lendos_cta_clicked", { cta });
@@ -97,7 +97,7 @@ const LendOS = () => {
     },
   ];
 
-  const whyLendOS = [
+  const whyLendOZ = [
     {
       title: "Credit Decisions in Under 10 Seconds",
       description: "Deliver real-time underwriting and loan decisions using AI-powered risk models and configurable decision engines.",
@@ -161,29 +161,29 @@ const LendOS = () => {
   return (
     <div className="bg-gray-950 text-gray-200 overflow-hidden">
       <Helmet>
-        <title>LendOS | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs</title>
+        <title>LendOZ | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs</title>
         <meta
           name="description"
-          content="LendOS is an AI-powered end-to-end digital lending platform that enables Banks, NBFCs, and Fintechs to automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable infrastructure platform."
+          content="LendOZ is an AI-powered end-to-end digital lending platform that enables Banks, NBFCs, and Fintechs to automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable infrastructure platform."
         />
         <meta
           name="keywords"
-          content="LendOS, digital lending platform, AI lending, credit decisioning, loan disbursal, NBFC lending software, fintech lending, embedded finance, lending marketplace"
+          content="LendOZ, digital lending platform, AI lending, credit decisioning, loan disbursal, NBFC lending software, fintech lending, embedded finance, lending marketplace"
         />
-        <meta property="og:title" content="LendOS | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs" />
+        <meta property="og:title" content="LendOZ | AI-Powered Digital Lending Platform for Banks, NBFCs & Fintechs" />
         <meta
           property="og:description"
           content="Automate onboarding, underwriting, instant credit decisioning, loan disbursals, collections, and portfolio management through a single configurable platform."
         />
         <meta property="og:image" content="https://d1194rs9ausm91.cloudfront.net/images/lendos/hero2.png" />
-        <meta property="og:url" content="https://miraista.com/lendos" />
-        <link rel="canonical" href="https://miraista.com/lendos" />
+        <meta property="og:url" content="https://miraista.com/lendoz" />
+        <link rel="canonical" href="https://miraista.com/lendoz" />
         <meta name="robots" content="index, follow" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "LendOS",
+            name: "LendOZ",
             applicationCategory: "FinanceApplication",
             operatingSystem: "Web",
             description:
@@ -204,7 +204,7 @@ const LendOS = () => {
           <motion.div initial="hidden" animate="visible" variants={staggerContainer}>
             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 mb-6">
               <span className="text-green-400 font-bold text-lg">Lend</span>
-              <span className="text-blue-400 font-bold text-lg">OS</span>
+              <span className="text-blue-400 font-bold text-lg">OZ</span>
               <span className="text-gray-500 text-sm">| Digital Lending</span>
             </motion.div>
 
@@ -268,7 +268,7 @@ const LendOS = () => {
                     <motion.img
                       key={LENDOS_HERO_IMAGES[heroImageIndex]}
                       src={LENDOS_HERO_IMAGES[heroImageIndex]}
-                      alt="LendOS AI-Powered Lending Platform"
+                      alt="LendOZ AI-Powered Lending Platform"
                       initial={{ opacity: 0, x: 30 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -30 }}
@@ -289,7 +289,7 @@ const LendOS = () => {
                       ? "w-8 bg-gradient-to-r from-blue-500 to-green-500"
                       : "w-2 bg-gray-600 hover:bg-gray-500"
                   }`}
-                  aria-label={`View LendOS image ${idx + 1}`}
+                  aria-label={`View LendOZ image ${idx + 1}`}
                 />
               ))}
             </div>
@@ -339,7 +339,7 @@ const LendOS = () => {
           <SectionHeader
             label="Our Solution"
             title="One Platform. Entire Lending Lifecycle."
-            description="LendOS combines onboarding, underwriting, decisioning, disbursals, collections, and portfolio analytics into a single infrastructure layer."
+            description="LendOZ combines onboarding, underwriting, decisioning, disbursals, collections, and portfolio analytics into a single infrastructure layer."
           />
           <motion.h3
             variants={fadeInUp}
@@ -397,12 +397,12 @@ const LendOS = () => {
         </div>
       </section>
 
-      {/* Why LendOS */}
+      {/* Why LendOZ */}
       <section className="py-20 px-6 lg:px-8 bg-gradient-to-b from-gray-900/50 to-gray-950">
         <div className="max-w-[1200px] mx-auto">
-          <SectionHeader label="Why LendOS" title="Built for Speed, Scale & Intelligence" />
+          <SectionHeader label="Why LendOZ" title="Built for Speed, Scale & Intelligence" />
           <div className="grid md:grid-cols-2 gap-6">
-            {whyLendOS.map((item) => (
+            {whyLendOZ.map((item) => (
               <motion.div
                 key={item.title}
                 variants={fadeInUp}
@@ -537,7 +537,7 @@ const LendOS = () => {
             viewport={{ once: true }}
             className="text-gray-400 text-lg mb-8"
           >
-            Discover how LendOS can help your institution automate underwriting, accelerate loan approvals, reduce operational costs, and scale lending efficiently.
+            Discover how LendOZ can help your institution automate underwriting, accelerate loan approvals, reduce operational costs, and scale lending efficiently.
           </motion.p>
           <motion.div
             variants={fadeInUp}
@@ -569,7 +569,7 @@ const LendOS = () => {
       {/* Footer Tagline */}
       <section className="py-12 border-t border-gray-800 text-center px-6">
         <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 mb-2">
-          LendOS
+          LendOZ
         </h2>
         <p className="text-white font-medium mb-2">The Operating System for Instant Digital Lending</p>
         <p className="text-gray-500 text-sm max-w-2xl mx-auto">
@@ -580,4 +580,4 @@ const LendOS = () => {
   );
 };
 
-export default LendOS;
+export default LendOZ;

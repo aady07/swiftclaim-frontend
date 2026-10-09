@@ -4,7 +4,7 @@ import { services } from '../../data/consulting';
 const marketingMeta = {
   home: {
     title: 'Miraista | IT Consulting, Product Engineering & AI Solutions',
-    description: 'Miraista provides IT consulting, website and app development, AI automation, and white-label solutions, alongside LendOS, chatbots, and vehicle damage assessment.',
+    description: 'Miraista provides IT consulting, website and app development, AI automation, and white-label solutions, alongside LendOZ, chatbots, and vehicle damage assessment.',
     path: '/',
   },
   consulting: {
